@@ -1,6 +1,5 @@
 <?php
-$tabela_login = "pessoas";
-$args_login = [ "nome", "email" ];
+require "db.php";
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +27,7 @@ $args_login = [ "nome", "email" ];
 <body>
     <div id="sabrina">
         <h2>login:<h2>
-        <form method="POST" action=<?= "$tabela_login" ?>>
+        <form method="POST" action="criar-pessoa.php">
             <?php foreach ($args_login as $arg): ?>
                 <label><?= $arg ?> </label>
                 <input type="text" name=<?= "$tabela_login-$arg" ?>><br>
