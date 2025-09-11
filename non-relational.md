@@ -16,3 +16,8 @@
 - _id
 - categoria (string | enum)
 - links (\[tags._id...\])
+
+## tarefa log / registro / diario
+- _id
+- data (data)
+- registro (string)

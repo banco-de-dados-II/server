@@ -33,9 +33,7 @@ require "db.php";
                 <input type="text" name=<?= "$tabela_login-$arg" ?>><br>
             <?php endforeach; ?>
             <input class="btn" type="submit">
-        </form>        
+        </form>
     </div>
-
-
 </body>
 </html>

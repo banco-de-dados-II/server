@@ -6,3 +6,7 @@
 - ? svg (client)
 - mysql (relational database)
 - ? sleekdb (non relational database)
+
+
+# assets
+- https://1000randomnames.com/
