@@ -1,8 +1,3 @@
-<?php
-$tabela_login = "pessoas";
-$args_login = [ "nome", "email" ];
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,15 +23,16 @@ $args_login = [ "nome", "email" ];
 <body>
     <div id="sabrina">
         <h2>login:<h2>
-        <form method="POST" action=<?= "$tabela_login" ?>>
-            <?php foreach ($args_login as $arg): ?>
-                <label><?= $arg ?> </label>
-                <input type="text" name=<?= "$tabela_login-$arg" ?>><br>
-            <?php endforeach; ?>
-            <input class="btn" type="submit">
-        </form>        
+            <form method="POST" action="/login">
+                <label>nome</label>
+                <input text="text" name="nome"><br>
+
+                <label>email</label>
+                <input text="text" name="email"><br>
+
+                <input type="submit">
+            </form>            
+        </form>
     </div>
-
-
 </body>
 </html>
