@@ -1,0 +1,39 @@
+<?php
+require "db.php";
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>db2</title>
+    <style>
+        body {
+            text-align: center;
+            background-color: #181818;
+            color: white;
+        }
+
+        #sabrina {
+            background-color: #131313;
+        }
+
+        .btn {
+            box-shadow: 0 8px 16px 0 rgba(255,0,0,1), 0 6px 20px 0 rgba(0,255,0,1.19);
+        }
+    </style>
+</head>
+<body>
+    <div id="sabrina">
+        <h2>login:<h2>
+        <form method="POST" action="criar-pessoa.php">
+            <?php foreach ($args_login as $arg): ?>
+                <label><?= $arg ?> </label>
+                <input type="text" name=<?= "$tabela_login-$arg" ?>><br>
+            <?php endforeach; ?>
+            <input class="btn" type="submit">
+        </form>
+    </div>
+</body>
+</html>
