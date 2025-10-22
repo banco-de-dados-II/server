@@ -43,15 +43,8 @@ CREATE TABLE IF NOT EXISTS `bd2`.`projetos` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `titulo` VARCHAR(50) NULL,
   `datas_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `fk_projetos_datas1_idx` (`datas_id` ASC) VISIBLE,
-  CONSTRAINT `fk_projetos_datas1`
-    FOREIGN KEY (`datas_id`)
-    REFERENCES `bd2`.`datas` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+  PRIMARY KEY (`id`))
+  ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -63,8 +56,7 @@ CREATE TABLE IF NOT EXISTS `bd2`.`pessoas` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(100) NOT NULL,
   `email` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
@@ -80,26 +72,7 @@ CREATE TABLE IF NOT EXISTS `bd2`.`tarefas` (
   `projetos_id` INT NOT NULL,
   `criador_id` INT NOT NULL COMMENT 'criador da tarefa',
   `datas_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_tarefas_projetos1_idx` (`projetos_id` ASC) VISIBLE,
-  INDEX `fk_tarefas_pessoas1_idx` (`criador_id` ASC) VISIBLE,
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `fk_tarefas_datas1_idx` (`datas_id` ASC) VISIBLE,
-  CONSTRAINT `fk_tarefas_projetos1`
-    FOREIGN KEY (`projetos_id`)
-    REFERENCES `bd2`.`projetos` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tarefas_pessoas1`
-    FOREIGN KEY (`criador_id`)
-    REFERENCES `bd2`.`pessoas` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tarefas_datas1`
-    FOREIGN KEY (`datas_id`)
-    REFERENCES `bd2`.`datas` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
@@ -124,19 +97,7 @@ DROP TABLE IF EXISTS `bd2`.`equipe_has_pessoas` ;
 CREATE TABLE IF NOT EXISTS `bd2`.`equipe_has_pessoas` (
   `equipe_id` INT NOT NULL,
   `pessoas_id` INT NOT NULL,
-  `tag` VARCHAR(50) NULL COMMENT 'exemplo: lider, desenvolvedor, dba, da, estagiario',
-  INDEX `fk_equipe_has_pessoas_pessoas1_idx` (`pessoas_id` ASC) VISIBLE,
-  INDEX `fk_equipe_has_pessoas_equipe1_idx` (`equipe_id` ASC) VISIBLE,
-  CONSTRAINT `fk_equipe_has_pessoas_equipe1`
-    FOREIGN KEY (`equipe_id`)
-    REFERENCES `bd2`.`equipe` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_equipe_has_pessoas_pessoas1`
-    FOREIGN KEY (`pessoas_id`)
-    REFERENCES `bd2`.`pessoas` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  `tag` VARCHAR(50) NULL COMMENT 'exemplo: lider, desenvolvedor, dba, da, estagiario')
 ENGINE = InnoDB;
 
 
@@ -147,19 +108,7 @@ DROP TABLE IF EXISTS `bd2`.`tarefas_has_pessoas` ;
 
 CREATE TABLE IF NOT EXISTS `bd2`.`tarefas_has_pessoas` (
   `tarefas_id` INT NOT NULL,
-  `pessoas_id` INT NOT NULL,
-  INDEX `fk_tarefas_has_pessoas_pessoas1_idx` (`pessoas_id` ASC) VISIBLE,
-  INDEX `fk_tarefas_has_pessoas_tarefas1_idx` (`tarefas_id` ASC) VISIBLE,
-  CONSTRAINT `fk_tarefas_has_pessoas_tarefas1`
-    FOREIGN KEY (`tarefas_id`)
-    REFERENCES `bd2`.`tarefas` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tarefas_has_pessoas_pessoas1`
-    FOREIGN KEY (`pessoas_id`)
-    REFERENCES `bd2`.`pessoas` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  `pessoas_id` INT NOT NULL)
 ENGINE = InnoDB;
 
 
@@ -171,19 +120,7 @@ DROP TABLE IF EXISTS `bd2`.`projetos_has_pessoas` ;
 CREATE TABLE IF NOT EXISTS `bd2`.`projetos_has_pessoas` (
   `projetos_id` INT NOT NULL,
   `pessoas_id` INT NOT NULL,
-  `tag` VARCHAR(50) NULL COMMENT 'exemplo: criador, cliente',
-  INDEX `fk_projetos_has_pessoas_pessoas1_idx` (`pessoas_id` ASC) VISIBLE,
-  INDEX `fk_projetos_has_pessoas_projetos1_idx` (`projetos_id` ASC) VISIBLE,
-  CONSTRAINT `fk_projetos_has_pessoas_projetos1`
-    FOREIGN KEY (`projetos_id`)
-    REFERENCES `bd2`.`projetos` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_projetos_has_pessoas_pessoas1`
-    FOREIGN KEY (`pessoas_id`)
-    REFERENCES `bd2`.`pessoas` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  `tag` VARCHAR(50) NULL COMMENT 'exemplo: criador, cliente')
 ENGINE = InnoDB;
 
 
@@ -195,19 +132,7 @@ DROP TABLE IF EXISTS `bd2`.`projetos_has_equipe` ;
 CREATE TABLE IF NOT EXISTS `bd2`.`projetos_has_equipe` (
   `projetos_id` INT NOT NULL,
   `equipe_id` INT NOT NULL,
-  `tag` VARCHAR(50) NULL COMMENT 'exemplo: desenvolvedores, designers',
-  INDEX `fk_projetos_has_equipe_equipe1_idx` (`equipe_id` ASC) VISIBLE,
-  INDEX `fk_projetos_has_equipe_projetos1_idx` (`projetos_id` ASC) VISIBLE,
-  CONSTRAINT `fk_projetos_has_equipe_projetos1`
-    FOREIGN KEY (`projetos_id`)
-    REFERENCES `bd2`.`projetos` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_projetos_has_equipe_equipe1`
-    FOREIGN KEY (`equipe_id`)
-    REFERENCES `bd2`.`equipe` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  `tag` VARCHAR(50) NULL COMMENT 'exemplo: desenvolvedores, designers')
 ENGINE = InnoDB;
 
 
