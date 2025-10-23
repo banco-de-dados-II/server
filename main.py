@@ -8,15 +8,14 @@ def index():
     print(db, id(db))
     return render_template('index.html')
 
-@app.get('/login/')
-def login_get():
-    return render_template('login.html')
-
 @app.get('/tarefas/')
 def tarefas_get():
     nome = request.args.get('nome', default='sem nome')
     return render_template('tarefas.html', nome=nome)
 
+@app.get('/login/')
+def login_get():
+    return render_template('login.html')
 
 @app.post('/login')
 def login_post():
@@ -30,6 +29,3 @@ def login_post():
     print(nome, email)
     return redirect(url_for("tarefas_get", nome=nome))
 
-#@app.post('/login/')
-#def login():
-#    return None

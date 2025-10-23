@@ -84,8 +84,7 @@ DROP TABLE IF EXISTS `bd2`.`equipe` ;
 CREATE TABLE IF NOT EXISTS `bd2`.`equipe` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
