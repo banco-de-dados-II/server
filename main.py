@@ -1,4 +1,6 @@
-from flask import render_template, request, redirect, url_for
+import os
+
+from flask import render_template, request, redirect, url_for, send_file
 from globals import *
 
 from db import Pessoas
