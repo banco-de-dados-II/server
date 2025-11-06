@@ -1,0 +1,114 @@
+/* ====== NAVBAR ====== */
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #181820;
+    color: white;
+    padding: 15px 40px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.0);
+}
+
+nav img {
+    height: 45px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: #00bcd4;
+}
+
+/* ====== LOGIN ====== */
+#login-container {
+    max-width: 400px;
+    margin: 60px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 5px 4px 12px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+#login-container h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+#login-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#login-container input[type="text"],
+#login-container input[type="email"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+#login-container input[type="submit"] {
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: #00bcd4;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#login-container input[type="submit"]:hover {
+    background-color: #0097a7;
+}
+
+/* ====== INFORMA├ç├òES ====== */
+#info-section {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 20px;
+    padding: 50px;
+}
+
+.info-box {
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    flex: 1;
+    text-align: center;
+}
+
+.info-box h3 {
+    color: #00bcd4;
+    margin-bottom: 10px;
+}
+
+.info-box p {
+    color: #444;
+}
+
+/* ====== RESPONSIVO ====== */
+@media (max-width: 768px) {
+    #info-section {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .info-box {
+        margin-bottom: 20px;
+    }
+}
