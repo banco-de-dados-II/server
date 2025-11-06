@@ -31,7 +31,3 @@ def login_post():
 
     print(nome, email)
     return redirect(url_for("tarefas_get", nome=nome))
-
-#@app.post('/login/')
-#def login():
-#    return None
