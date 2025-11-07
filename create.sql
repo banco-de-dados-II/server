@@ -24,12 +24,11 @@ USE `bd2` ;
 DROP TABLE IF EXISTS `bd2`.`datas` ;
 
 CREATE TABLE IF NOT EXISTS `bd2`.`datas` (
-  `id` INT NOT NULL,
-  `dia_de_criacao` DATE NOT NULL,
-  `dia_de_concluido` DATE NULL,
-  `dia_de_fazendo` DATE NULL,
-  `dia_de_pausado` DATE NULL,
-  `data_limite` DATE NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `criacao` DATE NOT NULL,
+  `fazendo` DATE NULL,
+  `conclusao` DATE NULL,
+  `limite` DATE NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -42,7 +41,7 @@ DROP TABLE IF EXISTS `bd2`.`projetos` ;
 CREATE TABLE IF NOT EXISTS `bd2`.`projetos` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `titulo` VARCHAR(50) NULL,
-  `datas_id` INT NOT NULL,
+  `data_id` INT NOT NULL,
   PRIMARY KEY (`id`))
   ENGINE = InnoDB;
 
@@ -69,9 +68,9 @@ CREATE TABLE IF NOT EXISTS `bd2`.`tarefas` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `status` ENUM('a-fazer', 'em-andamento', 'concluido') NOT NULL,
   `titulo` VARCHAR(45) NOT NULL,
-  `projetos_id` INT NOT NULL,
+  `projeto_id` INT NOT NULL,
   `criador_id` INT NOT NULL COMMENT 'criador da tarefa',
-  `datas_id` INT NOT NULL,
+  `data_id` INT NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -79,13 +78,13 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `bd2`.`equipe`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `bd2`.`equipe` ;
+DROP TABLE IF EXISTS `bd2`.`equipes` ;
 
-CREATE TABLE IF NOT EXISTS `bd2`.`equipe` (
+CREATE TABLE IF NOT EXISTS `bd2`.`equipes` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
 ENGINE = InnoDB;
 
 

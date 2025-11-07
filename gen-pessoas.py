@@ -1,9 +1,35 @@
 import random
+import sys
+import os
+import itertools
+from datetime import timedelta, datetime
+from time import time
 
+if len(sys.argv) <= 1:
+    print(f'./{os.path.basename(__file__)} <0...9999>')
+    exit(-1)
+
+l = int(sys.argv[1])
 c = random.choice
 
 def n():
-    return random.randint(0, 9999)
+    global l
+
+    return random.randint(0, l)
+
+def days():
+    return timedelta(days=random.randint(3, 30))
+
+time_start = datetime.fromtimestamp(time())
+time_end = time_start + timedelta(days=30)
+
+def gen_date():
+    global time_start, time_end
+
+    delta = time_end - time_start
+    int_delta = (delta.days * 24 * 60 * 60) + delta.seconds
+    random_second = random.randrange(int_delta)
+    return time_start + timedelta(seconds=random_second)
 
 emails_servers = ['gmail', 'yahoo', 'outlook']
 doms = ['com', 'net', 'com.br']
@@ -16,13 +42,25 @@ tarefas_status = ('a-fazer', 'em-andamento', 'concluido')
 verbos = ['buy', 'eat', 'cook', 'make']
 cores = ['Azul Celeste', 'Amarelo Ouro', 'Vermelho Escarlate', 'Verde Menta', 'Laranja Abóbora', 'Roxo Lavanda', 'Cinza Claro', 'Marrom Café', 'Azul Royal', 'Branco Neve', 'Preto Carbono', 'Verde Musgo', 'Amarelo Canário', 'Coral', 'Vinho', 'Turquesa', 'Bege Claro', 'Azul Petróleo', 'Rosa Bebê', 'Cinza Médio', 'Dourado', 'Prata', 'Azul Índigo', 'Pêssego', 'Lilás', 'Verde Floresta', 'Púrpura', 'Fucsia', 'Magenta', 'Ciano', 'Azul Claro', 'Vermelho Carmim', 'Castanho', 'Verde Limão', 'Mostarda', 'Branco Neve', 'Cinza Escuro', 'Amarelo Mostarda', 'Azul Marinho', 'Vermelho Vinho', 'Cinza Grafite', 'Verde Oliva', 'Laranja Tangerina', 'Vermelho Ferrari', 'Azul Tiffany', 'Azul Turquesa', 'Azul Claro Pastel', 'Rosa Fúcsia', 'Verde Água', 'Azul Céu', 'Azul Petróleo', 'Chocolate', 'Creme', 'Ambar', 'Laranja Coral', 'Verde Neon', 'Lilás Claro', 'Azul Esverdeado', 'Azul Jeans', 'Púrpura Claro', 'Rosa Claro', 'Vermelho Bordeaux', 'Branco Gelo', 'Azul Real', 'Verde Esmeralda', 'Azul Anil', 'Amarelo Solar', 'Vinho Claro', 'Marrom Claro', 'Terracota', 'Caramelo', 'Azul Céu Claro', 'Pêssego Claro', 'Verde Pistache', 'Rosa Flamingo', 'Azul Turquesa Claro', 'Rosa Quartzo', 'Verde Musgo Claro', 'Lavanda Claro', 'Azul Denim', 'Azul Claro Pastel', 'Azul Tiffany Claro', 'Amarelo Claro', 'Verde Cacto', 'Laranja Pastel', 'Coral Claro', 'Vermelho Tomate', 'Lilás Escuro', 'Amarelo Pastel', 'Azul Royal Claro', 'Verde Alface', 'Preto Fosco', 'Laranja Escuro', 'Verde Mentolado', 'Azul Elétrico', 'Verde Tropa', 'Azul Marinho Claro', 'Cinza Beijinho', 'Vermelho Sangue', 'Amarelo Claro Pastel']
 
-for i in range(len(nomes)):
-    nome = nomes[i]
+print('use bd2;')
+
+for i in range(l):
+    nome = c(nomes)
     email = f'{".".join(nome.split())}{n()}@{c(emails_servers)}.{c(doms)}'
+    print(f'insert into pessoas (nome, email) value ({nome!r}, {email!r});')
+
     equipe = f'{c(objs)}.{c(fruitas)}{n()}'
+    print(f'insert into equipes (nome) value ({equipe!r});')
+
     tarefa = f'{c(verbos)} {random.randint(1, 30)} {c(comida)}'
+    print(f'insert into tarefas (titulo, status, projeto_id, criador_id, data_id) value ({tarefa!r}, {c(tarefas_status)!r}, {n()}, {n()}, {n()});')
+
     projeto = f'{c(cores)} {n()}'
-    print(f'insert into bd2.pessoas (nome, email) values ({nome!r}, {email!r});')
-    print(f'insert into bd2.equipes (nome) values ({equipe!r});')
-    print(f'insert into bd2.tarefas (titulo, status, projeto_id, criador_id, datas_id) values ({tarefa!r}, {c(tarefas_status)!r}, {n()}, {n()}, {n()});')
-    print(f'insert into bd2.projetos (titulo) values ({projeto!r});')
+    print(f'insert into projetos (titulo, data_id) value ({projeto!r}, {n()});')
+
+    criacao = gen_date()
+    fazendo = criacao + days()
+    conclusao = fazendo + days()
+    limite = conclusao + days()
+    datas = ['"'+(d.strftime("%Y-%m-%d"))+'"' for d in [criacao, fazendo, conclusao, limite]]
+    print(f'insert into datas (criacao, fazendo, conclusao, limite) value ({",".join(datas)});')

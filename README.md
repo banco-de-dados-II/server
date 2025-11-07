@@ -15,18 +15,25 @@ Uma plataforma moderna para **gerenciamento de dados e visualização analítica
 
 ## Entrar em deselvolvimento
 
-- execute um servidor mysql na porta 3306
+execute um servidor mysql na porta 3306
+```batchfile
+docker compose up
+```
 
-para resolver as dependencias
+entrar no servidor mysql
+``` batchfile
+mysql -P 3306 -u root
+```
 
-
-```sh
+entrar em um ambiente virtual python e
+resolver as dependencias do python
+```batchfile
 python -m venv .venv
-.venv\Scripts\activate.bat
+.\.venv\Scripts\activate.bat
 pip install -r requirements.txt
 ```
 
 iniciar o serivdor
-```sh
+```batchfile
 python -m flask --app main run --debug
 ```
