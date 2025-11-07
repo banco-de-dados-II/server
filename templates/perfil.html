@@ -11,15 +11,17 @@
         <a href="/">home</a>
     </nav>
 
-    <form action="/login" method="POST">
-        <label>name</label>
-        <input type="text" name="nome">
+    <p>nome `{{ nome }}`</p>
+    <p>email `{{ email }}`</p>
 
-        <label>email</label>
-        <input type="text" name="email">
+    <form method="POST" action="/pessoa-mudar">
+        <label>mudar nome</label>
+        <input text="text" name="nome" value="{{ nome }}">
 
-        <br/>
-        <input type="submit" value="enviar">
+        <label>mudar email</label>
+        <input text="text" name="email" value="{{ email }}">
+
+        <input type="submit">
     </form>
 </body>
 </html>

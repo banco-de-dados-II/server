@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/holiday.css" />
+    <link rel="stylesheet" href="static/login.css" />
+    <title>Painel de Gerenciamento - db2</title>
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <img src="logo_dark.png" alt="Logo da Plataforma">
+        </div>
+        <ul>
+            <li><a href="#">Inicio</a></li>
+            <li><a href="#">Sobre</a></li>
+            <li><a href="#">Contato</a></li>
+        </ul>
+    </nav>
+
+    <div id="login-container">
+        <h2>Login</h2>
+        <form method="POST" action="/login">
+            <label>Nome</label>
+            <input type="text" name="nome" placeholder="Digite seu nome" required>
+
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Digite seu email" required>
+
+            <input type="submit" value="Entrar">
+        </form>
+    </div>
+
+    <section id="info-section">
+        <div class="info-box">
+            <h3>Gerencie com Facilidade</h3>
+            <p>Tenha controle total sobre suas operações com uma interface simples e intuitiva.</p>
+        </div>
+        <div class="info-box">
+            <h3>Analytics Avançado</h3>
+            <p>Visualize métricas e relatórios em tempo real para decisões mais inteligentes.</p>
+        </div>
+    </section>
+</body>
+</html>

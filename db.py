@@ -1,13 +1,33 @@
+from flask import g
 from globals import *
 
-from sqlalchemy import Integer, String
-from sqlalchemy.orm import Mapped, mapped_column
+def pessoa_procurar(nome):
+    cur = g.db.cursor()
+    cur.execute(
+        'select * from pessoas where nome = %s',
+        (nome,),
+    )
 
-class Pessoas(db.Model):
-    id: Mapped[int] = mapped_column(primary_key=True)
-    nome: Mapped[str] = mapped_column(nullable=True)
-    email: Mapped[str] = mapped_column(nullable=True)
+    return cur.fetchall()
 
+def pessoa_adicionar(nome, email):
+    cur = g.db.cursor()
+    cur.execute(
+        'insert into pessoas (nome, email) value (%s, %s)',
+        (nome, email),
+    )
 
-#with app.app_context():
-#    db.create_all()
+    g.db.commit()
+    return cur.lastrowid
+
+def pessoa_mudar(nome_antigo, nome, email):
+    assert len(pessoa_procurar(nome_antigo)) > 0
+
+    cur = g.db.cursor()
+    cur.execute(
+        'update pessoas set nome = %s, email = %s where nome = %s',
+        (nome, email, nome_antigo),
+    )
+
+    g.db.commit()
+    return cur.lastrowid
