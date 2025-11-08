@@ -1,18 +1,16 @@
+from dataclasses import dataclass
 import json
-
 
 from flask import g
 from globals import *
 
 class Tabela:
-    tabela = '????'
-
     def mudar(self, **kargs):
         for k, v in kargs.items():
             self.__dict__[k] = v
 
         with g.db.cursor() as cur:
-            stmt = f'update {self.tabela} set '
+            stmt = f'update {self.TABELA} set '
             stmt += ', '.join([f'{k} = %({k})s' for k in self.to_args().keys()])
             stmt += ' where id = %(id)s'
 
@@ -25,7 +23,7 @@ class Tabela:
         return self.__dict__
 
     def to_json(self):
-        return json.dumps({'id': self.id} | self.to_args())
+        return json.dumps(self.to_args())
 
     @classmethod
     def from_json(klass, s):
@@ -35,7 +33,7 @@ class Tabela:
     @classmethod
     def adicionar(klass, **kargs):
         with g.db.cursor() as cur:
-            stmt = f'insert into {klass.tabela}'
+            stmt = f'insert into {klass.TABELA}'
             stmt += '('+(', '.join([k for k in kargs.keys()]))+')'
             stmt += ' value '
             stmt += '('+(', '.join([f'%({k})s' for k in kargs.keys()]))+')'
@@ -47,10 +45,10 @@ class Tabela:
 
     @classmethod
     def procurar(klass, expr, **kargs):
-        assert len(kargs) > 0
-
-        stmt = f'select {expr} from {klass.tabela} where '
-        stmt += ' and '.join([f'{k} = %({k})s' for k in kargs.keys()])
+        stmt = f'select {expr} from {klass.TABELA}'
+        if len(kargs) != 0:
+            stmt += ' where '
+            stmt += ' and '.join([f'{k} = %({k})s' for k in kargs.keys()])
 
         cur = g.db.cursor()
         cur.execute(stmt, kargs)
@@ -59,17 +57,45 @@ class Tabela:
 
     @classmethod
     def from_id(klass, id):
-        stmt = f'select * from {klass.tabela} where id = %d'
+        cur = klass.procurar('*', id=id)
+        return klass(*cur.fetchone())
 
-        with g.db.cursor() as cur:
-            cur.execute(stmt, id)
-            klass(*cur.fetchone())
+    @classmethod
+    def count(klass):
+        cur = klass.procurar('count(*)')
+        return cur.fetchone()[0]
 
+@dataclass
+class Projeto(Tabela):
+    TABELA = 'projetos'
 
+    id: int
+    titulo: str
+    data_id: int
+
+@dataclass
 class Pessoa(Tabela):
-    tabela = 'pessoas'
+    TABELA = 'pessoas'
 
-    def __init__(self, id, nome, email):
-        self.id = id
-        self.nome = nome
-        self.email = email
+    id: int = -1
+    nome: str = ''
+    email: str = ''
+
+
+@dataclass
+class Tarefa(Tabela):
+    TABELA = 'tarefas'
+
+    id: int
+    status: str
+    titulo: str
+    projeto_id: int
+    criador_id: int
+    data_id: int
+
+@dataclass
+class Equipe(Tabela):
+    TABELA = 'equipes'
+
+    id: int
+    nome: int

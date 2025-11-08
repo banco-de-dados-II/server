@@ -7,7 +7,10 @@ from globals import *
 import db
 
 def usuario():
-    return db.Pessoa(**json.loads(request.cookies['usuario']))
+    result = request.cookies.get('usuario')
+    if not result:
+        return db.Pessoa()
+    return db.Pessoa(**json.loads(result))
 
 @app.context_processor
 def injertar_usuario():
@@ -15,7 +18,8 @@ def injertar_usuario():
 
 @app.route('/')
 def index():
-    print(g.db, id(g.db))
+    print(db.Pessoa.count())
+    print(db.Pessoa.from_id(1))
     return render_template('index.html')
 
 @app.get('/login/')
