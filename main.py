@@ -38,12 +38,13 @@ def perfil(u):
 def login_post():
     nome = request.form['nome']
     email = request.form['email']
-    pessoas = db.Pessoa.procurar(nome=nome, email=email)
+    procura = db.Pessoa.procurar('*', nome=nome, email=email)
 
-    if len(pessoas) == 0:
-        u = db.Pessoa.adicionar(nome=nome, email=email)
+    pargs = procura.fetchone()
+    if pargs:
+        u = db.Pessoa(*pargs)
     else:
-        u = pessoas[0]
+        u = db.Pessoa.adicionar(nome=nome, email=email)
 
     return perfil(u)
 

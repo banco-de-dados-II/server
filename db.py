@@ -46,16 +46,25 @@ class Tabela:
             return klass(id=cur.lastrowid, **kargs)
 
     @classmethod
-    def procurar(klass, **kargs):
+    def procurar(klass, expr, **kargs):
         assert len(kargs) > 0
 
-        stmt = f'select * from {klass.tabela} where '
+        stmt = f'select {expr} from {klass.tabela} where '
         stmt += ' and '.join([f'{k} = %({k})s' for k in kargs.keys()])
 
-        with g.db.cursor() as cur:
-            cur.execute(stmt, kargs)
+        cur = g.db.cursor()
+        cur.execute(stmt, kargs)
+        return cur
 
-            return [klass(*r) for r in cur.fetchall()]
+
+    @classmethod
+    def from_id(klass, id):
+        stmt = f'select * from {klass.tabela} where id = %d'
+
+        with g.db.cursor() as cur:
+            cur.execute(stmt, id)
+            klass(*cur.fetchone())
+
 
 class Pessoa(Tabela):
     tabela = 'pessoas'
