@@ -1,33 +1,66 @@
+import json
+
+
 from flask import g
 from globals import *
 
-def pessoa_procurar(nome):
-    cur = g.db.cursor()
-    cur.execute(
-        'select * from pessoas where nome = %s',
-        (nome,),
-    )
+class Tabela:
+    tabela = '????'
 
-    return cur.fetchall()
+    def mudar(self, **kargs):
+        for k, v in kargs.items():
+            self.__dict__[k] = v
 
-def pessoa_adicionar(nome, email):
-    cur = g.db.cursor()
-    cur.execute(
-        'insert into pessoas (nome, email) value (%s, %s)',
-        (nome, email),
-    )
+        with g.db.cursor() as cur:
+            stmt = f'update {self.tabela} set '
+            stmt += ', '.join([f'{k} = %({k})s' for k in self.to_args().keys()])
+            stmt += ' where id = %(id)s'
 
-    g.db.commit()
-    return cur.lastrowid
+            cur.execute(stmt, self.to_args())
 
-def pessoa_mudar(nome_antigo, nome, email):
-    assert len(pessoa_procurar(nome_antigo)) > 0
+            g.db.commit()
+            return self
 
-    cur = g.db.cursor()
-    cur.execute(
-        'update pessoas set nome = %s, email = %s where nome = %s',
-        (nome, email, nome_antigo),
-    )
+    def to_args(self):
+        return self.__dict__
 
-    g.db.commit()
-    return cur.lastrowid
+    def to_json(self):
+        return json.dumps({'id': self.id} | self.to_args())
+
+    @classmethod
+    def from_json(klass, s):
+        kargs = json.loads(s)
+        return klass(*kargs)
+
+    @classmethod
+    def adicionar(klass, **kargs):
+        with g.db.cursor() as cur:
+            stmt = f'insert into {klass.tabela}'
+            stmt += '('+(', '.join([k for k in kargs.keys()]))+')'
+            stmt += ' value '
+            stmt += '('+(', '.join([f'%({k})s' for k in kargs.keys()]))+')'
+
+            cur.execute(stmt, kargs)
+
+            g.db.commit()
+            return klass(id=cur.lastrowid, **kargs)
+
+    @classmethod
+    def procurar(klass, **kargs):
+        assert len(kargs) > 0
+
+        stmt = f'select * from {klass.tabela} where '
+        stmt += ' and '.join([f'{k} = %({k})s' for k in kargs.keys()])
+
+        with g.db.cursor() as cur:
+            cur.execute(stmt, kargs)
+
+            return [klass(*r) for r in cur.fetchall()]
+
+class Pessoa(Tabela):
+    tabela = 'pessoas'
+
+    def __init__(self, id, nome, email):
+        self.id = id
+        self.nome = nome
+        self.email = email

@@ -1,9 +1,17 @@
 import os
+import json
 
 from flask import render_template, request, redirect, url_for, send_file, g
 from globals import *
 
 import db
+
+def usuario():
+    return db.Pessoa(**json.loads(request.cookies['usuario']))
+
+@app.context_processor
+def injertar_usuario():
+    return usuario().to_args()
 
 @app.route('/')
 def index():
@@ -16,31 +24,35 @@ def login_get():
 
 @app.get('/perfil/')
 def perfil_get():
-    nome = request.args.get('nome', default='sem nome')
-    email = request.args.get('email', default='sem email')
-    return render_template('perfil.html', nome=nome, email=email)
+    return render_template(
+        'perfil.html',
+        **usuario().to_args(),
+    )
 
+def perfil(u):
+    response = redirect(url_for("perfil_get"))
+    response.set_cookie('usuario', u.to_json())
+    return response
 
 @app.post('/login')
 def login_post():
     nome = request.form['nome']
     email = request.form['email']
+    pessoas = db.Pessoa.procurar(nome=nome, email=email)
 
-    pessoas = db.pessoa_procurar(nome)
     if len(pessoas) == 0:
-        assert db.pessoa_adicionar(nome, email) > 0
+        u = db.Pessoa.adicionar(nome=nome, email=email)
+    else:
+        u = pessoas[0]
 
-    response = redirect(url_for("perfil_get", nome=nome, email=email))
-    response.set_cookie('nome', nome)
-    return response
+    return perfil(u)
 
 @app.post('/pessoa-mudar')
 def pessoa_mudar_post():
-    nome = request.form['nome']
-    email = request.form['email']
+    u = usuario()
+    u.mudar(
+        nome=request.form['nome'],
+        email=request.form['email'],
+    )
 
-    db.pessoa_mudar(request.cookies['nome'], nome, email)
-
-    response = redirect(url_for("perfil_get", nome=nome, email=email))
-    response.set_cookie('nome', nome)
-    return response
+    return perfil(u)
