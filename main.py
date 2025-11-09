@@ -14,13 +14,18 @@ def usuario():
     result = session.get('usuario')
 
     if not result:
-        return db.Pessoa()
+        return None
 
     return db.Pessoa(**json.loads(result))
 
 @app.context_processor
 def injertar_usuario():
-    return usuario().to_args()
+    u = usuario()
+
+    if not u:
+        return {}
+
+    return u.to_args()
 
 @app.route('/')
 def index():
@@ -30,11 +35,39 @@ def index():
 def login_get():
     return render_template('login.html')
 
+@app.get('/tarefas/')
+def tarefas_get():
+    u = usuario()
+    if not u:
+        return redirect(url_for('index'))
+
+    with db.TarefaPessoa.procurar('tarefa_id', pessoa_id=u.id) as cur:
+        tarefa_ids = cur.fetchall()
+
+    if len(tarefa_ids) == 0:
+        return render_template(
+            'tarefas.html',
+            tarefas=[],
+        )
+
+    stmt = f'select status, titulo from tarefas where id in ({','.join(str(tarefa_id[0]) for tarefa_id in tarefa_ids)})'
+    cur = g.db.cursor(dictionary=True)
+    cur.execute(stmt)
+    tarefas = cur.fetchall()
+    return render_template(
+        'tarefas.html',
+        tarefas=tarefas,
+    )
+
 @app.get('/perfil/')
 def perfil_get():
+    u = usuario()
+    if not u:
+        return redirect(url_for('index'))
+
     return render_template(
         'perfil.html',
-        **usuario().to_args(),
+        **u.to_args(),
     )
 
 def perfil(u):
@@ -44,11 +77,16 @@ def perfil(u):
 
 @app.post('/login')
 def login_post():
-    nome = escape_str(request.form['nome'])
-    email = escape_str(request.form['email'])
-    procura = db.Pessoa.procurar('*', nome=nome, email=email)
+    id = escape_str(request.form.get('id'))
+    nome = escape_str(request.form.get('nome'))
+    email = escape_str(request.form.get('email'))
 
-    pargs = procura.fetchone()
+    if id:
+        pargs = db.Pessoa.procurar('*', id=id).fetchone()
+    else:
+        procura = db.Pessoa.procurar('*', nome=nome, email=email)
+        pargs = procura.fetchone()
+
     if pargs:
         u = db.Pessoa(*pargs)
     else:

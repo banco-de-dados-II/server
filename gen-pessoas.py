@@ -47,20 +47,25 @@ print('use bd2;')
 for i in range(l):
     nome = c(nomes)
     email = f'{".".join(nome.split())}{n()}@{c(emails_servers)}.{c(doms)}'
-    print(f'insert into pessoas (nome, email) value ({nome!r}, {email!r});')
+    print(f'insert into pessoas (nome, email) value {nome, email};')
 
     equipe = f'{c(objs)}.{c(fruitas)}{n()}'
     print(f'insert into equipes (nome) value ({equipe!r});')
 
     tarefa = f'{c(verbos)} {random.randint(1, 30)} {c(comida)}'
-    print(f'insert into tarefas (titulo, status, projeto_id, criador_id, data_id) value ({tarefa!r}, {c(tarefas_status)!r}, {n()}, {n()}, {n()});')
+    print(f'insert into tarefas (titulo, status, projeto_id, criador_id, data_id) value {tarefa, c(tarefas_status), n(), n(), n()};')
 
     projeto = f'{c(cores)} {n()}'
-    print(f'insert into projetos (titulo, data_id) value ({projeto!r}, {n()});')
+    print(f'insert into projetos (titulo, data_id) value {projeto, n()};')
 
     criacao = gen_date()
     fazendo = criacao + days()
     conclusao = fazendo + days()
     limite = conclusao + days()
-    datas = ['"'+(d.strftime("%Y-%m-%d"))+'"' for d in [criacao, fazendo, conclusao, limite]]
-    print(f'insert into datas (criacao, fazendo, conclusao, limite) value ({",".join(datas)});')
+    datas = tuple('"'+(d.strftime("%Y-%m-%d"))+'"' for d in [criacao, fazendo, conclusao, limite])
+    print(f'insert into datas (criacao, fazendo, conclusao, limite) value {datas};')
+
+    print(f'insert into equipes_has_pessoas (equipe_id, pessoa_id, tag) value {n(), n(), c(cores)};')
+    print(f'insert into tarefas_has_pessoas (tarefa_id, pessoa_id, tag) value {n(), n(), c(cores)};')
+    print(f'insert into projetos_has_pessoas (projeto_id, pessoa_id, tag) value {n(), n(), c(cores)};')
+    print(f'insert into projetos_has_equipes (projeto_id, equipe_id, tag) value {n(), n(), c(cores)};')

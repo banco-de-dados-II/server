@@ -7,8 +7,12 @@ from globals import *
 class Tabela:
     def mudar(self, **kargs):
         for k, v in kargs.items():
-            self.__dict__[k] = v
+            self[k] = v
 
+        self.atualizar()
+        return self
+
+    def atualizar(self):
         with g.db.cursor() as cur:
             stmt = f'update {self.TABELA} set '
             stmt += ', '.join([f'{k} = %({k})s' for k in self.to_args().keys()])
@@ -24,6 +28,15 @@ class Tabela:
 
     def to_json(self):
         return json.dumps(self.to_args())
+
+    def __getitem__(self, index):
+        return self.__dict__[index]
+
+    def __setitem__(self, key, value):
+        self.__dict__[key] = value
+
+    def __delitem__(self, key):
+        self.__dict__[key] = None
 
     @classmethod
     def from_json(klass, s):
@@ -77,9 +90,9 @@ class Projeto(Tabela):
 class Pessoa(Tabela):
     TABELA = 'pessoas'
 
-    id: int = -1
-    nome: str = ''
-    email: str = ''
+    id: int
+    nome: str
+    email: str
 
 
 @dataclass
@@ -99,3 +112,34 @@ class Equipe(Tabela):
 
     id: int
     nome: int
+
+@dataclass
+class EquipePessoa(Tabela):
+    TABELA = 'equipe_has_pessoas'
+
+    equipe_id: int
+    pessoa_id: int
+    tag: str
+
+@dataclass
+class TarefaPessoa(Tabela):
+    TABELA = 'tarefas_has_pessoas'
+
+    tarefa_id: int
+    pessoa_id: int
+
+@dataclass
+class ProjetoPessoa(Tabela):
+    TABELA = 'projetos_has_pessoas'
+
+    projeto_id: int
+    pessoa_id: int
+    tag: str
+
+@dataclass
+class ProjetoEquipe(Tabela):
+    TABELA = 'projetos_has_equipe'
+
+    projeto_id: int
+    equipe_id: int
+    tag: str

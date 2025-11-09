@@ -91,11 +91,11 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `bd2`.`equipe_has_pessoas`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `bd2`.`equipe_has_pessoas` ;
+DROP TABLE IF EXISTS `bd2`.`equipes_has_pessoas` ;
 
-CREATE TABLE IF NOT EXISTS `bd2`.`equipe_has_pessoas` (
+CREATE TABLE IF NOT EXISTS `bd2`.`equipes_has_pessoas` (
   `equipe_id` INT NOT NULL,
-  `pessoas_id` INT NOT NULL,
+  `pessoa_id` INT NOT NULL,
   `tag` VARCHAR(50) NULL COMMENT 'exemplo: lider, desenvolvedor, dba, da, estagiario')
 ENGINE = InnoDB;
 
@@ -106,8 +106,9 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `bd2`.`tarefas_has_pessoas` ;
 
 CREATE TABLE IF NOT EXISTS `bd2`.`tarefas_has_pessoas` (
-  `tarefas_id` INT NOT NULL,
-  `pessoas_id` INT NOT NULL)
+  `tarefa_id` INT NOT NULL,
+  `pessoa_id` INT NOT NULL,
+  `tag` VARCHAR(50) NULL COMMENT 'exemplo: prioridade(A), prioridade(B), prioridade(C)')
 ENGINE = InnoDB;
 
 
@@ -117,8 +118,8 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `bd2`.`projetos_has_pessoas` ;
 
 CREATE TABLE IF NOT EXISTS `bd2`.`projetos_has_pessoas` (
-  `projetos_id` INT NOT NULL,
-  `pessoas_id` INT NOT NULL,
+  `projeto_id` INT NOT NULL,
+  `pessoa_id` INT NOT NULL,
   `tag` VARCHAR(50) NULL COMMENT 'exemplo: criador, cliente')
 ENGINE = InnoDB;
 
@@ -128,8 +129,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `bd2`.`projetos_has_equipe` ;
 
-CREATE TABLE IF NOT EXISTS `bd2`.`projetos_has_equipe` (
-  `projetos_id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `bd2`.`projetos_has_equipes` (
+  `projeto_id` INT NOT NULL,
   `equipe_id` INT NOT NULL,
   `tag` VARCHAR(50) NULL COMMENT 'exemplo: desenvolvedores, designers')
 ENGINE = InnoDB;

@@ -7,6 +7,7 @@ import mysql.connector
 
 app = Flask(__name__, static_url_path='/static')
 app.secret_key = secrets.token_urlsafe(16)
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.debug = True
 
 toolbar = DebugToolbarExtension(app)
