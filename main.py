@@ -1,15 +1,21 @@
 import os
 import json
 
-from flask import render_template, request, redirect, url_for, send_file, g
+from flask import render_template, request, redirect, url_for, send_file, g, session
+from markupsafe import escape
 from globals import *
 
 import db
 
+def escape_str(s):
+    return str(escape(s))
+
 def usuario():
-    result = request.cookies.get('usuario')
+    result = session.get('usuario')
+
     if not result:
         return db.Pessoa()
+
     return db.Pessoa(**json.loads(result))
 
 @app.context_processor
@@ -18,8 +24,6 @@ def injertar_usuario():
 
 @app.route('/')
 def index():
-    print(db.Pessoa.count())
-    print(db.Pessoa.from_id(1))
     return render_template('index.html')
 
 @app.get('/login/')
@@ -34,14 +38,14 @@ def perfil_get():
     )
 
 def perfil(u):
+    session['usuario'] = u.to_json()
     response = redirect(url_for("perfil_get"))
-    response.set_cookie('usuario', u.to_json())
     return response
 
 @app.post('/login')
 def login_post():
-    nome = request.form['nome']
-    email = request.form['email']
+    nome = escape_str(request.form['nome'])
+    email = escape_str(request.form['email'])
     procura = db.Pessoa.procurar('*', nome=nome, email=email)
 
     pargs = procura.fetchone()
@@ -56,8 +60,8 @@ def login_post():
 def pessoa_mudar_post():
     u = usuario()
     u.mudar(
-        nome=request.form['nome'],
-        email=request.form['email'],
+        nome=escape_str(request.form['nome']),
+        email=escape_str(request.form['email']),
     )
 
     return perfil(u)

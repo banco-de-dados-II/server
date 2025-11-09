@@ -6,7 +6,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 import mysql.connector
 
 app = Flask(__name__, static_url_path='/static')
-app.config['SECRET_KEY'] = secrets.token_urlsafe(16)
+app.secret_key = secrets.token_urlsafe(16)
 app.debug = True
 
 toolbar = DebugToolbarExtension(app)
