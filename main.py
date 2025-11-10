@@ -43,9 +43,8 @@ def tarefas_get():
         return redirect(url_for('index'))
 
     cur = g.db.cursor(dictionary=True)
-    cur.execute('call tarefas_da_pessoa(%s)', (u.id,))
+    cur.execute('call card_da_pessoa(%s)', (u.id,))
     tarefas = cur.fetchall()
-    print(tarefas)
 
     return render_template(
         'tarefas.html',

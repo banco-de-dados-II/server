@@ -117,5 +117,6 @@ def do(db, l=10):
 
     gen(db, l)
     file('proc.sql')
+    file('view.sql')
 
     db.commit()

@@ -11,7 +11,13 @@
         {% for item in tarefas %}
         <li>
             <h2>{{ item['titulo'] }}</h2>
-            <p>{{ item['status'] }}</p>
+            <p>status: {{ item['status'] }}</p>
+            <p>nome do projeto: {{ item['projeto_nome'] }}</p>
+            <p>data de criacao: {{ item['criacao'] }}</p>
+            <p>fazendo deis de: {{ item['fazendo'] }}</p>
+            <p>concluido em: {{ item['conclusao'] }}</p>
+            <p>limite: {{ item['limite'] }}</p>
+            <p>criador: {{ item['criador_nome'] }}</p>
         </li>
         {% endfor %}
     </ul>
