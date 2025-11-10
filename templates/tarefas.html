@@ -1,5 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-    <title>tarefas</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/holiday.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanban de Analytics Avançado</title>
+    
+    <style>
+        /* ... (Todo o CSS continua o mesmo) ... */
+        body {
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            margin: 0;
+        }
+        .kanban-board {
+            display: flex; 
+            flex-direction: column;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .kanban-header {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            border: 2px solid #ff4d4d;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 20px;
+            height: 80px;
+        }
+        .nav-button {
+            background: none;
+            border: 2px solid #ff4d4d;
+            color: #ff4d4d;
+            font-size: 20px;
+            padding: 5px 10px;
+            margin-right: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .status-filter {
+            display: flex;
+            align-items: center;
+            border: 2px solid #ff4d4d;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .status-filter span {
+            margin-right: 15px;
+            color: #f0f0f0;
+        }
+        .status-filter .dropdown-icon {
+            font-size: 1.2em;
+            margin-right: 0;
+        }
+        .task-info-box {
+            border: 2px solid #ff4d4d;
+            border-radius: 8px;
+            padding: 10px;
+            min-width: 150px;
+            text-align: center;
+            overflow-y: auto; 
+            word-wrap: break-word;
+        }
+        .lanes-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px;
+        }
+        .tasks-column {
+            background-color: #2c2c2c;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 500px;
+        }
+        .tasks-column h3 {
+            text-align: center;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #444;
+        }
+        .task-card {
+            background-color: #004d99;
+            color: #ffffff;
+            border: 2px solid #4da6ff;
+            border-radius: 4px;
+            padding: 15px 10px;
+            margin-bottom: 10px;
+            cursor: pointer; 
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .task-card-controls {
+            display: flex;
+            align-items: center;
+        }
+        .task-card.selected {
+            border-color: #f0ad4e; 
+            background-color: #006dd1; 
+            box-shadow: 0 0 10px #f0ad4e; 
+        }
+        .add-task-btn {
+            background-color: #4da6ff;
+            color: #1a1a1a;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            width: 100%;
+            margin-bottom: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .add-task-btn:hover {
+            background-color: #79c0ff;
+        }
+        .new-task-input {
+            width: calc(100% - 18px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #4da6ff;
+            border-radius: 4px;
+            resize: vertical;
+            background-color: #333333;
+            color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .edit-task-btn {
+            color: #79c0ff;
+            font-weight: bold;
+            padding: 5px;
+            margin-left: 5px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            font-size: 1.1em;
+        }
+        .edit-task-btn:hover {
+            background-color: #444;
+        }
+        .delete-task-btn {
+            color: #ff4d4d;
+            font-weight: bold;
+            padding: 5px; 
+            margin-left: 5px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            font-size: 1.1em;
+        }
+        .delete-task-btn:hover {
+            background-color: #444;
+        }
+    </style>
+    
 </head>
-<p>tarefas `{{ nome }}`</p>
+<body>
+    <div class="kanban-board">
+        <header class="kanban-header">
+            <div class="header-left">
+                <button class="nav-button" id="nav-left">←</button>
+                <button class="nav-button" id="nav-right">→</button>
+            </div>
+            <div class="header-center">
+                <div class="status-filter">
+                    <span>* a fazer</span>
+                    <span>* fazendo</span>
+                    <span>* feito</span>
+                    <span class="dropdown-icon">∇</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="task-info-box" id="info-box-content">
+                    <p>Selecione uma tarefa...</p>
+                </div>
+            </div>
+        </header>
+        <main class="lanes-container">
+            <div class="tasks-column" id="todo-column">
+                <h3>A Fazer</h3>
+                <button class="add-task-btn" onclick="addNewTask('todo-column')">
+                    + Adicionar Tarefa
+                </button>
+                <div class="task-card" data-description="Descrição detalhada da Tarefa A">
+                    <span>a</span>
+                    <div class="task-card-controls">
+                        <span class="edit-task-btn">✏️</span>
+                        <span class="delete-task-btn">X</span>
+                    </div>
+                </div>
+                <div class="task-card" data-description="Fazer a segmentação de usuários usando K-Means.">
+                    <span>b</span>
+                    <div class="task-card-controls">
+                        <span class="edit-task-btn">✏️</span>
+                        <span class="delete-task-btn">X</span>
+                    </div>
+                </div>
+                <div class="task-card" data-description="Analisar os resultados da Tarefa B.">
+                    <span>c</span>
+                    <div class="task-card-controls">
+                        <span class="edit-task-btn">✏️</span>
+                        <span class="delete-task-btn">X</span>
+                    </div>
+                </div>
+            </div>
+            <div class="tasks-column" id="doing-column">
+                <h3>Fazendo</h3>
+                <div class="task-card" data-description="Implementando o modelo de regressão.">
+                    <span>d</span>
+                    <div class="task-card-controls">
+                        <span class="edit-task-btn">✏️</span>
+                        <span class="delete-task-btn">X</span>
+                    </div>
+                </div>
+                <div class="task-card" data-description="Testando os pipelines de dados.">
+                    <span>f</span>
+                    <div class="task-card-controls">
+                        <span class="edit-task-btn">✏️</span>
+                        <span class="delete-task-btn">X</span>
+                    </div>
+                </div>
+            </div>
+            <div class="tasks-column" id="done-column">
+                <h3>Feito</h3>
+                <div class="task-card" data-description="Relatório de performance entregue.">
+                    <span>e</span>
+                    <div class="task-card-controls">
+                        <span class="edit-task-btn">✏️</span>
+                        <span class="delete-task-btn">X</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Função addNewTask (continua igual)
+        function addNewTask(columnId) {
+            const column = document.getElementById(columnId);
+            if (column.querySelector('.new-task-input')) return;
+            const input = document.createElement('textarea');
+            input.className = 'new-task-input';
+            input.placeholder = 'Digite o TÍTULO da nova tarefa e pressione Enter...';
+            
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault(); 
+                    saveTask(input, column);
+                }
+            });
+            input.addEventListener('blur', function() {
+                saveTask(input, column);
+            });
+
+            const addButton = column.querySelector('.add-task-btn');
+            column.insertBefore(input, addButton.nextSibling);
+            input.focus();
+        }
+
+        /*
+            *** AQUI ESTÁ A CORREÇÃO DEFINITIVA ***
+        */
+        function saveTask(inputElement, columnElement) {
+            
+            // CORREÇÃO: Verifica se o input já tem a "trava" (lock) de 'isSaving'.
+            // O nome disso é "data-attribute"
+            if (inputElement.dataset.isSaving === 'true') {
+                return; // Para a execução, pois já está salvando
+            }
+            // Adiciona a trava para impedir que o evento 'blur' rode
+            inputElement.dataset.isSaving = 'true';
+
+
+            const taskText = inputElement.value.trim(); 
+
+            if (taskText) {
+                // 1. Cria o Cartão (div)
+                const taskCard = document.createElement('div');
+                taskCard.className = 'task-card';
+                
+                // Adiciona uma descrição padrão.
+                taskCard.dataset.description = "Descrição não definida. Clique em ✏️ para editar.";
+                
+                // 2. Cria o SPAN para o texto (título)
+                const textSpan = document.createElement('span');
+                textSpan.textContent = taskText;
+                
+                // 3. Cria o container dos botões
+                const controlsDiv = document.createElement('div');
+                controlsDiv.className = 'task-card-controls';
+                
+                // 4. Cria o botão de Editar (✏️)
+                const editBtn = document.createElement('span');
+                editBtn.className = 'edit-task-btn';
+                editBtn.textContent = '✏️';
+
+                // 5. Cria o botão de Apagar (X)
+                const deleteBtn = document.createElement('span');
+                deleteBtn.className = 'delete-task-btn';
+                deleteBtn.textContent = 'X';
+
+                // 6. Adiciona botões ao container de controles
+                controlsDiv.appendChild(editBtn);
+                controlsDiv.appendChild(deleteBtn);
+
+                // 7. Adiciona o texto e os controles DENTRO do cartão
+                taskCard.appendChild(textSpan);
+                taskCard.appendChild(controlsDiv);
+                
+                // 8. Insere o cartão completo na coluna
+                columnElement.insertBefore(taskCard, inputElement.nextSibling);
+            }
+            
+            // Remove a caixa de texto
+            inputElement.remove();
+        }
+
+        /* --- Funções de Seleção, Movimento e Apagar (Continuam iguais) --- */
+
+        let selectedTask = null;
+        const lanesContainer = document.querySelector('.lanes-container');
+        const infoBox = document.getElementById('info-box-content');
+
+        lanesContainer.addEventListener('click', function(e) {
+            
+            // LÓGICA DE APAGAR
+            if (e.target.classList.contains('delete-task-btn')) {
+                const taskCard = e.target.closest('.task-card');
+                
+                if (taskCard === selectedTask) {
+                    selectedTask = null;
+                    infoBox.innerHTML = "<p>Selecione uma tarefa...</p>";
+                }
+                taskCard.remove();
+                return; 
+            }
+
+            // LÓGICA DE EDITAR
+            if (e.target.classList.contains('edit-task-btn')) {
+                const taskCard = e.target.closest('.task-card');
+                const textSpan = taskCard.querySelector('span:first-child'); 
+
+                const currentTitle = textSpan.textContent;
+                const newTitle = prompt("Modificar TÍTULO da tarefa:", currentTitle);
+
+                const currentDesc = taskCard.dataset.description;
+                const newDesc = prompt("Modificar DESCRIÇÃO da tarefa:", currentDesc);
+
+                if (newTitle !== null && newTitle.trim() !== "") {
+                    textSpan.textContent = newTitle.trim();
+                }
+                if (newDesc !== null) {
+                    taskCard.dataset.description = newDesc.trim() || "Sem descrição.";
+                }
+                
+                if (taskCard === selectedTask) {
+                    infoBox.innerHTML = `<p>${taskCard.dataset.description}</p>`;
+                }
+                
+                return; 
+            }
+
+            // LÓGICA DE SELEÇÃO
+            const clickedCard = e.target.closest('.task-card');
+            
+            if (clickedCard) {
+                if (selectedTask) {
+                    selectedTask.classList.remove('selected');
+                }
+                
+                clickedCard.classList.add('selected');
+                selectedTask = clickedCard; 
+                
+                infoBox.innerHTML = `<p>${selectedTask.dataset.description}</p>`;
+            } 
+            else if (e.target.classList.contains('tasks-column')) {
+                if (selectedTask) {
+                    selectedTask.classList.remove('selected');
+                    selectedTask = null;
+                    infoBox.innerHTML = "<p>Selecione uma tarefa...</p>";
+                }
+            }
+        });
+
+        // Funções de Mover (Setas)
+        const navLeft = document.getElementById('nav-left');
+        const navRight = document.getElementById('nav-right');
+
+        navLeft.addEventListener('click', function() {
+            moveTask('left');
+        });
+
+        navRight.addEventListener('click', function() {
+            moveTask('right');
+        });
+
+        function moveTask(direction) {
+            if (!selectedTask) {
+                return; 
+            }
+            const currentColumn = selectedTask.parentElement;
+            let targetColumn = null;
+            if (direction === 'left') {
+                targetColumn = currentColumn.previousElementSibling;
+            } else { 
+                targetColumn = currentColumn.nextElementSibling;
+            }
+            if (targetColumn && targetColumn.classList.contains('tasks-column')) {
+                targetColumn.appendChild(selectedTask);
+            }
+        }
+
+    </script>
+</body>
+</html>
