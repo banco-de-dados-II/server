@@ -41,23 +41,17 @@ def tarefas_get():
     if not u:
         return redirect(url_for('index'))
 
-    with db.TarefaPessoa.procurar('tarefa_id', pessoa_id=u.id) as cur:
-        tarefa_ids = cur.fetchall()
-
-    if len(tarefa_ids) == 0:
-        return render_template(
-            'tarefas.html',
-            tarefas=[],
-        )
-
-    stmt = f'select status, titulo from tarefas where id in ({','.join(str(tarefa_id[0]) for tarefa_id in tarefa_ids)})'
     cur = g.db.cursor(dictionary=True)
-    cur.execute(stmt)
-    tarefas = cur.fetchall()
+    cur.execute(
+        'call tarefas_da_pessoa (%s)',
+        (u.id,),
+    )
+
     return render_template(
         'tarefas.html',
-        tarefas=tarefas,
+        tarefas=cur.fetchall(),
     )
+
 
 @app.get('/perfil/')
 def perfil_get():
