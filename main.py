@@ -6,6 +6,7 @@ from markupsafe import escape
 from globals import *
 
 import db
+import db_gen
 
 def escape_str(s):
     return str(escape(s))
@@ -42,14 +43,13 @@ def tarefas_get():
         return redirect(url_for('index'))
 
     cur = g.db.cursor(dictionary=True)
-    cur.execute(
-        'call tarefas_da_pessoa (%s)',
-        (u.id,),
-    )
+    cur.execute('call tarefas_da_pessoa(%s)', (u.id,))
+    tarefas = cur.fetchall()
+    print(tarefas)
 
     return render_template(
         'tarefas.html',
-        tarefas=cur.fetchall(),
+        tarefas=tarefas,
     )
 
 
@@ -97,3 +97,8 @@ def pessoa_mudar_post():
     )
 
     return perfil(u)
+
+@app.post('/reset')
+def rest_post():
+    db_gen.do(g.db)
+    return redirect(request.origin)

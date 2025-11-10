@@ -127,14 +127,13 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `bd2`.`projetos_has_equipe`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `bd2`.`projetos_has_equipe` ;
+DROP TABLE IF EXISTS `bd2`.`projetos_has_equipes` ;
 
 CREATE TABLE IF NOT EXISTS `bd2`.`projetos_has_equipes` (
   `projeto_id` INT NOT NULL,
   `equipe_id` INT NOT NULL,
   `tag` VARCHAR(50) NULL COMMENT 'exemplo: desenvolvedores, designers')
 ENGINE = InnoDB;
-
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

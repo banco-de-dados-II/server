@@ -2,11 +2,13 @@
 
 import random
 import itertools
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, date
 from time import time
 from pathlib import Path
 
-def gen(cur, l):
+def gen(db, l):
+    src = ''
+
     c = random.choice
 
     time_start = datetime.fromtimestamp(time())
@@ -24,61 +26,96 @@ def gen(cur, l):
     cores = ['Azul Celeste', 'Amarelo Ouro', 'Vermelho Escarlate', 'Verde Menta', 'Laranja Abóbora', 'Roxo Lavanda', 'Cinza Claro', 'Marrom Café', 'Azul Royal', 'Branco Neve', 'Preto Carbono', 'Verde Musgo', 'Amarelo Canário', 'Coral', 'Vinho', 'Turquesa', 'Bege Claro', 'Azul Petróleo', 'Rosa Bebê', 'Cinza Médio', 'Dourado', 'Prata', 'Azul Índigo', 'Pêssego', 'Lilás', 'Verde Floresta', 'Púrpura', 'Fucsia', 'Magenta', 'Ciano', 'Azul Claro', 'Vermelho Carmim', 'Castanho', 'Verde Limão', 'Mostarda', 'Branco Neve', 'Cinza Escuro', 'Amarelo Mostarda', 'Azul Marinho', 'Vermelho Vinho', 'Cinza Grafite', 'Verde Oliva', 'Laranja Tangerina', 'Vermelho Ferrari', 'Azul Tiffany', 'Azul Turquesa', 'Azul Claro Pastel', 'Rosa Fúcsia', 'Verde Água', 'Azul Céu', 'Azul Petróleo', 'Chocolate', 'Creme', 'Ambar', 'Laranja Coral', 'Verde Neon', 'Lilás Claro', 'Azul Esverdeado', 'Azul Jeans', 'Púrpura Claro', 'Rosa Claro', 'Vermelho Bordeaux', 'Branco Gelo', 'Azul Real', 'Verde Esmeralda', 'Azul Anil', 'Amarelo Solar', 'Vinho Claro', 'Marrom Claro', 'Terracota', 'Caramelo', 'Azul Céu Claro', 'Pêssego Claro', 'Verde Pistache', 'Rosa Flamingo', 'Azul Turquesa Claro', 'Rosa Quartzo', 'Verde Musgo Claro', 'Lavanda Claro', 'Azul Denim', 'Azul Claro Pastel', 'Azul Tiffany Claro', 'Amarelo Claro', 'Verde Cacto', 'Laranja Pastel', 'Coral Claro', 'Vermelho Tomate', 'Lilás Escuro', 'Amarelo Pastel', 'Azul Royal Claro', 'Verde Alface', 'Preto Fosco', 'Laranja Escuro', 'Verde Mentolado', 'Azul Elétrico', 'Verde Tropa', 'Azul Marinho Claro', 'Cinza Beijinho', 'Vermelho Sangue', 'Amarelo Claro Pastel']
 
     def n():
-        global l
-
         return random.randint(1, l)
 
     def days():
         return timedelta(days=random.randint(3, 30))
 
     def gen_date():
-        global time_start, time_end
-
         delta = time_end - time_start
         int_delta = (delta.days * 24 * 60 * 60) + delta.seconds
         random_second = random.randrange(int_delta)
         return time_start + timedelta(seconds=random_second)
 
-
     src = ''
 
-    def add(s):
-        src += s
 
-    add('use bd2;')
-
-    for i in range(l):
-        nome = c(nomes)
-        email = f'{".".join(nome.split())}{n()}@{c(emails_servers)}.{c(doms)}'
-        add(f'insert into pessoas (nome, email) value {nome, email};')
-
-        equipe = f'{c(objs)}.{c(fruitas)}{n()}'
-        add(f'insert into equipes (nome) value ({equipe!r});')
-
-        tarefa = f'{c(verbos)} {random.randint(1, 30)} {c(comida)}'
-        add(f'insert into tarefas (titulo, status, projeto_id, criador_id, data_id) value {tarefa, c(tarefas_status), n(), n(), n()};')
-
-        projeto = f'{c(cores)} {n()}'
-        add(f'insert into projetos (titulo, data_id) value {projeto, n()};')
-
-        criacao = gen_date()
-        fazendo = criacao + days()
-        conclusao = fazendo + days()
-        limite = conclusao + days()
-        datas = tuple('"'+(d.strftime("%Y-%m-%d"))+'"' for d in [criacao, fazendo, conclusao, limite])
-        add(f'insert into datas (criacao, fazendo, conclusao, limite) value {datas};')
-
-        add(f'insert into equipes_has_pessoas (equipe_id, pessoa_id, tag) value {n(), n(), c(cores)};')
-        add(f'insert into tarefas_has_pessoas (tarefa_id, pessoa_id, tag) value {n(), n(), c(cores)};')
-        add(f'insert into projetos_has_pessoas (projeto_id, pessoa_id, tag) value {n(), n(), c(cores)};')
-        add(f'insert into projetos_has_equipes (projeto_id, equipe_id, tag) value {n(), n(), c(cores)};')
-
-    cur.execute(src)
- 
-def do(db, l=10):
     with db.cursor() as cur:
-        for file in [open(path, 'rb') for path in Path('.').rglob('*.sql')]:
-            cur.execute(file.read())
-            file.close()
+        for i in range(l):
+            nome = c(nomes)
+            cur.execute(
+                'insert into pessoas (nome, email) values (%s, %s)',
+                (
+                    nome,
+                    f'{".".join(nome.split())}{n()}@{c(emails_servers)}.{c(doms)}',
+                ),
+            )
 
-        gen(cur, l)
+            cur.execute(
+                f'insert into equipes (nome) value (%s)',
+                (f'{c(objs)}.{c(fruitas)}{n()}',),
+            )
+
+            cur.execute(
+                'insert into tarefas (titulo, status, projeto_id, criador_id, data_id) value (%s, %s, %s, %s, %s)',
+                (
+                    f'{c(verbos)} {random.randint(1, 30)} {c(comida)}',
+                    c(tarefas_status),
+                    n(),
+                    n(),
+                    n(),
+                )
+            )
+
+            cur.execute(
+                f'insert into projetos (titulo, data_id) value (%s, %s)',
+                (
+                    f'{c(cores)} {n()}',
+                    n(),
+                ),
+            )
+
+            criacao = gen_date()
+            fazendo = criacao + days()
+            conclusao = fazendo + days()
+            limite = conclusao + days()
+            cur.execute(
+                'insert into datas (criacao, fazendo, conclusao, limite) value (%s, %s, %s, %s)',
+                [d.strftime("%Y-%m-%d") for d in [criacao, fazendo, conclusao, limite]],
+            )
+
+            cur.execute(
+                f'insert into equipes_has_pessoas (equipe_id, pessoa_id, tag) value (%s, %s, %s)',
+                (n(), n(), c(cores)),
+            )
+            cur.execute(
+                f'insert into tarefas_has_pessoas (tarefa_id, pessoa_id, tag) value (%s, %s, %s)',
+                (n(), n(), c(cores)),
+            )
+            cur.execute(
+                f'insert into projetos_has_pessoas (projeto_id, pessoa_id, tag) value (%s, %s, %s)',
+                (n(), n(), c(cores)),
+            )
+            cur.execute(
+                f'insert into projetos_has_equipes (projeto_id, equipe_id, tag) value (%s, %s, %s)',
+                (n(), n(), c(cores)),
+            )
+
+def do(db, l=10):
+    def file(path):
+        with db.cursor() as cur, open(path) as file:
+            cur.execute(file.read())
+
+    with db.cursor() as cur:
+        cur.execute('truncate table datas')
+        cur.execute('truncate table projetos')
+        cur.execute('truncate table pessoas')
+        cur.execute('truncate table equipes_has_pessoas')
+        cur.execute('truncate table tarefas_has_pessoas')
+        cur.execute('truncate table projetos_has_pessoas')
+        cur.execute('truncate table projetos_has_equipes')
+
+    gen(db, l)
+    file('proc.sql')
+
+    db.commit()

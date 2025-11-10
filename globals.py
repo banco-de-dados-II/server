@@ -5,6 +5,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 import mysql.connector
 
+import db_gen
+
 app = Flask(__name__, static_url_path='/static')
 app.secret_key = secrets.token_urlsafe(16)
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
