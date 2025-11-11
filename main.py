@@ -36,29 +36,11 @@ def index():
 def login_get():
     return render_template('login.html')
 
-@app.get('/tarefas/')
-def tarefas_get():
-    u = usuario()
-    if not u:
-        return redirect(url_for('index'))
-
-    tarefas = db.call_proc(
-        g.db.cursor(dictionary=True),
-        'card_da_pessoa',
-        u.id,
-    )
-
-    return render_template(
-        'tarefas.html',
-        tarefas=tarefas,
-    )
-
-
 @app.get('/perfil/')
 def perfil_get():
     u = usuario()
     if not u:
-        return redirect(url_for('index'))
+        return redirect(url_for('login_get'))
 
     return render_template(
         'perfil.html',
@@ -101,5 +83,44 @@ def pessoa_mudar_post():
 
 @app.post('/reset')
 def rest_post():
+    session.pop('usuario')
     db_gen.do(g.db)
     return redirect(request.origin)
+
+@app.get('/tarefas/')
+def tarefas_get():
+    u = usuario()
+    if not u:
+        return redirect(url_for('login_get'))
+
+    tarefas = db.call_proc(
+        g.db.cursor(dictionary=True),
+        'card_da_pessoa',
+        u.id,
+    )
+
+    print(tarefas)
+
+    return render_template(
+        'tarefas.html',
+        tarefas=tarefas,
+    )
+
+@app.get('/equipes/')
+def equipes_get():
+    u = usuario()
+    if not u:
+        return redirect(url_for('login_get'))
+
+    equipes = db.call_proc(
+        g.db.cursor(dictionary=True),
+        'equipes_da_pessoa',
+        u.id,
+    )
+
+    print(equipes)
+
+    return render_template(
+        'equipes.html',
+        equipes=equipes,
+    )

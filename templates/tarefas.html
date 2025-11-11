@@ -7,6 +7,7 @@
     {% for item in tarefas %}
     <li>
         <h2>{{ item['titulo'] }}</h2>
+        <p>tag: {{ item['tag'] }}</p>
         <p>status: {{ item['status'] }}</p>
         <p>nome do projeto: {{ item['projeto_nome'] }}</p>
         <p>data de criacao: {{ item['criacao'] }}</p>

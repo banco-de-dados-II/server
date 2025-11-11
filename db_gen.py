@@ -84,21 +84,24 @@ def gen(db, l):
                 [d.strftime("%Y-%m-%d") for d in [criacao, fazendo, conclusao, limite]],
             )
 
+            def tag():
+                return f'{c(trabalhos)} {c(cores)}'
+
             cur.execute(
                 f'insert into equipes_has_pessoas (equipe_id, pessoa_id, tag) value (%s, %s, %s)',
-                (n(), n(), c(cores)),
+                (n(), n(), tag()),
             )
             cur.execute(
                 f'insert into tarefas_has_pessoas (tarefa_id, pessoa_id, tag) value (%s, %s, %s)',
-                (n(), n(), c(cores)),
+                (n(), n(), tag()),
             )
             cur.execute(
                 f'insert into projetos_has_pessoas (projeto_id, pessoa_id, tag) value (%s, %s, %s)',
-                (n(), n(), c(cores)),
+                (n(), n(), tag()),
             )
             cur.execute(
                 f'insert into projetos_has_equipes (projeto_id, equipe_id, tag) value (%s, %s, %s)',
-                (n(), n(), c(cores)),
+                (n(), n(), tag()),
             )
 
 def do(db, l=10):
@@ -110,6 +113,7 @@ def do(db, l=10):
         cur.execute('truncate table datas')
         cur.execute('truncate table projetos')
         cur.execute('truncate table pessoas')
+        cur.execute('truncate table equipes')
         cur.execute('truncate table equipes_has_pessoas')
         cur.execute('truncate table tarefas_has_pessoas')
         cur.execute('truncate table projetos_has_pessoas')
