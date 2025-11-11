@@ -42,9 +42,11 @@ def tarefas_get():
     if not u:
         return redirect(url_for('index'))
 
-    cur = g.db.cursor(dictionary=True)
-    cur.execute('call card_da_pessoa(%s)', (u.id,))
-    tarefas = cur.fetchall()
+    tarefas = db.call_proc(
+        g.db.cursor(dictionary=True),
+        'card_da_pessoa',
+        u.id,
+    )
 
     return render_template(
         'tarefas.html',

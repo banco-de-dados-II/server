@@ -4,6 +4,17 @@ import json
 from flask import g
 from globals import *
 
+def call_proc(cur, proc_name, *args):
+    stmt = f'call {proc_name}'
+    stmt += '('
+    for i in range(len(args)):
+        if i > 0:
+            stmt += ','
+        stmt += '%s'
+    stmt += ')'
+    cur.execute(stmt, args)
+    return cur.fetchall()
+
 class Tabela:
     def mudar(self, **kargs):
         for k, v in kargs.items():
