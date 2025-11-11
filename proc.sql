@@ -2,6 +2,7 @@ use bd2;
 
 drop procedure if exists bd2.card_da_pessoa;
 drop procedure if exists bd2.equipes_da_pessoa;
+drop procedure if exists bd2.projetos_da_pessoa;
 
 delimiter $
 
@@ -30,6 +31,19 @@ begin
     where
         pessoa_id = q_pessoa_id and
         equipes.id = equipes_has_pessoas.equipe_id
+    ;
+end $
+
+create procedure bd2.projetos_da_pessoa (IN q_pessoa_id INT)
+begin
+    select titulo, criacao, fazendo, conclusao, limite
+    from projetos
+    inner join datas
+    on datas.id = projetos.data_id
+    where projetos.id in (
+          select projeto_id from projetos_has_pessoas
+          where projetos_has_pessoas.pessoa_id = q_pessoa_id
+        )
     ;
 end $
 

@@ -83,8 +83,9 @@ def pessoa_mudar_post():
 
 @app.post('/reset')
 def rest_post():
-    session.pop('usuario')
-    db_gen.do(g.db)
+    if session.get('usuario'):
+        session.pop('usuario')
+    db_gen.do(g.db, 100)
     return redirect(request.origin)
 
 @app.get('/tarefas/')
@@ -98,8 +99,6 @@ def tarefas_get():
         'card_da_pessoa',
         u.id,
     )
-
-    print(tarefas)
 
     return render_template(
         'tarefas.html',
@@ -118,9 +117,24 @@ def equipes_get():
         u.id,
     )
 
-    print(equipes)
-
     return render_template(
         'equipes.html',
         equipes=equipes,
+    )
+
+@app.get('/projetos/')
+def projetos_get():
+    u = usuario()
+    if not u:
+        return redirect(url_for('login_get'))
+
+    projetos = db.call_proc(
+        g.db.cursor(dictionary=True),
+        'projetos_da_pessoa',
+        u.id,
+    )
+
+    return render_template(
+        'projetos.html',
+        projetos=projetos,
     )

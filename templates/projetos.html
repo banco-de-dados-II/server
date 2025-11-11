@@ -1,0 +1,18 @@
+{% set title = "equipes" %}
+{% include "head.html" %}
+
+<p>projetos de {{ nome }}</p>
+
+<ul>
+    {% for item in projetos %}
+    <li>
+        <h2>{{ item['titulo'] }}</h2>
+        <p>criacao: {{ item['criacao'] }}</p>
+        <p>fazendo: {{ item['fazendo'] }}</p>
+        <p>conclusao: {{ item['conclusao'] }}</p>
+        <p>limite: {{ item['limite'] }}</p>
+    </li>
+    {% endfor %}
+</ul>
+
+{% include "foot.html" %}
