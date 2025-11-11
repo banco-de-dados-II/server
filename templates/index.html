@@ -1,32 +1,6 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% set title = "index" %}
+{% include "head.html" %}
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/holiday.css" />
+<button hx-post="/reset" hx-swap=none>reset</button>
 
-    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js" integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz" crossorigin="anonymous"></script>
-
-    <title>Painel de Gerenciamento - db2</title>
-</head>
-<body>
-    {% include 'nav.html' %}
-
-    <button hx-post="/reset" hx-swap=none>reset</button>
-
-    <form action="/login" method="POST">
-        <label>id</label>
-        <input type="text" name="id">
-
-        <label>nome</label>
-        <input type="text" name="nome">
-
-        <label>email</label>
-        <input type="text" name="email">
-
-        <br/>
-        <input type="submit" value="enviar">
-    </form>
-</body>
-</html>
+{% include "foot.html" %}

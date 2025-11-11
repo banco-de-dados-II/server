@@ -1,25 +1,19 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/holiday.css" />
-    <title>Painel de Gerenciamento - db2</title>
-</head>
-<body>
-    {% include 'nav.html' %}
+{% set title = "perfil" %}
+{% include "head.html" %}
 
-    <p>nome `{{ nome }}`</p>
-    <p>email `{{ email }}`</p>
+<ul>
+    <li>nome: {{ nome }}</li>
+    <li>email: {{ email }}</li>
+</ul>
 
-    <form method="POST" action="/pessoa-mudar">
-        <label>mudar nome</label>
-        <input text="text" name="nome" value="{{ nome }}">
+<form method="POST" action="/pessoa-mudar">
+    <label>mudar nome</label>
+    <input text="text" name="nome" value="{{ nome }}">
 
-        <label>mudar email</label>
-        <input text="text" name="email" value="{{ email }}">
+    <label>mudar email</label>
+    <input text="text" name="email" value="{{ email }}">
 
-        <input type="submit">
-    </form>
-</body>
-</html>
+    <input type="submit" value="mudar"></form>
+</form>
+
+{% include "foot.html" %}

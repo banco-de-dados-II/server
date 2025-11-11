@@ -1,24 +1,21 @@
-<head>
-    <title>tarefas</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/holiday.css" />
-</head>
-<home>
-    {% include 'nav.html' %}
+{% set title = "tarefas" %}
+{% include "head.html" %}
 
-    <p>tarefas de {{ nome }}</p>
+<p>tarefas de {{ nome }}</p>
 
-    <ul>
-        {% for item in tarefas %}
-        <li>
-            <h2>{{ item['titulo'] }}</h2>
-            <p>status: {{ item['status'] }}</p>
-            <p>nome do projeto: {{ item['projeto_nome'] }}</p>
-            <p>data de criacao: {{ item['criacao'] }}</p>
-            <p>fazendo deis de: {{ item['fazendo'] }}</p>
-            <p>concluido em: {{ item['conclusao'] }}</p>
-            <p>limite: {{ item['limite'] }}</p>
-            <p>criador: {{ item['criador_nome'] }}</p>
-        </li>
-        {% endfor %}
-    </ul>
-</home>
+<ul>
+    {% for item in tarefas %}
+    <li>
+        <h2>{{ item['titulo'] }}</h2>
+        <p>status: {{ item['status'] }}</p>
+        <p>nome do projeto: {{ item['projeto_nome'] }}</p>
+        <p>data de criacao: {{ item['criacao'] }}</p>
+        <p>começou a fazer em: {{ item['fazendo'] }}</p>
+        <p>concluido em: {{ item['conclusao'] }}</p>
+        <p>limite: {{ item['limite'] }}</p>
+        <p>criador: {{ item['criador_nome'] }}</p>
+    </li>
+    {% endfor %}
+</ul>
+
+{% include "foot.html" %}

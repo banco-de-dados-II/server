@@ -1,25 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>db2</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/holiday.css" />
-</head>
-<body>
-    {% include 'nav.html' %}
-    <div id="sabrina">
-        <h2>login:<h2>
-            <form method="POST" action="/login">
-                <label>nome</label>
-                <input text="text" name="nome"><br>
+{% set title = "login" %}
+{% include "head.html" %}
 
-                <label>email</label>
-                <input text="text" name="email"><br>
+<div id="sabrina">
+    <h2>login:<h2>
+        <form action="/login" method="POST">
+            <label>id</label>
+            <input type="text" name="id">
 
-                <input type="submit">
-            </form>            
+            <label>nome</label>
+            <input type="text" name="nome">
+
+            <label>email</label>
+            <input type="text" name="email">
+
+            <br/>
+            <input type="submit" value="enviar">
         </form>
-    </div>
-</body>
-</html>
+        </form>
+</div>
+
+{% include "foot.html" %}
