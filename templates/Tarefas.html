@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quadro Kanban</title>
+  <style>
+    body {
+      background-color: #0d0d0d;
+      color: #fff;
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .kanban-container {
+      border: 2px solid #fff;
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      justify-content: flex-start;
+    }
+
+    .btn {
+      border: 2px solid #ff6b6b;
+      border-radius: 10px;
+      padding: 10px 20px;
+      color: #ff6b6b;
+      background: transparent;
+      cursor: pointer;
+      font-size: 18px;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      background: #ff6b6b;
+      color: #0d0d0d;
+    }
+
+    .dropdown, .task-info {
+      border: 2px solid #ff6b6b;
+      border-radius: 10px;
+      padding: 10px 15px;
+      color: #ff6b6b;
+      flex: 1;
+    }
+
+    .dropdown ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .dropdown li {
+      margin: 5px 0;
+    }
+
+    .kanban-board {
+      display: flex;
+      gap: 20px;
+      justify-content: space-between;
+    }
+
+    .column {
+      flex: 1;
+      border: 2px solid #fff;
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 300px;
+    }
+
+    .column h3 {
+      margin: 5px 0 15px;
+      border-bottom: 2px solid #fff;
+      width: 100%;
+      text-align: center;
+      padding-bottom: 5px;
+    }
+
+    .task {
+      border: 2px solid #4dabff;
+      border-radius: 8px;
+      padding: 8px 15px;
+      margin-bottom: 10px;
+      width: 80%;
+      text-align: center;
+      color: #4dabff;
+      font-weight: 500;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="kanban-container">
+    <div class="top-bar">
+      <button class="btn">←</button>
+      <button class="btn">→</button>
+
+      <div class="dropdown">
+        <ul>
+          <li>* a fazer</li>
+          <li>* fazendo</li>
+          <li>* feito</li>
+        </ul>
+      </div>
+
+      <div class="task-info">&lt;info da tarefa&gt;</div>
+    </div>
+
+    <div class="kanban-board">
+      <div class="column">
+        <h3>a fazer</h3>
+        <div class="task">a</div>
+        <div class="task">b</div>
+        <div class="task">c</div>
+      </div>
+
+      <div class="column">
+        <h3>fazendo</h3>
+        <div class="task">d</div>
+        <div class="task">f</div>
+      </div>
+
+      <div class="column">
+        <h3>feito</h3>
+        <div class="task">e</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
