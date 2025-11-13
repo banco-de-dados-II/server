@@ -7,7 +7,7 @@ from time import time
 from pathlib import Path
 
 def do(db, l=10):
-    with db.cursor() as cur:
+    with db.cursor(buffered=True) as cur:
         cur.execute('truncate table datas')
         cur.execute('truncate table projetos')
         cur.execute('truncate table pessoas')
@@ -50,7 +50,7 @@ def do(db, l=10):
     src = ''
 
 
-    with db.cursor() as cur:
+    with db.cursor(buffered=True) as cur:
         for i in range(l):
             nome = c(nomes)
             cur.execute(

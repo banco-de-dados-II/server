@@ -82,7 +82,7 @@ def tarefas_get():
     if not u:
         return redirect(url_for('login_get'))
 
-    with g.db.cursor(dictionary=True) as cur:
+    with g.db.cursor(dictionary=True, buffered=True) as cur:
         tarefas = db.call_proc(
             cur,
             'card_da_pessoa',
@@ -102,7 +102,7 @@ def equipes_get(id=None):
         return redirect(url_for('login_get'))
 
     if id:
-        with g.db.cursor(dictionary=True) as cur:
+        with g.db.cursor(dictionary=True, buffered=True) as cur:
             cur.execute('select id, nome, tag from equipes inner join equipes_has_pessoas on equipe_id = id where id = %s', (id,))
             return render_template('equipe.html', equipe=cur.fetchone())
 
@@ -124,7 +124,7 @@ def equipes_post():
     nome = form_get('nome')
     tag = form_get('tag')
 
-    with g.db.cursor() as cur:
+    with g.db.cursor(buffered=True) as cur:
         cur.execute('update equipes set nome = %s where id = %s', (nome, id))
         cur.execute('update equipes_has_pessoas set tag = %s where equipe_id = %s and pessoa_id = %s', (tag, id, u.id))
         g.db.commit()
@@ -137,7 +137,7 @@ def equipes_criar_post():
     nome = form_get('nome')
 
     id: int
-    with g.db.cursor() as cur:
+    with g.db.cursor(buffered=True) as cur:
         cur.execute('insert into equipes (nome) value (%s)', (nome,))
         g.db.commit()
         id = cur.lastrowid
@@ -153,7 +153,7 @@ def equipes_sair_post():
         return redirect(url_for('login_get'))
     id = form_get('id')
 
-    with g.db.cursor() as cur:
+    with g.db.cursor(buffered=True) as cur:
         cur.execute('delete from equipes_has_pessoas where equipe_id = %s and pessoa_id = %s', (id, u.id))
 
     g.db.commit()
@@ -162,13 +162,22 @@ def equipes_sair_post():
 
 @app.post('/equipes/nova-pessoa')
 def equipes_nova_pessoa():
+    equipe_id = int(form_get('id'))
     nome = form_get('nome')
     tag = form_get('tag')
 
-    with g.db.cursor() as cur:
-        cur.execute('select id from pessoas where nome = %s', (nome,))
-        id = cur.fetchone()
-        cur.execute('')
+    with g.db.cursor(dictionary=True, buffered=True) as cur:
+        pessoa_id = db.Pessoa.procurar('id', nome=nome).fetchone()[0]
+
+        print(equipe_id, pessoa_id, tag)
+
+        cur.execute(
+            f'call equipe_adicionar_pessoa ({equipe_id}, {pessoa_id}, "{tag}")')
+
+        g.db.commit()
+
+        return redirect(url_for('equipes_get', id=equipe_id))
+
 
 @app.get('/projetos/')
 def projetos_get():

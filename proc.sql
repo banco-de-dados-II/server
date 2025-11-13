@@ -48,8 +48,10 @@ begin
     ;
 end $
 
-create procedure bd2.equipe_adicionar_pessoa (IN q_pessoa_nome VARCHAR(100))
+create procedure bd2.equipe_adicionar_pessoa (IN q_equipe_id INT, IN q_pessoa_id INT, IN q_tag VARCHAR(50))
 begin
+    replace into equipes_has_pessoas (equipe_id, pessoa_id, tag)
+    value (q_equipe_id, q_pessoa_id, q_tag) ;
 end $
 
 delimiter ;

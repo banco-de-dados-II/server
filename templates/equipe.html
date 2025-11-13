@@ -32,13 +32,14 @@
 <h2>adicionar pessoa na equipe</h2>
 
 <form action="/equipes/nova-pessoa" method="POST">
-    <input type="hidden" value="{{ equipe['id'] }}">
+    <input type="hidden" name="id" value="{{ equipe['id'] }}">
 
     <label>nome da pessoa</label>
     <input name="nome" type="text">
 
     <label>tag</label>
     <input name="tag" type="text">
+
     <button type="submit">adicionar pessoa a equipe</button>
 </form>
 
