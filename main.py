@@ -3,8 +3,8 @@ import json
 
 from flask import render_template, request, redirect, url_for, send_file, g, session
 from markupsafe import escape
-from globals import *
 
+from globals import *
 import db
 import db_gen
 

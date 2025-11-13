@@ -6,7 +6,17 @@ from datetime import timedelta, datetime, date
 from time import time
 from pathlib import Path
 
-def gen(db, l):
+def do(db, l=10):
+    with db.cursor() as cur:
+        cur.execute('truncate table datas')
+        cur.execute('truncate table projetos')
+        cur.execute('truncate table pessoas')
+        cur.execute('truncate table equipes')
+        cur.execute('truncate table equipes_has_pessoas')
+        cur.execute('truncate table tarefas_has_pessoas')
+        cur.execute('truncate table projetos_has_pessoas')
+        cur.execute('truncate table projetos_has_equipes')
+
     src = ''
 
     c = random.choice
@@ -104,23 +114,7 @@ def gen(db, l):
                 (n(), n(), tag()),
             )
 
-def do(db, l=10):
-    def file(path):
-        with db.cursor() as cur, open(path) as file:
-            cur.execute(file.read())
-
-    with db.cursor() as cur:
-        cur.execute('truncate table datas')
-        cur.execute('truncate table projetos')
-        cur.execute('truncate table pessoas')
-        cur.execute('truncate table equipes')
-        cur.execute('truncate table equipes_has_pessoas')
-        cur.execute('truncate table tarefas_has_pessoas')
-        cur.execute('truncate table projetos_has_pessoas')
-        cur.execute('truncate table projetos_has_equipes')
-
-    gen(db, l)
-    file('proc.sql')
-    file('view.sql')
+    # file('proc.sql')
+    # file('view.sql')
 
     db.commit()
