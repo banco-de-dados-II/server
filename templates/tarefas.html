@@ -1,7 +1,17 @@
 {% set title = "tarefas" %}
 {% include "head.html" %}
 
-<p>tarefas de {{ nome }}</p>
+<h1>tarefas de {{ nome }}</h1>
+
+<h2>adicionar</h2>
+
+<form action="/tarefas" method="POST">
+    <label>titulo</label>
+    <input name="titulo" type="text">
+    <button type="submit">adicionar nova tarefa</button>
+</form>
+
+<h2>tarefas</h2>
 
 <ul>
     {% for item in tarefas %}

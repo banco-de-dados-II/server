@@ -3,6 +3,7 @@ use bd2;
 drop procedure if exists bd2.card_da_pessoa;
 drop procedure if exists bd2.equipes_da_pessoa;
 drop procedure if exists bd2.projetos_da_pessoa;
+drop procedure if exists bd2.equipe_adicionar_pessoa;
 
 delimiter $
 
@@ -45,6 +46,10 @@ begin
           where projetos_has_pessoas.pessoa_id = q_pessoa_id
         )
     ;
+end $
+
+create procedure bd2.equipe_adicionar_pessoa (IN q_pessoa_nome VARCHAR(100))
+begin
 end $
 
 delimiter ;

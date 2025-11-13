@@ -1,7 +1,17 @@
-{% set title = "equipes" %}
+{% set title = "projetos" %}
 {% include "head.html" %}
 
-<p>projetos de {{ nome }}</p>
+<h1>projetos de {{ nome }}</h1>
+
+<h2>adicionar</h2>
+
+<form action="/projetos" method="POST">
+    <label>nome</label>
+    <input name="nome" type="text">
+    <button type="submit">adicionar nova projeto</button>
+</form>
+
+<h2>projeto</h2>
 
 <ul>
     {% for item in projetos %}
