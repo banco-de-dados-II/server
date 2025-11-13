@@ -83,11 +83,7 @@ def tarefas_get():
         return redirect(url_for('login_get'))
 
     with g.db.cursor(dictionary=True, buffered=True) as cur:
-        #tarefas = db.call_proc(cur, 'card_da_pessoa', u.id)
-        cur.execute('call card_da_pessoa(%s)', (u.id,))
-        tarefas = cur.fetchall()
-
-    print(tarefas)
+        tarefas = db.call_proc(cur, 'card_da_pessoa', u.id)
 
     return render_template(
         'tarefas.html',
