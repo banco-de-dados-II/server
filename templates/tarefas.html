@@ -14,17 +14,17 @@
 <h2>tarefas</h2>
 
 <ul>
-    {% for item in tarefas %}
+    {% for tarefa in tarefas %}
     <li>
-        <h2>{{ item['titulo'] }}</h2>
-        <p>tag: {{ item['tag'] }}</p>
-        <p>status: {{ item['status'] }}</p>
-        <p>nome do projeto: {{ item['projeto_nome'] }}</p>
-        <p>data de criacao: {{ item['criacao'] }}</p>
-        <p>começou a fazer em: {{ item['fazendo'] }}</p>
-        <p>concluido em: {{ item['conclusao'] }}</p>
-        <p>limite: {{ item['limite'] }}</p>
-        <p>criador: {{ item['criador_nome'] }}</p>
+        <h2>{{ tarefa['titulo'] }}</h2>
+        <p>tag: {{ tarefa['tag'] }}</p>
+        <p>status: {{ tarefa['status'] }}</p>
+        <p>nome do projeto: {{ tarefa['projeto_nome'] }}</p>
+        <p>data de criacao: {{ tarefa['criacao'] }}</p>
+        <p>começou a fazer em: {{ tarefa['fazendo'] }}</p>
+        <p>concluido em: {{ tarefa['conclusao'] }}</p>
+        <p>limite: {{ tarefa['limite'] }}</p>
+        <p>criador: {{ tarefa['criador_nome'] }}</p>
     </li>
     {% endfor %}
 </ul>

@@ -9,7 +9,8 @@ select
     datas.criacao, datas.fazendo, datas.conclusao, datas.limite,
     pessoas.nome as criador_nome,
     pessoas.id as criador_id,
-    tarefas_has_pessoas.tag as tag
+    tarefas_has_pessoas.tag as tag,
+    tarefas_has_pessoas.pessoa_id as atribuido_id
 from tarefas
 inner join projetos
 on tarefas.projeto_id = projetos.id

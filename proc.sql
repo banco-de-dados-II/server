@@ -11,8 +11,7 @@ create procedure bd2.card_da_pessoa (IN q_pessoa_id INT)
 begin
     select *
     from card
-    where card.criador_id = q_pessoa_id
-    ;
+    where card.atribuido_id = q_pessoa_id ;
 end $
 
 create procedure bd2.equipes_da_pessoa (IN q_pessoa_id INT)
