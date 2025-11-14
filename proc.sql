@@ -6,6 +6,8 @@ drop procedure if exists bd2.projetos_da_pessoa;
 drop procedure if exists bd2.equipe_adicionar_pessoa;
 drop procedure if exists bd2.update_card;
 drop procedure if exists bd2.create_card;
+drop procedure if exists bd2.update_projeto;
+drop procedure if exists bd2.criar_projeto;
 
 delimiter $
 
@@ -38,7 +40,7 @@ end $
 
 create procedure bd2.projetos_da_pessoa (IN q_pessoa_id INT)
 begin
-    select titulo, criacao, fazendo, conclusao, limite
+    select projetos.id as id, titulo, criacao, fazendo, conclusao, limite
     from projetos
     inner join datas
     on datas.id = projetos.data_id
@@ -91,7 +93,7 @@ begin
     insert into datas (criacao, fazendo, conclusao, limite)
     value (q_criacao, q_fazendo, q_conclusao, q_limite) ;
 
-    SET @data_id = LAST_INSERT_ID();
+    set @data_id = LAST_INSERT_ID();
 
     insert into tarefas (status, titulo, projeto_id, data_id, criador_id)
     value (q_status, q_titulo, 69, @data_id, q_criador_id) ;
@@ -100,6 +102,43 @@ begin
 
     insert into tarefas_has_pessoas (tarefa_id, pessoa_id, tag)
     value (@tarefa_id, q_criador_id, q_tag) ;
+end $
+
+create procedure bd2.update_projeto (
+       IN q_id INT,
+       IN q_titulo varchar(100),
+       IN q_criacao date,
+       IN q_fazendo date,
+       IN q_conclusao date,
+       IN q_limite date)
+begin
+    update datas
+    set fazendo = q_fazendo, conclusao = q_conclusao, limite = q_limite
+    where
+    id in (select data_id from projetos where projetos.id = q_id) ;
+
+    update projetos
+    set titulo = q_titulo
+    where id = q_id ;
+end $
+
+create procedure bd2.criar_projeto (
+       OUT q_id INT,
+       IN q_titulo varchar(100),
+       IN q_criacao date,
+       IN q_fazendo date,
+       IN q_conclusao date,
+       IN q_limite date)
+begin
+    insert into datas (criacao, fazendo, conclusao, limite)
+    value (q_criacao, q_fazendo, q_conclusao, q_limite);
+
+    set @data_id = LAST_INSERT_ID();
+
+    insert into projetos (titulo, data_id)
+    value (q_titulo, @data_id);
+
+    set q_id = LAST_INSERT_ID();
 end $
 
 delimiter ;

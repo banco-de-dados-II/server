@@ -26,6 +26,9 @@ def usuario():
 
     return db.Pessoa(**json.loads(result))
 
+def tempo():
+    return datetime.fromtimestamp(time()).strftime("%Y-%m-%d")
+
 @app.context_processor
 def injertar_usuario():
     u = usuario()
@@ -117,7 +120,7 @@ def tarefas_substituir_post():
     with g.db.cursor(buffered=True) as cur:
         if not id:
             u = usuario()
-            criacao = datetime.fromtimestamp(time()).strftime("%Y-%m-%d")
+            criacao = tempo()
             cur.execute('call create_card(%s, %s, %s, %s, %s, %s, %s, %s)',
                         (titulo, 'criador', criacao, None, None, None, status, u.id))
             g.db.commit()
@@ -218,21 +221,51 @@ def equipes_nova_pessoa():
 
 
 @app.get('/projetos/')
-def projetos_get():
+@app.get('/projetos/<int:id>')
+def projetos_get(id=None):
     u = usuario()
     if not u:
         return redirect(url_for('login_get'))
 
-    projetos = db.call_proc(
-        g.db.cursor(dictionary=True),
-        'projetos_da_pessoa',
-        u.id,
-    )
+    with g.db.cursor(dictionary=True, buffered=True) as cur:
+        if id:
+            cur.execute('select projetos.id, projetos.titulo, datas.criacao, datas.fazendo, datas.conclusao, datas.limite from projetos inner join datas on datas.id = projetos.data_id where projetos.id = %s', (id,))
+            g.db.commit()
 
-    return render_template(
-        'projetos.html',
-        projetos=projetos,
-    )
+            return render_template('projeto.html', projeto=cur.fetchone())
+
+        projetos = db.call_proc(
+            cur,
+            'projetos_da_pessoa',
+            u.id,
+        )
+
+        return render_template(
+            'projetos.html',
+            projetos=projetos,
+        )
+
+@app.post('/projetos/mudar')
+def projetos_mudar_post():
+    id = form_get('id')
+    titulo = form_get('titulo')
+    fazendo = form_get('fazendo')
+    conclusao = form_get('conclusao')
+    limite = form_get('limite')
+
+    with g.db.cursor(buffered=True) as cur:
+        if not id:
+            args = (0, titulo, fazendo, conclusao, limite)
+            cur.callproc('criar_projeto', args)
+            return redirect(url_for('projetos_get', id=args[0]))
+
+        cur.execute(
+            'call update_projeto(%s, %s, %s, %s, %s, %s)',
+            (int(id), titulo, tempo(), fazendo, conclusao, limite),
+        )
+        g.db.commit()
+
+        return redirect(url_for('projetos_get', id=int(id)))
 
 @app.post('/pessoa-mudar')
 def pessoa_mudar_post():

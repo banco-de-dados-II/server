@@ -16,7 +16,7 @@
 <ul>
     {% for item in projetos %}
     <li>
-        <h2>{{ item['titulo'] }}</h2>
+        <a href="/projetos/{{ item['id'] }}">{{ item['titulo'] }}</a>
         <p>criacao: {{ item['criacao'] }}</p>
         <p>fazendo: {{ item['fazendo'] }}</p>
         <p>conclusao: {{ item['conclusao'] }}</p>
