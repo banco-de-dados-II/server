@@ -4,6 +4,8 @@ drop procedure if exists bd2.card_da_pessoa;
 drop procedure if exists bd2.equipes_da_pessoa;
 drop procedure if exists bd2.projetos_da_pessoa;
 drop procedure if exists bd2.equipe_adicionar_pessoa;
+drop procedure if exists bd2.update_card;
+drop procedure if exists bd2.create_card;
 
 delimiter $
 
@@ -51,6 +53,53 @@ create procedure bd2.equipe_adicionar_pessoa (IN q_equipe_id INT, IN q_pessoa_id
 begin
     replace into equipes_has_pessoas (equipe_id, pessoa_id, tag)
     value (q_equipe_id, q_pessoa_id, q_tag) ;
+end $
+
+create procedure bd2.update_card (
+       IN q_id int,
+       IN q_titulo varchar(100),
+       IN q_tag varchar(100),
+       IN q_fazendo date,
+       IN q_conclusao date,
+       IN q_limite date,
+       IN q_status varchar(100))
+begin
+    update tarefas
+    set titulo = q_titulo, status = q_status
+    where id = q_id ;
+
+    update datas
+    set fazendo = q_fazendo, conclusao = q_conclusao, limite = q_limite
+    where
+    id in (select data_id from tarefas where tarefas.id = q_id) ;
+
+    update tarefas_has_pessoas
+    set tag = q_tag
+    where tarefas_has_pessoas.tarefa_id = q_id ;
+end $
+
+create procedure bd2.create_card (
+       IN q_titulo varchar(100),
+       IN q_tag varchar(100),
+       IN q_criacao date,
+       IN q_fazendo date,
+       IN q_conclusao date,
+       IN q_limite date,
+       IN q_status varchar(100),
+       IN q_criador_id int)
+begin
+    insert into datas (criacao, fazendo, conclusao, limite)
+    value (q_criacao, q_fazendo, q_conclusao, q_limite) ;
+
+    SET @data_id = LAST_INSERT_ID();
+
+    insert into tarefas (status, titulo, projeto_id, data_id, criador_id)
+    value (q_status, q_titulo, 69, @data_id, q_criador_id) ;
+
+    SET @tarefa_id = LAST_INSERT_ID();
+
+    insert into tarefas_has_pessoas (tarefa_id, pessoa_id, tag)
+    value (@tarefa_id, q_criador_id, q_tag) ;
 end $
 
 delimiter ;

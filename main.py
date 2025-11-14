@@ -3,6 +3,8 @@ import json
 
 from flask import render_template, request, redirect, url_for, send_file, g, session
 from markupsafe import escape
+from datetime import datetime
+from time import time
 
 from globals import *
 import db
@@ -32,6 +34,12 @@ def injertar_usuario():
         return {}
 
     return u.to_args()
+
+tarefa_status = ['a-fazer', 'em-andamento', 'concluido']
+
+@app.context_processor
+def injertar_tarefa_status():
+    return {'tarefa_status': tarefa_status}
 
 @app.route('/')
 def index():
@@ -77,10 +85,16 @@ def login_post():
     return perfil(u)
 
 @app.get('/tarefas/')
-def tarefas_get():
+@app.get('/tarefas/<int:id>')
+def tarefas_get(id=None):
     u = usuario()
     if not u:
         return redirect(url_for('login_get'))
+
+    if id:
+        with g.db.cursor(dictionary=True, buffered=True) as cur:
+            cur.execute('select * from card where id = %s', (id, ))
+            return render_template('tarefa.html', tarefa=cur.fetchone())
 
     with g.db.cursor(dictionary=True, buffered=True) as cur:
         tarefas = db.call_proc(cur, 'card_da_pessoa', u.id)
@@ -89,6 +103,32 @@ def tarefas_get():
         'tarefas.html',
         tarefas=tarefas,
     )
+
+@app.post('/tarefas/substituir')
+def tarefas_substituir_post():
+    id = form_get('id')
+    titulo = form_get('titulo')
+    tag = form_get('tag')
+    fazendo = form_get('fazendo')
+    conclusao = form_get('conclusao')
+    limite = form_get('limite')
+    status = form_get('status')
+
+    with g.db.cursor(buffered=True) as cur:
+        if not id:
+            u = usuario()
+            criacao = datetime.fromtimestamp(time()).strftime("%Y-%m-%d")
+            cur.execute('call create_card(%s, %s, %s, %s, %s, %s, %s, %s)',
+                        (titulo, 'criador', criacao, None, None, None, status, u.id))
+            g.db.commit()
+            id = cur.lastrowid
+        else:
+            cur.execute('call update_card(%s, %s, %s, %s, %s, %s, %s)',
+                        (int(id), titulo, tag, fazendo, conclusao, limite, status))
+            g.db.commit()
+
+    return redirect(url_for('tarefas_get', id=id))
+
 
 @app.get('/equipes')
 @app.get('/equipes/<int:id>')
@@ -168,7 +208,9 @@ def equipes_nova_pessoa():
         print(equipe_id, pessoa_id, tag)
 
         cur.execute(
-            f'call equipe_adicionar_pessoa ({equipe_id}, {pessoa_id}, "{tag}")')
+            'call equipe_adicionar_pessoa (%s, %s, %s)',
+            equipe_id, pessoa_id, tag,
+        )
 
         g.db.commit()
 

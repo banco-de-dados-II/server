@@ -5,6 +5,7 @@ drop view if exists card;
 create view card as
 select
     tarefas.id as id, tarefas.status as status, tarefas.titulo as titulo,
+    projetos.id as projeto_id,
     projetos.titulo as projeto_nome,
     datas.criacao, datas.fazendo, datas.conclusao, datas.limite,
     pessoas.nome as criador_nome,

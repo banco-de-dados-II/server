@@ -5,9 +5,16 @@
 
 <h2>adicionar</h2>
 
-<form action="/tarefas" method="POST">
+<form action="/tarefas/substituir" method="POST">
     <label>titulo</label>
     <input name="titulo" type="text">
+
+    {% for status in tarefa_status %}
+    <input type="radio" name="status" value="{{ status }}">
+    <label>{{ status }}</label>
+    {% endfor %}
+
+    <br>
     <button type="submit">adicionar nova tarefa</button>
 </form>
 
@@ -16,7 +23,7 @@
 <ul>
     {% for tarefa in tarefas %}
     <li>
-        <h2>{{ tarefa['titulo'] }}</h2>
+        <h2><a href="/tarefas/{{ tarefa['id'] }}">{{ tarefa['titulo'] }}</a></h2>
         <p>tag: {{ tarefa['tag'] }}</p>
         <p>status: {{ tarefa['status'] }}</p>
         <p>nome do projeto: {{ tarefa['projeto_nome'] }}</p>
