@@ -255,8 +255,12 @@ def projetos_mudar_post():
 
     with g.db.cursor(buffered=True) as cur:
         if not id:
-            args = (0, titulo, fazendo, conclusao, limite)
+            u = usuario()
+            args = (0, titulo, tempo(), u.id)
+            print(args)
             cur.callproc('criar_projeto', args)
+            g.db.commit()
+            print(args)
             return redirect(url_for('projetos_get', id=args[0]))
 
         cur.execute(

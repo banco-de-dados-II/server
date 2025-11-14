@@ -126,12 +126,10 @@ create procedure bd2.criar_projeto (
        OUT q_id INT,
        IN q_titulo varchar(100),
        IN q_criacao date,
-       IN q_fazendo date,
-       IN q_conclusao date,
-       IN q_limite date)
+       IN q_pessoa_id INT)
 begin
-    insert into datas (criacao, fazendo, conclusao, limite)
-    value (q_criacao, q_fazendo, q_conclusao, q_limite);
+    insert into datas (criacao)
+    value (q_criacao);
 
     set @data_id = LAST_INSERT_ID();
 
@@ -139,6 +137,9 @@ begin
     value (q_titulo, @data_id);
 
     set q_id = LAST_INSERT_ID();
+
+    insert into projetos_has_pessoas (projeto_id, pessoa_id, tag)
+    value (q_id, q_pessoa_id, 'criador');
 end $
 
 delimiter ;
