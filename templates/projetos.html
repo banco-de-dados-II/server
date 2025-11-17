@@ -1,0 +1,28 @@
+{% set title = "projetos" %}
+{% include "head.html" %}
+
+<h1>projetos de {{ nome }}</h1>
+
+<h2>adicionar</h2>
+
+<form action="/projetos/substituir" method="POST">
+    <label>titulo</label>
+    <input name="titulo" type="text">
+    <button type="submit">adicionar nova projeto</button>
+</form>
+
+<h2>projeto</h2>
+
+<ul>
+    {% for item in projetos %}
+    <li>
+        <a href="/projetos/{{ item['id'] }}">{{ item['titulo'] }}</a>
+        <p>criacao: {{ item['criacao'] }}</p>
+        <p>fazendo: {{ item['fazendo'] }}</p>
+        <p>conclusao: {{ item['conclusao'] }}</p>
+        <p>limite: {{ item['limite'] }}</p>
+    </li>
+    {% endfor %}
+</ul>
+
+{% include "foot.html" %}

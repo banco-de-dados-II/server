@@ -1,0 +1,26 @@
+{% set title = "projetos" %}
+{% include "head.html" %}
+
+<form action="/projetos/substituir" method="POST">
+    <input name="id" type="hidden" value="{{ projeto['id'] }}">
+
+    <label>titulo</label>
+    <input name="titulo" type="text" value="{{ projeto['titulo'] }}">
+
+    <h3>datas</h3>
+    <p>criacao: {{ projeto['criacao'] }}</p>
+
+    <label>fazendo</label>
+    <input type="data" name="fazendo" value="{{ projeto['fazendo']}}">
+
+    <label>conclusao</label>
+    <input type="data" name="conclusao" value="{{ projeto['conclusao']}}">
+
+    <label>limite</label>
+    <input type="data" name="limite" value="{{ projeto['limite']}}">
+
+    <br> <br>
+    <button type="submit">atualizar projeto</button>
+</form>
+
+{% include "foot.html" %}

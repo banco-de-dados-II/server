@@ -1,21 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>index</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/holiday.css" />
-</head>
-<body>
-    <nav>
-        <ul>
-            <li><a href="./login">login</a></li>
-            <li><a href="#">about</a></li>
-        </ul>
-    </nav>
+{% set title = "index" %}
+{% include "head.html" %}
 
-    <img src="static/an.gif" />
-    
-    <h1>index</h1>
-</body>
-</html>
+<button hx-post="/reset" hx-swap=none>reset</button>
+
+{% include "foot.html" %}

@@ -24,12 +24,11 @@ USE `bd2` ;
 DROP TABLE IF EXISTS `bd2`.`datas` ;
 
 CREATE TABLE IF NOT EXISTS `bd2`.`datas` (
-  `id` INT NOT NULL,
-  `dia_de_criacao` DATE NOT NULL,
-  `dia_de_concluido` DATE NULL,
-  `dia_de_fazendo` DATE NULL,
-  `dia_de_pausado` DATE NULL,
-  `data_limite` DATE NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `criacao` DATE NOT NULL,
+  `fazendo` DATE NULL,
+  `conclusao` DATE NULL,
+  `limite` DATE NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -42,7 +41,7 @@ DROP TABLE IF EXISTS `bd2`.`projetos` ;
 CREATE TABLE IF NOT EXISTS `bd2`.`projetos` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `titulo` VARCHAR(50) NULL,
-  `datas_id` INT NOT NULL,
+  `data_id` INT NOT NULL,
   PRIMARY KEY (`id`))
   ENGINE = InnoDB;
 
@@ -69,9 +68,9 @@ CREATE TABLE IF NOT EXISTS `bd2`.`tarefas` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `status` ENUM('a-fazer', 'em-andamento', 'concluido') NOT NULL,
   `titulo` VARCHAR(45) NOT NULL,
-  `projetos_id` INT NOT NULL,
+  `projeto_id` INT NOT NULL,
   `criador_id` INT NOT NULL COMMENT 'criador da tarefa',
-  `datas_id` INT NOT NULL,
+  `data_id` INT NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -79,25 +78,25 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `bd2`.`equipe`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `bd2`.`equipe` ;
+DROP TABLE IF EXISTS `bd2`.`equipes` ;
 
-CREATE TABLE IF NOT EXISTS `bd2`.`equipe` (
+CREATE TABLE IF NOT EXISTS `bd2`.`equipes` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
 -- Table `bd2`.`equipe_has_pessoas`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `bd2`.`equipe_has_pessoas` ;
+DROP TABLE IF EXISTS `bd2`.`equipes_has_pessoas` ;
 
-CREATE TABLE IF NOT EXISTS `bd2`.`equipe_has_pessoas` (
+CREATE TABLE IF NOT EXISTS `bd2`.`equipes_has_pessoas` (
   `equipe_id` INT NOT NULL,
-  `pessoas_id` INT NOT NULL,
-  `tag` VARCHAR(50) NULL COMMENT 'exemplo: lider, desenvolvedor, dba, da, estagiario')
+  `pessoa_id` INT NOT NULL,
+  `tag` VARCHAR(100) NULL COMMENT 'exemplo: lider, desenvolvedor, dba, da, estagiario')
 ENGINE = InnoDB;
 
 
@@ -107,8 +106,9 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `bd2`.`tarefas_has_pessoas` ;
 
 CREATE TABLE IF NOT EXISTS `bd2`.`tarefas_has_pessoas` (
-  `tarefas_id` INT NOT NULL,
-  `pessoas_id` INT NOT NULL)
+  `tarefa_id` INT NOT NULL,
+  `pessoa_id` INT NOT NULL,
+  `tag` VARCHAR(100) NULL COMMENT 'exemplo: prioridade(A), prioridade(B), prioridade(C)')
 ENGINE = InnoDB;
 
 
@@ -118,23 +118,22 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `bd2`.`projetos_has_pessoas` ;
 
 CREATE TABLE IF NOT EXISTS `bd2`.`projetos_has_pessoas` (
-  `projetos_id` INT NOT NULL,
-  `pessoas_id` INT NOT NULL,
-  `tag` VARCHAR(50) NULL COMMENT 'exemplo: criador, cliente')
+  `projeto_id` INT NOT NULL,
+  `pessoa_id` INT NOT NULL,
+  `tag` VARCHAR(100) NULL COMMENT 'exemplo: criador, cliente')
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
 -- Table `bd2`.`projetos_has_equipe`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `bd2`.`projetos_has_equipe` ;
+DROP TABLE IF EXISTS `bd2`.`projetos_has_equipes` ;
 
-CREATE TABLE IF NOT EXISTS `bd2`.`projetos_has_equipe` (
-  `projetos_id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `bd2`.`projetos_has_equipes` (
+  `projeto_id` INT NOT NULL,
   `equipe_id` INT NOT NULL,
-  `tag` VARCHAR(50) NULL COMMENT 'exemplo: desenvolvedores, designers')
+  `tag` VARCHAR(100) NULL COMMENT 'exemplo: desenvolvedores, designers')
 ENGINE = InnoDB;
-
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
