@@ -46,11 +46,11 @@ def injertar_tarefa_status():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', rota='index')
 
 @app.get('/login/')
 def login_get():
-    return render_template('login.html')
+    return render_template('login.html', rota='login')
 
 @app.get('/perfil/')
 def perfil_get():
@@ -60,7 +60,7 @@ def perfil_get():
 
     return render_template(
         'perfil.html',
-        **u.to_args(),
+        rota='perfil'
     )
 
 def perfil(u):
@@ -97,7 +97,7 @@ def tarefas_get(id=None):
     if id:
         with g.db.cursor(dictionary=True, buffered=True) as cur:
             cur.execute('select * from card where id = %s', (id, ))
-            return render_template('tarefa.html', tarefa=cur.fetchone())
+            return render_template('tarefa.html', tarefa=cur.fetchone(), rota='tarefa')
 
     with g.db.cursor(dictionary=True, buffered=True) as cur:
         tarefas = db.call_proc(cur, 'card_da_pessoa', u.id)
@@ -105,6 +105,7 @@ def tarefas_get(id=None):
     return render_template(
         'tarefas.html',
         tarefas=tarefas,
+        rota='tarefas'
     )
 
 @app.post('/tarefas/substituir')
@@ -143,7 +144,7 @@ def equipes_get(id=None):
     if id:
         with g.db.cursor(dictionary=True, buffered=True) as cur:
             cur.execute('select id, nome, tag from equipes inner join equipes_has_pessoas on equipe_id = id where id = %s', (id,))
-            return render_template('equipe.html', equipe=cur.fetchone())
+            return render_template('equipe.html', equipe=cur.fetchone(), rota='equipe')
 
     equipes = db.call_proc(
         g.db.cursor(dictionary=True),
@@ -154,9 +155,10 @@ def equipes_get(id=None):
     return render_template(
         'equipes.html',
         equipes=equipes,
+        rota='equipes'
     )
 
-@app.post('/equipes/mudar')
+@app.post('/equipes/substituir')
 def equipes_post():
     u = usuario()
     id = form_get('id')
@@ -232,7 +234,7 @@ def projetos_get(id=None):
             cur.execute('select projetos.id, projetos.titulo, datas.criacao, datas.fazendo, datas.conclusao, datas.limite from projetos inner join datas on datas.id = projetos.data_id where projetos.id = %s', (id,))
             g.db.commit()
 
-            return render_template('projeto.html', projeto=cur.fetchone())
+            return render_template('projeto.html', projeto=cur.fetchone(), rota='projeto')
 
         projetos = db.call_proc(
             cur,
@@ -243,9 +245,10 @@ def projetos_get(id=None):
         return render_template(
             'projetos.html',
             projetos=projetos,
+            rota='projetos'
         )
 
-@app.post('/projetos/mudar')
+@app.post('/projetos/substituir')
 def projetos_mudar_post():
     id = form_get('id')
     titulo = form_get('titulo')
@@ -271,7 +274,7 @@ def projetos_mudar_post():
 
         return redirect(url_for('projetos_get', id=int(id)))
 
-@app.post('/pessoa-mudar')
+@app.post('/perfil/substituir')
 def pessoa_mudar_post():
     u = usuario()
     u.mudar(

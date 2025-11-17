@@ -1,7 +1,7 @@
 {% set title = "projetos" %}
 {% include "head.html" %}
 
-<form action="/projetos/mudar" method="POST">
+<form action="/projetos/substituir" method="POST">
     <input name="id" type="hidden" value="{{ projeto['id'] }}">
 
     <label>titulo</label>
@@ -20,7 +20,7 @@
     <input type="data" name="limite" value="{{ projeto['limite']}}">
 
     <br> <br>
-    <button type="submit">atualizar</button>
+    <button type="submit">atualizar projeto</button>
 </form>
 
 {% include "foot.html" %}
