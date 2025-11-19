@@ -135,7 +135,9 @@ def tarefas_get(id=None):
 def tarefas_substituir_post():
     id = form_get('id')
     titulo = form_get('titulo')
-    tag = form_get('tag')
+    tags = form_get('tags')
+    if tags:
+        tags = tags.split(',')
     fazendo = form_get('fazendo') or 'NULL'
     conclusao = form_get('conclusao') or 'NULL'
     limite = form_get('limite') or 'NULL'
@@ -143,18 +145,20 @@ def tarefas_substituir_post():
 
     modo: str
     with g.db.cursor(buffered=True) as cur:
+        u = usuario()
         if not id:
             modo = 'criar'
-            u = usuario()
             criacao = tempo()
+
             cur.execute('call create_card(%s, %s, %s, %s, %s, %s, %s, %s)',
-                        (titulo, 'criador', criacao, None, None, None, status, u.id))
+                        (titulo, 'criador', criacao, 'NULL', 'NULL', 'NULL', status, u.id))
             g.db.commit()
             id = cur.lastrowid
         else:
             modo = 'substituir'
+            tag_id = mongo.tag_update({'tarefa': id, 'pessoa': u.id}, tags)
             cur.execute('call update_card(%s, %s, %s, %s, %s, %s, %s)',
-                        (int(id), titulo, tag, fazendo, conclusao, limite, status))
+                        (int(id), titulo, tag_id, fazendo, conclusao, limite, status))
             g.db.commit()
 
     return redirecionar('tarefas_get', {'modo': modo}, id=id)
