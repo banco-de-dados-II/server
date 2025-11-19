@@ -130,9 +130,9 @@ def tarefas_substituir_post():
     id = form_get('id')
     titulo = form_get('titulo')
     tag = form_get('tag')
-    fazendo = form_get('fazendo')
-    conclusao = form_get('conclusao')
-    limite = form_get('limite')
+    fazendo = form_get('fazendo') or 'NULL'
+    conclusao = form_get('conclusao') or 'NULL'
+    limite = form_get('limite') or 'NULL'
     status = form_get('status')
 
     with g.db.cursor(buffered=True) as cur:
@@ -283,8 +283,8 @@ def projetos_get(id=None):
 def projetos_mudar_post():
     id = form_get('id')
     titulo = form_get('titulo')
-    fazendo = form_get('fazendo')
-    conclusao = form_get('conclusao')
+    fazendo = form_get('fazendo') or 'NULL'
+    conclusao = form_get('conclusao') or 'NULL'
     limite = form_get('limite')
 
     with g.db.cursor(buffered=True) as cur:
