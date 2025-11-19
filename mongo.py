@@ -3,6 +3,8 @@ from flask import g, request, session
 from datetime import datetime
 from time import time
 
+import json
+
 def registrar(info={}):
     logs = g.mdb.get_collection('logs')
 
@@ -16,7 +18,7 @@ def registrar(info={}):
 
     usuario = session.get('usuario')
     if usuario:
-        info = info | {'usuario': usuario}
+        info = info | {'usuario': json.loads(usuario)}
 
     data = datetime.fromtimestamp(time()).strftime('%Y-%m-%d %H:%M:%S')
     result = info | {'data': data}
