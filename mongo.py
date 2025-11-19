@@ -18,9 +18,8 @@ def registrar(info={}):
 
     usuario = session.get('usuario')
     if usuario:
-        info = info | {'usuario': json.loads(usuario)}
+        info['usuario'] =  json.loads(usuario)
 
-    data = datetime.fromtimestamp(time()).strftime('%Y-%m-%d %H:%M:%S')
-    result = info | {'data': data}
+    info['data'] = datetime.fromtimestamp(time()).strftime('%Y-%m-%d %H:%M:%S')
 
-    logs.insert_one(result)
+    logs.insert_one(info)
