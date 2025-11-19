@@ -12,6 +12,7 @@ def do(db, l=10):
         cur.execute('truncate table projetos')
         cur.execute('truncate table pessoas')
         cur.execute('truncate table equipes')
+        cur.execute('truncate table tarefas')
         cur.execute('truncate table equipes_has_pessoas')
         cur.execute('truncate table tarefas_has_pessoas')
         cur.execute('truncate table projetos_has_pessoas')

@@ -145,5 +145,5 @@ end $
 
 delimiter ;
 
--- pessoas com mais tarefas:
+-- quais sao as 10 pessoas com mais tarefas
 -- select count(pessoa_id), pessoa_id pessoa_id from tarefas_has_pessoas group by pessoa_id order by count(pessoa_id) desc limit 10;
