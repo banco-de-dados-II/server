@@ -1,0 +1,46 @@
+{% set title = "equipes" %}
+{% include "head.html" %}
+
+<h1>equipe {{ equipe['nome'] }}</h1>
+
+<h2>info</h2>
+
+<form action="/equipes/substituir" method="POST">
+    <!--
+    fazer é um risco de segurança enorme,
+    mas eu preciso entregar isso ainda esse mes :)
+    -->
+    <input type="hidden" name="id" value="{{ equipe['id'] }}">
+
+    <label>nome</label>
+    <input type="text" name="nome" value="{{ equipe['name'] }}">
+
+    <label>tag</label>
+    <input type="text" name="tag" value="{{ equipe['tag'] }}">
+
+    <button type="submit">atualizar informações da equipe</button>
+</form>
+
+<h2>sair da equipe</h2>
+<form action="/equipes/sair" method="POST">
+    <input type="hidden" name="id" value="{{ equipe['id'] }}">
+    <input type="hidden" name="sair" value="true">
+
+    <button type="submit">sair</button>
+</form>
+
+<h2>adicionar pessoa na equipe</h2>
+
+<form action="/equipes/nova-pessoa" method="POST">
+    <input type="hidden" name="id" value="{{ equipe['id'] }}">
+
+    <label>nome da pessoa</label>
+    <input name="nome" type="text">
+
+    <label>tag</label>
+    <input name="tag" type="text">
+
+    <button type="submit">adicionar pessoa a equipe</button>
+</form>
+
+{% include "foot.html" %}

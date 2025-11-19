@@ -1,0 +1,22 @@
+{% set title = "login" %}
+{% include "head.html" %}
+
+<div id="sabrina">
+    <h2>login:<h2>
+        <form action="/login" method="POST">
+            <label>id</label>
+            <input type="text" name="id">
+
+            <label>nome</label>
+            <input type="text" name="nome">
+
+            <label>email</label>
+            <input type="text" name="email">
+
+            <br/>
+            <input type="submit" value="enviar">
+        </form>
+        </form>
+</div>
+
+{% include "foot.html" %}

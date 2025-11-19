@@ -1,0 +1,11 @@
+version: "3"
+services:
+  relacional-db:
+    image: "mysql:5"
+    ports:
+      - "3306:3306"
+    restart: "always"
+    environment:
+      MYSQL_DATABASE: "bd2"
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"

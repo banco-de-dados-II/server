@@ -1,0 +1,30 @@
+{% set title = "equipes" %}
+{% include "head.html" %}
+
+<h1>equipes de {{ nome }}</h1>
+
+<h2>adicionar</h2>
+
+<form action="/equipes/criar" method="POST">
+    <label>nome</label>
+    <input name="nome" type="text">
+    <button type="submit">adicionar nova equipe</button>
+</form>
+
+<h2>equipes</h2>
+
+<ul>
+    {% for item in equipes %}
+    <li>
+        <h2><a href="equipes/{{ item['id'] }}">{{ item['nome'] }}</a></h2>
+        <p>tag: {{ item['tag'] }}</p>
+        {% if item['projeto'] is none %}
+        <p>sem projeto</p>
+        {% else %}
+        <p>no projeto: {{ item['projeto'] }}</p>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+
+{% include "foot.html" %}

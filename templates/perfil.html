@@ -1,0 +1,19 @@
+{% set title = "perfil" %}
+{% include "head.html" %}
+
+<ul>
+    <li>nome: {{ nome }}</li>
+    <li>email: {{ email }}</li>
+</ul>
+
+<form method="POST" action="/perfil/substituir">
+    <label>mudar nome</label>
+    <input text="text" name="nome" value="{{ nome }}">
+
+    <label>mudar email</label>
+    <input text="text" name="email" value="{{ email }}">
+
+    <input type="submit" value="mudar"></form>
+</form>
+
+{% include "foot.html" %}
