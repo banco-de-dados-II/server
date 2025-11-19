@@ -11,8 +11,8 @@ import db
 import db_gen
 
 def escape_str(s):
-    if s is None:
-        return s
+    if s is None or len(s) == 0:
+        return None
     return str(escape(s))
 
 def form_get(key):
@@ -28,6 +28,17 @@ def usuario():
 
 def tempo():
     return datetime.fromtimestamp(time()).strftime("%Y-%m-%d")
+
+def get_param_int(name, default):
+    result = request.args.get(name)
+
+    if result:
+        result = int(result)
+    else:
+        result = default
+
+    return result
+
 
 @app.context_processor
 def injertar_usuario():
@@ -90,6 +101,9 @@ def login_post():
 @app.get('/tarefas/')
 @app.get('/tarefas/<int:id>')
 def tarefas_get(id=None):
+    pagina = get_param_int('pagina', 0)
+    max = get_param_int('max', 10)
+
     u = usuario()
     if not u:
         return redirect(url_for('login_get'))
@@ -97,15 +111,18 @@ def tarefas_get(id=None):
     if id:
         with g.db.cursor(dictionary=True, buffered=True) as cur:
             cur.execute('select * from card where id = %s', (id, ))
-            return render_template('tarefa.html', tarefa=cur.fetchone(), rota='tarefa')
+            return render_template(
+                'tarefa.html', tarefa=cur.fetchone(), rota='tarefa')
 
     with g.db.cursor(dictionary=True, buffered=True) as cur:
-        tarefas = db.call_proc(cur, 'card_da_pessoa', u.id)
+        tarefas = db.call_proc(cur, 'card_da_pessoa', u.id, pagina * max, max)
 
     return render_template(
         'tarefas.html',
         tarefas=tarefas,
-        rota='tarefas'
+        rota='tarefas',
+        lista_pagina=pagina,
+        lista_max=max,
     )
 
 @app.post('/tarefas/substituir')
@@ -137,6 +154,9 @@ def tarefas_substituir_post():
 @app.get('/equipes')
 @app.get('/equipes/<int:id>')
 def equipes_get(id=None):
+    pagina = get_param_int('pagina', 0)
+    max = get_param_int('max', 10)
+
     u = usuario()
     if not u:
         return redirect(url_for('login_get'))
@@ -150,12 +170,16 @@ def equipes_get(id=None):
         g.db.cursor(dictionary=True),
         'equipes_da_pessoa',
         u.id,
+        pagina * max,
+        max,
     )
 
     return render_template(
         'equipes.html',
         equipes=equipes,
-        rota='equipes'
+        rota='equipes',
+        lista_pagina=pagina,
+        lista_max=max,
     )
 
 @app.post('/equipes/substituir')
@@ -225,6 +249,9 @@ def equipes_nova_pessoa():
 @app.get('/projetos/')
 @app.get('/projetos/<int:id>')
 def projetos_get(id=None):
+    pagina = get_param_int('pagina', 0)
+    max = get_param_int('max', 10)
+
     u = usuario()
     if not u:
         return redirect(url_for('login_get'))
@@ -240,12 +267,16 @@ def projetos_get(id=None):
             cur,
             'projetos_da_pessoa',
             u.id,
+            pagina * max,
+            max,
         )
 
         return render_template(
             'projetos.html',
             projetos=projetos,
-            rota='projetos'
+            rota='projetos',
+            lista_pagina=pagina,
+            lista_max=max,
         )
 
 @app.post('/projetos/substituir')
@@ -288,5 +319,8 @@ def pessoa_mudar_post():
 def rest_post():
     if session.get('usuario'):
         session.pop('usuario')
-    db_gen.do(g.db, 100)
+
+    max = form_get('max')
+
+    db_gen.do(g.db, int(max))
     return redirect(request.origin)

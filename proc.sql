@@ -11,14 +11,15 @@ drop procedure if exists bd2.criar_projeto;
 
 delimiter $
 
-create procedure bd2.card_da_pessoa (IN q_pessoa_id INT)
+create procedure bd2.card_da_pessoa (IN q_pessoa_id INT, IN q_pagina INT, IN q_max INT)
 begin
     select *
     from card
-    where card.atribuido_id = q_pessoa_id ;
+    where card.atribuido_id = q_pessoa_id
+    limit q_pagina, q_max;
 end $
 
-create procedure bd2.equipes_da_pessoa (IN q_pessoa_id INT)
+create procedure bd2.equipes_da_pessoa (IN q_pessoa_id INT, IN q_pagina INT, IN q_max INT)
 begin
     select
         distinct(equipes.id),
@@ -35,20 +36,20 @@ begin
     where
         pessoa_id = q_pessoa_id and
         equipes.id = equipes_has_pessoas.equipe_id
-    ;
+    limit q_pagina, q_max ;
 end $
 
-create procedure bd2.projetos_da_pessoa (IN q_pessoa_id INT)
+create procedure bd2.projetos_da_pessoa (IN q_pessoa_id INT, IN q_pagina INT, IN q_max INT)
 begin
     select projetos.id as id, titulo, criacao, fazendo, conclusao, limite
     from projetos
-    inner join datas
+    left join datas
     on datas.id = projetos.data_id
     where projetos.id in (
           select projeto_id from projetos_has_pessoas
           where projetos_has_pessoas.pessoa_id = q_pessoa_id
         )
-    ;
+    limit q_pagina, q_max ;
 end $
 
 create procedure bd2.equipe_adicionar_pessoa (IN q_equipe_id INT, IN q_pessoa_id INT, IN q_tag VARCHAR(50))
@@ -143,3 +144,6 @@ begin
 end $
 
 delimiter ;
+
+-- pessoas com mais tarefas:
+-- select count(pessoa_id), pessoa_id pessoa_id from tarefas_has_pessoas group by pessoa_id order by count(pessoa_id) desc limit 10;

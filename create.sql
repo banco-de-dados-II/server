@@ -53,8 +53,8 @@ DROP TABLE IF EXISTS `bd2`.`pessoas` ;
 
 CREATE TABLE IF NOT EXISTS `bd2`.`pessoas` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(100) NOT NULL,
-  `email` VARCHAR(50) NOT NULL,
+  `nome` VARCHAR(200) NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -82,7 +82,7 @@ DROP TABLE IF EXISTS `bd2`.`equipes` ;
 
 CREATE TABLE IF NOT EXISTS `bd2`.`equipes` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(45) NOT NULL,
+  `nome` VARCHAR(200) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC))
 ENGINE = InnoDB;
