@@ -10,6 +10,8 @@ from globals import *
 import db
 import db_gen
 
+import mongo
+
 def escape_str(s):
     if s is None or len(s) == 0:
         return None
@@ -55,20 +57,25 @@ tarefa_status = ['a-fazer', 'em-andamento', 'concluido']
 def injertar_tarefa_status():
     return {'tarefa_status': tarefa_status}
 
-@app.route('/')
+@app.get('/')
 def index():
+    mongo.registrar()
     return render_template('index.html', rota='index')
 
 @app.get('/login/')
 def login_get():
+    mongo.registrar()
     return render_template('login.html', rota='login')
 
 @app.get('/perfil/')
 def perfil_get():
+
     u = usuario()
     if not u:
+        mongo.registrar({'redirecionar': 'login_get'})
         return redirect(url_for('login_get'))
 
+    mongo.registrar({'renderisar': 'perfil.html'})
     return render_template(
         'perfil.html',
         rota='perfil'
@@ -85,6 +92,8 @@ def login_post():
     nome = form_get('nome')
     email = form_get('email')
 
+    reg = {}
+
     if id:
         pargs = db.Pessoa.procurar('*', id=id).fetchone()
     else:
@@ -96,6 +105,7 @@ def login_post():
     else:
         u = db.Pessoa.adicionar(nome=nome, email=email)
 
+    mongo.registrar({'redirecionar': 'perfil_get', 'adicionar': bool(pargs)})
     return perfil(u)
 
 @app.get('/tarefas/')
@@ -106,9 +116,12 @@ def tarefas_get(id=None):
 
     u = usuario()
     if not u:
+        mongo.registrar({'redirecionar': 'login_get'})
         return redirect(url_for('login_get'))
 
     if id:
+        mongo.registrar({'renderisar': 'tarefa.html'})
+
         with g.db.cursor(dictionary=True, buffered=True) as cur:
             cur.execute('select * from card where id = %s', (id, ))
             return render_template(
@@ -117,6 +130,7 @@ def tarefas_get(id=None):
     with g.db.cursor(dictionary=True, buffered=True) as cur:
         tarefas = db.call_proc(cur, 'card_da_pessoa', u.id, pagina * max, max)
 
+    mongo.registrar({'renderisar': 'tarefas.html'})
     return render_template(
         'tarefas.html',
         tarefas=tarefas,
@@ -135,8 +149,11 @@ def tarefas_substituir_post():
     limite = form_get('limite') or 'NULL'
     status = form_get('status')
 
+    reg = {}
+
     with g.db.cursor(buffered=True) as cur:
         if not id:
+            reg['modo'] = 'criar'
             u = usuario()
             criacao = tempo()
             cur.execute('call create_card(%s, %s, %s, %s, %s, %s, %s, %s)',
@@ -144,10 +161,13 @@ def tarefas_substituir_post():
             g.db.commit()
             id = cur.lastrowid
         else:
+            reg['modo'] = 'substituir'
             cur.execute('call update_card(%s, %s, %s, %s, %s, %s, %s)',
                         (int(id), titulo, tag, fazendo, conclusao, limite, status))
             g.db.commit()
 
+    reg['redirecionar'] = 'terafas_get'
+    mongo.registrar(reg)
     return redirect(url_for('tarefas_get', id=id))
 
 
@@ -159,9 +179,11 @@ def equipes_get(id=None):
 
     u = usuario()
     if not u:
+        mongo.registrar({'redirecionar': 'login_get'})
         return redirect(url_for('login_get'))
 
     if id:
+        mongo.registrar({'renderisar': 'equipe.html'})
         with g.db.cursor(dictionary=True, buffered=True) as cur:
             cur.execute('select id, nome, tag from equipes inner join equipes_has_pessoas on equipe_id = id where id = %s', (id,))
             return render_template('equipe.html', equipe=cur.fetchone(), rota='equipe')
@@ -174,6 +196,7 @@ def equipes_get(id=None):
         max,
     )
 
+    mongo.registrar({'renderisar': 'equipes.html'})
     return render_template(
         'equipes.html',
         equipes=equipes,
@@ -194,6 +217,7 @@ def equipes_post():
         cur.execute('update equipes_has_pessoas set tag = %s where equipe_id = %s and pessoa_id = %s', (tag, id, u.id))
         g.db.commit()
 
+    mongo.registrar({'redirecionar': 'equipes_get'})
     return redirect(url_for('equipes_get', id=id))
 
 @app.post('/equipes/criar')
@@ -209,6 +233,7 @@ def equipes_criar_post():
         cur.execute('insert into equipes_has_pessoas (equipe_id, pessoa_id, tag) value (%s, %s, "criador")', (id, u.id))
         g.db.commit()
 
+    mongo.registrar({'redirecionar': 'equipes_get'})
     return redirect(url_for('equipes_get', id=id))
 
 @app.post('/equipes/sair')
@@ -223,6 +248,7 @@ def equipes_sair_post():
 
     g.db.commit()
 
+    mongo.registrar({'redirecionar': 'equipes_get'})
     return redirect(url_for('equipes_get'))
 
 @app.post('/equipes/nova-pessoa')
@@ -243,6 +269,7 @@ def equipes_nova_pessoa():
 
         g.db.commit()
 
+        mongo.registrar({'redirecionar': 'equipes_get'})
         return redirect(url_for('equipes_get', id=equipe_id))
 
 
@@ -261,6 +288,7 @@ def projetos_get(id=None):
             cur.execute('select projetos.id, projetos.titulo, datas.criacao, datas.fazendo, datas.conclusao, datas.limite from projetos inner join datas on datas.id = projetos.data_id where projetos.id = %s', (id,))
             g.db.commit()
 
+            mongo.registrar({'renderisar': 'projeto.html'})
             return render_template('projeto.html', projeto=cur.fetchone(), rota='projeto')
 
         projetos = db.call_proc(
@@ -271,6 +299,7 @@ def projetos_get(id=None):
             max,
         )
 
+        mongo.registrar({'renderisar': 'projetos.html'})
         return render_template(
             'projetos.html',
             projetos=projetos,
@@ -303,6 +332,7 @@ def projetos_mudar_post():
         )
         g.db.commit()
 
+        mongo.registrar({'redirecionar': 'projetos_get'})
         return redirect(url_for('projetos_get', id=int(id)))
 
 @app.post('/perfil/substituir')
@@ -313,10 +343,13 @@ def pessoa_mudar_post():
         email=form_get('email'),
     )
 
+    mongo.registrar({'redirecionar': 'perfil_get'})
     return perfil(u)
 
 @app.post('/reset')
 def rest_post():
+    mongo.registrar({'redirecionar': request.origin})
+
     if session.get('usuario'):
         session.pop('usuario')
 
