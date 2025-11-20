@@ -1,6 +1,16 @@
 {% set title = "index" %}
 {% include "head.html" %}
 
-<button hx-post="/reset" hx-swap=none>reset</button>
+<form action="/reset" method="POST">
+    <label>max</label>
+    <input type="text" name="max" value="100">
+
+    <button>reset</button>
+</form>
+
+<form action="/dump" method="POST">
+    <label>dump</label>
+    <input type="submit">
+</form>
 
 {% include "foot.html" %}

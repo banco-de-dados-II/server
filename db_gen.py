@@ -5,13 +5,18 @@ import itertools
 from datetime import timedelta, datetime, date
 from time import time
 from pathlib import Path
+import pymongo
 
-def do(db, l=10):
+def do(db, mdb, l=10):
+    mdb['logs'].drop()
+    mdb['tags'].drop()
+
     with db.cursor(buffered=True) as cur:
         cur.execute('truncate table datas')
         cur.execute('truncate table projetos')
         cur.execute('truncate table pessoas')
         cur.execute('truncate table equipes')
+        cur.execute('truncate table tarefas')
         cur.execute('truncate table equipes_has_pessoas')
         cur.execute('truncate table tarefas_has_pessoas')
         cur.execute('truncate table projetos_has_pessoas')
@@ -94,25 +99,26 @@ def do(db, l=10):
                 [d.strftime("%Y-%m-%d") for d in [criacao, fazendo, conclusao, limite]],
             )
 
-            def tag():
-                return f'{c(trabalhos)} {c(cores)}'
+            def tag(a, b):
+                an = n()
+                bn = n()
+                tag_id = str(mdb['tags'].find_one_and_update(
+                    {a: an, b: bn},
+                    {'$set': {'tags': [f'{c(trabalhos)} {c(cores)}' for _ in range(random.randint(1, 3))]}},
+                    upsert=True,
+                    return_document=pymongo.ReturnDocument.AFTER,
+                )['_id'])
 
-            cur.execute(
-                f'insert into equipes_has_pessoas (equipe_id, pessoa_id, tag) value (%s, %s, %s)',
-                (n(), n(), tag()),
-            )
-            cur.execute(
-                f'insert into tarefas_has_pessoas (tarefa_id, pessoa_id, tag) value (%s, %s, %s)',
-                (n(), n(), tag()),
-            )
-            cur.execute(
-                f'insert into projetos_has_pessoas (projeto_id, pessoa_id, tag) value (%s, %s, %s)',
-                (n(), n(), tag()),
-            )
-            cur.execute(
-                f'insert into projetos_has_equipes (projeto_id, equipe_id, tag) value (%s, %s, %s)',
-                (n(), n(), tag()),
-            )
+                cur.execute(
+                    f'insert into {a}s_has_{b}s ({a}_id, {b}_id, tag) value (%s, %s, %s)',
+                    (an, bn, tag_id),
+                )
+
+            for i in range(4):
+                tag('equipe', 'pessoa')
+                tag('tarefa', 'pessoa')
+                tag('projeto', 'pessoa')
+                tag('projeto', 'equipe')
 
     # file('proc.sql')
     # file('view.sql')

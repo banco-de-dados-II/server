@@ -13,11 +13,13 @@
 
 <h2>equipes</h2>
 
+{% include "paginas.html" %}
+
 <ul>
     {% for item in equipes %}
     <li>
         <h2><a href="equipes/{{ item['id'] }}">{{ item['nome'] }}</a></h2>
-        <p>tag: {{ item['tag'] }}</p>
+        <p>tags: {{ item['tags'] }}</p>
         {% if item['projeto'] is none %}
         <p>sem projeto</p>
         {% else %}

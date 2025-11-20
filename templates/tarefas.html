@@ -20,11 +20,13 @@
 
 <h2>tarefas</h2>
 
+{% include "paginas.html" %}
+
 <ul>
     {% for tarefa in tarefas %}
     <li>
         <h2><a href="/tarefas/{{ tarefa['id'] }}">{{ tarefa['titulo'] }}</a></h2>
-        <p>tag: {{ tarefa['tag'] }}</p>
+        <p>tags: {{ tarefa['tags'] }}</p>
         <p>status: {{ tarefa['status'] }}</p>
         <p>nome do projeto: {{ tarefa['projeto_nome'] }}</p>
         <p>data de criacao: {{ tarefa['criacao'] }}</p>

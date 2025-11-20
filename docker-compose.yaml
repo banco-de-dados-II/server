@@ -9,3 +9,11 @@ services:
       MYSQL_DATABASE: "bd2"
       MYSQL_ROOT_PASSWORD: ""
       MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+  non-relacional-db:
+    image: "mongodb/mongodb-community-server:7.0-ubuntu2204"
+    ports:
+      - "27017:27017"
+    restart: "always"
+    environment:
+      MONGODB_INITDB_ROOT_USERNAME: "root"
+      MONGODB_INITDB_ROOT_PASSWORD: "root"
