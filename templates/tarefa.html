@@ -1,45 +1,161 @@
-{% set title = "tarefas" %}
-{% include "head.html" %}
+{% extends "base.html" %}
+{% block conteudo %}
 
-<h1>{{ tarefa['titulo'] }}</h1>
+<style>
+    .tarefa-container {
+        max-width: 700px;
+        margin: 40px auto;
+        padding: 20px;
+    }
 
-<h2>info</h2>
+    .tarefa-card {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
 
-<form action="/tarefas/substituir" method="POST">
-    <input type="hidden" name="id" value="{{ tarefa['id'] }}">
+    .tarefa-card h1 {
+        text-align: center;
+        color: var(--cor-primaria);
+        margin-bottom: 25px;
+        font-size: 2em;
+    }
 
-    <label>titulo</label>
-    <input type="text" name="titulo" value="{{ tarefa['titulo'] }}">
+    .tarefa-card h2 {
+        margin-top: 25px;
+        border-bottom: 2px solid var(--cor-primaria);
+        padding-bottom: 8px;
+        color: var(--cor-texto);
+    }
 
-    <label>tag</label>
-    <input type="text" name="tag" value="{{ tarefa['tag'] }}">
+    .tarefa-card label {
+        display: block;
+        font-weight: 600;
+        margin-top: 15px;
+        margin-bottom: 5px;
+        color: var(--cor-texto);
+    }
 
-    <h3>datas</h3>
-    <p>criacao: {{ tarefa['criacao'] }}</p>
+    .tarefa-card input[type="text"],
+    .tarefa-card input[type="data"] {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        box-sizing: border-box;
+    }
 
-    <label>fazendo</label>
-    <input type="data" name="fazendo" value="{{ tarefa['fazendo']}}">
+    .tarefa-card input:focus {
+        border-color: var(--cor-primaria);
+        box-shadow: 0 0 0 3px rgba(0,123,255,0.25);
+        outline: none;
+    }
 
-    <label>conclusao</label>
-    <input type="data" name="conclusao" value="{{ tarefa['conclusao']}}">
+    .status-container {
+        margin-top: 20px;
+        padding: 10px 0;
+    }
 
-    <label>limite</label>
-    <input type="data" name="limite" value="{{ tarefa['limite']}}">
+    .status-container label {
+        font-weight: 500;
+        display: inline-block;
+        margin-right: 15px;
+    }
 
-    <br>
-    {% for status in tarefa_status %}
-    <input
-        type="radio"
-        name="status"
-        value="{{ status }}"
-        {%+ if tarefa['status'] == status %}checked{% endif %}>
-    <label>{{ status }}</label>
-    {% endfor %}
+    .btn-salvar {
+        margin-top: 25px;
+        padding: 14px;
+        width: 100%;
+        background: var(--cor-primaria);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+    }
 
-    <br>
-    <button type="submit">mudar informações da equipe</button>
-</form>
+    .btn-salvar:hover {
+        background: var(--cor-secundaria);
+    }
 
-<h2>projeto <a href="projetos/{{ tarefa['projeto_id'] }}">{{ tarefa['projeto_nome'] }}</a></h2>
+    .projeto-info {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 1.2em;
+    }
 
-{% include "foot.html" %}
+    .projeto-info a {
+        color: var(--cor-primaria);
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .projeto-info a:hover {
+        color: var(--cor-secundaria);
+    }
+</style>
+
+
+<div class="tarefa-container">
+    <div class="tarefa-card">
+
+        <h1>{{ tarefa['titulo'] }}</h1>
+
+        <h2>Informações da Tarefa</h2>
+
+        <form action="/tarefas/substituir" method="POST">
+
+            <input type="hidden" name="id" value="{{ tarefa['id'] }}">
+
+            <label>Título</label>
+            <input type="text" name="titulo" value="{{ tarefa['titulo'] }}">
+
+            <label>Tag</label>
+            <input type="text" name="tag" value="{{ tarefa['tag'] }}">
+
+            <h2>Datas</h2>
+
+            <p><strong>Criação:</strong> {{ tarefa['criacao'] }}</p>
+
+            <label>Fazendo</label>
+            <input type="data" name="fazendo" value="{{ tarefa['fazendo'] }}">
+
+            <label>Conclusão</label>
+            <input type="data" name="conclusao" value="{{ tarefa['conclusao'] }}">
+
+            <label>Limite</label>
+            <input type="data" name="limite" value="{{ tarefa['limite'] }}">
+
+            <div class="status-container">
+                <h2>Status</h2>
+
+                {% for status in tarefa_status %}
+                    <input
+                        type="radio"
+                        name="status"
+                        value="{{ status }}"
+                        {% if tarefa['status'] == status %}checked{% endif %}
+                    >
+                    <label>{{ status }}</label>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="btn-salvar">Salvar Alterações</button>
+        </form>
+
+        <div class="projeto-info">
+            <p>
+                Projeto relacionado:
+                <a href="/projetos/{{ tarefa['projeto_id'] }}">
+                    {{ tarefa['projeto_nome'] }}
+                </a>
+            </p>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

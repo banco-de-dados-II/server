@@ -1,39 +1,148 @@
-{% set title = "tarefas" %}
-{% include "head.html" %}
+{% extends "base.html" %}
+{% block conteudo %}
 
-<h1>tarefas de {{ nome }}</h1>
+<style>
+    .tarefas-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 30px;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
 
-<h2>adicionar</h2>
+    .tarefas-container h1,
+    .tarefas-container h2 {
+        text-align: center;
+    }
 
-<form action="/tarefas/substituir" method="POST">
-    <label>titulo</label>
-    <input name="titulo" type="text">
+    .form-bloco {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+    }
 
-    {% for status in tarefa_status %}
-    <input type="radio" name="status" value="{{ status }}">
-    <label>{{ status }}</label>
-    {% endfor %}
+    label {
+        font-weight: 600;
+        display: block;
+        margin-top: 15px;
+        margin-bottom: 5px;
+    }
 
-    <br>
-    <button type="submit">adicionar nova tarefa</button>
-</form>
+    input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
 
-<h2>tarefas</h2>
+    .radio-group {
+        margin: 10px 0;
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
 
-<ul>
-    {% for tarefa in tarefas %}
-    <li>
-        <h2><a href="/tarefas/{{ tarefa['id'] }}">{{ tarefa['titulo'] }}</a></h2>
-        <p>tag: {{ tarefa['tag'] }}</p>
-        <p>status: {{ tarefa['status'] }}</p>
-        <p>nome do projeto: {{ tarefa['projeto_nome'] }}</p>
-        <p>data de criacao: {{ tarefa['criacao'] }}</p>
-        <p>começou a fazer em: {{ tarefa['fazendo'] }}</p>
-        <p>concluido em: {{ tarefa['conclusao'] }}</p>
-        <p>limite: {{ tarefa['limite'] }}</p>
-        <p>criador: {{ tarefa['criador_nome'] }}</p>
-    </li>
-    {% endfor %}
-</ul>
+    .btn-submit {
+        margin-top: 20px;
+        width: 100%;
+        padding: 12px;
+        border: none;
+        background: var(--cor-primaria, #007bff);
+        color: white;
+        font-size: 1.1em;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
 
-{% include "foot.html" %}
+    .btn-submit:hover {
+        background: var(--cor-secundaria, #0056b3);
+    }
+
+    /* Lista */
+    .tarefas-lista {
+        list-style: none;
+        padding: 0;
+        margin-top: 25px;
+    }
+
+    .tarefas-lista li {
+        background: #f8f9fa;
+        padding: 18px;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .tarefas-lista h3 {
+        margin: 0 0 10px 0;
+    }
+
+    .tarefa-info p {
+        margin: 3px 0;
+    }
+</style>
+
+
+<div class="tarefas-container">
+
+    <h1>Tarefas de {{ nome }}</h1>
+
+
+    <!-- -------- FORM DE ADICIONAR -------- -->
+    <div class="form-bloco">
+        <h2>Adicionar nova tarefa</h2>
+
+        <form action="/tarefas/substituir" method="POST">
+
+            <label>Título</label>
+            <input name="titulo" type="text">
+
+            <label>Status</label>
+
+            <div class="radio-group">
+                {% for status in tarefa_status %}
+                <label>
+                    <input type="radio" name="status" value="{{ status }}">
+                    {{ status }}
+                </label>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="btn-submit">Adicionar tarefa</button>
+        </form>
+    </div>
+
+
+    <!-- -------- LISTA DE TAREFAS -------- -->
+    <h2>Suas tarefas</h2>
+
+    <ul class="tarefas-lista">
+        {% for tarefa in tarefas %}
+        <li>
+            <h3>
+                <a href="/tarefas/{{ tarefa['id'] }}">
+                    {{ tarefa['titulo'] }}
+                </a>
+            </h3>
+
+            <div class="tarefa-info">
+                <p><strong>Tag:</strong> {{ tarefa['tag'] }}</p>
+                <p><strong>Status:</strong> {{ tarefa['status'] }}</p>
+                <p><strong>Projeto:</strong> {{ tarefa['projeto_nome'] }}</p>
+                <p><strong>Criada em:</strong> {{ tarefa['criacao'] }}</p>
+                <p><strong>Começou:</strong> {{ tarefa['fazendo'] }}</p>
+                <p><strong>Concluída:</strong> {{ tarefa['conclusao'] }}</p>
+                <p><strong>Limite:</strong> {{ tarefa['limite'] }}</p>
+                <p><strong>Criador:</strong> {{ tarefa['criador_nome'] }}</p>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>
+
+{% endblock %}

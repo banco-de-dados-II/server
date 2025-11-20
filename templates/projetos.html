@@ -1,28 +1,134 @@
-{% set title = "projetos" %}
-{% include "head.html" %}
+{% extends "base.html" %}
+{% block conteudo %}
 
-<h1>projetos de {{ nome }}</h1>
+<style>
+    .projetos-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 10px;
+    }
 
-<h2>adicionar</h2>
+    /* Card para adicionar novo projeto */
+    .novo-projeto {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        margin-bottom: 35px;
+    }
 
-<form action="/projetos/substituir" method="POST">
-    <label>titulo</label>
-    <input name="titulo" type="text">
-    <button type="submit">adicionar nova projeto</button>
-</form>
+    .novo-projeto h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: var(--cor-primaria);
+        font-size: 1.7em;
+    }
 
-<h2>projeto</h2>
+    .novo-projeto label {
+        font-weight: 600;
+        color: var(--cor-texto);
+    }
 
-<ul>
-    {% for item in projetos %}
-    <li>
-        <a href="/projetos/{{ item['id'] }}">{{ item['titulo'] }}</a>
-        <p>criacao: {{ item['criacao'] }}</p>
-        <p>fazendo: {{ item['fazendo'] }}</p>
-        <p>conclusao: {{ item['conclusao'] }}</p>
-        <p>limite: {{ item['limite'] }}</p>
-    </li>
-    {% endfor %}
-</ul>
+    .novo-projeto input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        margin-top: 8px;
+        box-sizing: border-box;
+        font-size: 1em;
+    }
 
-{% include "foot.html" %}
+    .novo-projeto input:focus {
+        border-color: var(--cor-primaria);
+        box-shadow: 0 0 0 3px rgba(0,123,255,0.25);
+        outline: none;
+    }
+
+    .novo-projeto button {
+        margin-top: 18px;
+        padding: 12px;
+        width: 100%;
+        background: var(--cor-primaria);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.1em;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .novo-projeto button:hover {
+        background: var(--cor-secundaria);
+    }
+
+    /* Lista de projetos */
+    .projetos-lista h2 {
+        text-align: center;
+        font-size: 1.8em;
+        color: var(--cor-texto);
+        margin-bottom: 20px;
+    }
+
+    .projetos-lista ul {
+        padding: 0;
+        list-style: none;
+    }
+
+    .projetos-lista li {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        margin-bottom: 20px;
+    }
+
+    .projetos-lista a {
+        font-size: 1.4em;
+        font-weight: 700;
+        text-decoration: none;
+        color: var(--cor-primaria);
+    }
+
+    .projetos-lista p {
+        margin: 8px 0;
+        color: #444;
+    }
+</style>
+
+
+<div class="projetos-container">
+
+    <!-- Card para criar novo projeto -->
+    <div class="novo-projeto">
+        <h2>Adicionar Projeto</h2>
+
+        <form action="/projetos/substituir" method="POST">
+            <label for="titulo">Título</label>
+            <input name="titulo" id="titulo" type="text" required>
+            <button type="submit">Criar Projeto</button>
+        </form>
+    </div>
+
+    <!-- Lista de projetos -->
+    <div class="projetos-lista">
+        <h2>Projetos de {{ nome }}</h2>
+
+        <ul>
+            {% for item in projetos %}
+            <li>
+                <a href="/projetos/{{ item['id'] }}">{{ item['titulo'] }}</a>
+
+                <p><strong>Criação:</strong> {{ item['criacao'] }}</p>
+                <p><strong>Fazendo:</strong> {{ item['fazendo'] }}</p>
+                <p><strong>Conclusão:</strong> {{ item['conclusao'] }}</p>
+                <p><strong>Limite:</strong> {{ item['limite'] }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</div>
+
+{% endblock %}

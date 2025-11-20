@@ -1,30 +1,130 @@
-{% set title = "equipes" %}
-{% include "head.html" %}
+{% extends "base.html" %}
+{% block conteudo %}
 
-<h1>equipes de {{ nome }}</h1>
+<style>
+    .equipes-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 30px;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
 
-<h2>adicionar</h2>
+    .equipes-container h1,
+    .equipes-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
 
-<form action="/equipes/criar" method="POST">
-    <label>nome</label>
-    <input name="nome" type="text">
-    <button type="submit">adicionar nova equipe</button>
-</form>
+    .form-bloco {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 35px;
+    }
 
-<h2>equipes</h2>
+    label {
+        font-weight: 600;
+        display: block;
+        margin-top: 15px;
+        margin-bottom: 5px;
+    }
 
-<ul>
-    {% for item in equipes %}
-    <li>
-        <h2><a href="equipes/{{ item['id'] }}">{{ item['nome'] }}</a></h2>
-        <p>tag: {{ item['tag'] }}</p>
-        {% if item['projeto'] is none %}
-        <p>sem projeto</p>
-        {% else %}
-        <p>no projeto: {{ item['projeto'] }}</p>
-        {% endif %}
-    </li>
-    {% endfor %}
-</ul>
+    input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
 
-{% include "foot.html" %}
+    .btn-submit {
+        margin-top: 20px;
+        width: 100%;
+        padding: 12px;
+        border: none;
+        background: var(--cor-primaria, #007bff);
+        color: white;
+        font-size: 1.1em;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn-submit:hover {
+        background: var(--cor-secundaria, #0056b3);
+    }
+
+    /* Cards de equipes */
+    .equipes-lista {
+        list-style: none;
+        padding: 0;
+        margin-top: 25px;
+    }
+
+    .equipes-lista li {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .equipes-lista li h3 {
+        margin: 0 0 10px 0;
+    }
+
+    .equipe-info p {
+        margin: 5px 0;
+    }
+</style>
+
+
+<div class="equipes-container">
+
+    <h1>Equipes de {{ nome }}</h1>
+
+
+    <!-- FORM DE ADICIONAR -->
+    <div class="form-bloco">
+        <h2>Adicionar Nova Equipe</h2>
+
+        <form action="/equipes/criar" method="POST">
+
+            <label>Nome da equipe</label>
+            <input name="nome" type="text">
+
+            <button type="submit" class="btn-submit">Criar equipe</button>
+        </form>
+    </div>
+
+
+    <!-- LISTA DE EQUIPES -->
+    <h2>Suas Equipes</h2>
+
+    <ul class="equipes-lista">
+        {% for item in equipes %}
+        <li>
+            <h3>
+                <a href="/equipes/{{ item['id'] }}">
+                    {{ item['nome'] }}
+                </a>
+            </h3>
+
+            <div class="equipe-info">
+                <p><strong>Sua tag:</strong> {{ item['tag'] }}</p>
+
+                {% if item['projeto'] is none %}
+                    <p><strong>Projeto:</strong> Nenhum</p>
+                {% else %}
+                    <p><strong>Projeto:</strong> {{ item['projeto'] }}</p>
+                {% endif %}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>
+
+{% endblock %}

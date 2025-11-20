@@ -1,6 +1,41 @@
-{% set title = "index" %}
-{% include "head.html" %}
+{% extends "base.html" %}
+{% block conteudo %}
 
-<button hx-post="/reset" hx-swap=none>reset</button>
+<style>
+    .index-container {
+        max-width: 600px;
+        margin: 60px auto;
+        text-align: center;
+    }
 
-{% include "foot.html" %}
+    .btn-reset {
+        background-color: var(--cor-primaria, #007bff);
+        color: white;
+        padding: 14px 30px;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.2em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .btn-reset:hover {
+        background-color: var(--cor-secundaria, #0056b3);
+        transform: scale(1.04);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    }
+</style>
+
+
+<div class="index-container">
+    <button 
+        class="btn-reset" 
+        hx-post="/reset" 
+        hx-swap="none">
+        Resetar Banco
+    </button>
+</div>
+
+{% endblock %}

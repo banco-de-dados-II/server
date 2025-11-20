@@ -8,22 +8,18 @@
     <title>{{ title }}</title>
 
     <style>
-        /* ---------------------------------- */
-        /* 1. Variáveis CSS (Cores Padrão) */
-        /* ---------------------------------- */
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
         :root {
-            /* Cor Primária (Para botões e destaque) */
             --cor-primaria: #007bff; 
-            /* Cor Secundária (Para hover mais escuro) */
             --cor-secundaria: #0056b3; 
             --cor-fundo-claro: #f0f2f5; 
             --cor-texto: #1a1a1a;
             --cor-texto-claro: #ffffff;
         }
-        
-        /* ---------------------------------- */
-        /* 2. Estilo da Navegação (navbar) - Corrigido o bug do 'salto' */
-        /* ---------------------------------- */
 
         .navbar {
             background-color: #343a40; 
@@ -46,7 +42,6 @@
             color: var(--cor-texto-claro); 
             padding: 8px 15px; 
             border-radius: 5px; 
-            /* O nome técnico é: Borda Consistente. Corrigiu o bug do desalinhamento. */
             border: 2px solid transparent; 
             transition: background-color 0.3s ease, border-color 0.3s ease; 
             font-weight: 500; 
@@ -62,7 +57,7 @@
         .navbar a.active {
             background-color: var(--cor-primaria);
             color: var(--cor-texto-claro);
-            border-color: var(--cor-primaria); /* Mantém os 2px */
+            border-color: var(--cor-primaria);
             font-weight: 700;
         }
         
@@ -71,10 +66,6 @@
             border-color: var(--cor-secundaria);
         }
 
-        /* ---------------------------------- */
-        /* 3. NOVO ESTILO PARA O TÍTULO DA PÁGINA (SOLUÇÃO DO PROBLEMA) */
-        /* ---------------------------------- */
-        
         .page-title {
             padding: 30px 20px; 
             background-color: #ffffff; 
@@ -84,12 +75,10 @@
         }
 
         .page-title h1 {
-            /* O nome técnico é: Título de Nível 1. */
             font-size: 2.2em; 
             font-weight: 700;
-            color: var(--cor-texto); /* Usa a variável de cor de texto padrão */
+            color: var(--cor-texto);
             margin: 0; 
-            /* O nome técnico é: Transformação de Texto. */
             text-transform: capitalize; 
         }
     </style>
@@ -110,3 +99,11 @@
 <header class="page-title">
     <h1>{{ rota }}</h1>
 </header>
+
+<!-- inserir conteúdo das páginas aqui -->
+<main>
+    {% block conteudo %}{% endblock %}
+</main>
+
+</body>
+</html>

@@ -1,26 +1,74 @@
-{% set title = "projetos" %}
-{% include "head.html" %}
+{% extends "base.html" %}
+{% block conteudo %}
 
-<form action="/projetos/substituir" method="POST">
-    <input name="id" type="hidden" value="{{ projeto['id'] }}">
+<style>
+    .projeto-container {
+        max-width: 600px;
+        margin: 30px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
 
-    <label>titulo</label>
-    <input name="titulo" type="text" value="{{ projeto['titulo'] }}">
+    .projeto-container label {
+        display: block;
+        font-weight: 600;
+        margin-top: 15px;
+    }
 
-    <h3>datas</h3>
-    <p>criacao: {{ projeto['criacao'] }}</p>
+    .projeto-container input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
 
-    <label>fazendo</label>
-    <input type="data" name="fazendo" value="{{ projeto['fazendo']}}">
+    button {
+        margin-top: 20px;
+        padding: 12px 20px;
+        background: var(--cor-primaria);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+    }
 
-    <label>conclusao</label>
-    <input type="data" name="conclusao" value="{{ projeto['conclusao']}}">
+    button:hover {
+        background: var(--cor-secundaria);
+    }
+</style>
 
-    <label>limite</label>
-    <input type="data" name="limite" value="{{ projeto['limite']}}">
+<div class="projeto-container">
 
-    <br> <br>
-    <button type="submit">atualizar projeto</button>
-</form>
+    <h2>Editar Projeto</h2>
 
-{% include "foot.html" %}
+    <form action="/projetos/substituir" method="POST">
+
+        <input type="hidden" name="id" value="{{ projeto['id'] }}">
+
+        <label>Título</label>
+        <input type="text" name="titulo" value="{{ projeto['titulo'] }}">
+
+        <h3>Datas</h3>
+
+        <p><strong>Criação:</strong> {{ projeto['criacao'] }}</p>
+
+        <label>Fazendo</label>
+        <input type="date" name="fazendo" value="{{ projeto['fazendo'] }}">
+
+        <label>Conclusão</label>
+        <input type="date" name="conclusao" value="{{ projeto['conclusao'] }}">
+
+        <label>Limite</label>
+        <input type="date" name="limite" value="{{ projeto['limite'] }}">
+
+        <button type="submit">Atualizar Projeto</button>
+    </form>
+
+</div>
+
+{% endblock %}

@@ -1,46 +1,131 @@
-{% set title = "equipes" %}
-{% include "head.html" %}
+{% extends "base.html" %}
+{% block conteudo %}
 
-<h1>equipe {{ equipe['nome'] }}</h1>
+<style>
+    .equipe-container {
+        max-width: 700px;
+        margin: 40px auto;
+    }
 
-<h2>info</h2>
+    .equipe-card {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
 
-<form action="/equipes/substituir" method="POST">
-    <!--
-    fazer é um risco de segurança enorme,
-    mas eu preciso entregar isso ainda esse mes :)
-    -->
-    <input type="hidden" name="id" value="{{ equipe['id'] }}">
+    .equipe-card h1 {
+        text-align: center;
+        color: var(--cor-primaria);
+        margin-bottom: 25px;
+        font-size: 2em;
+    }
 
-    <label>nome</label>
-    <input type="text" name="nome" value="{{ equipe['name'] }}">
+    .equipe-card h2 {
+        margin-top: 35px;
+        border-bottom: 2px solid var(--cor-primaria);
+        padding-bottom: 8px;
+        color: var(--cor-texto);
+    }
 
-    <label>tag</label>
-    <input type="text" name="tag" value="{{ equipe['tag'] }}">
+    label {
+        display: block;
+        font-weight: 600;
+        margin-top: 15px;
+        margin-bottom: 5px;
+        color: var(--cor-texto);
+    }
 
-    <button type="submit">atualizar informações da equipe</button>
-</form>
+    input[type="text"] {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        box-sizing: border-box;
+    }
 
-<h2>sair da equipe</h2>
-<form action="/equipes/sair" method="POST">
-    <input type="hidden" name="id" value="{{ equipe['id'] }}">
-    <input type="hidden" name="sair" value="true">
+    input[type="text"]:focus {
+        border-color: var(--cor-primaria);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    }
 
-    <button type="submit">sair</button>
-</form>
+    .btn {
+        margin-top: 20px;
+        padding: 12px;
+        width: 100%;
+        background: var(--cor-primaria);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.1em;
+        font-weight: 600;
+        transition: 0.3s;
+    }
 
-<h2>adicionar pessoa na equipe</h2>
+    .btn:hover {
+        background: var(--cor-secundaria);
+    }
 
-<form action="/equipes/nova-pessoa" method="POST">
-    <input type="hidden" name="id" value="{{ equipe['id'] }}">
+    .btn-danger {
+        background: #dc3545;
+    }
 
-    <label>nome da pessoa</label>
-    <input name="nome" type="text">
+    .btn-danger:hover {
+        background: #b02a37;
+    }
+</style>
 
-    <label>tag</label>
-    <input name="tag" type="text">
 
-    <button type="submit">adicionar pessoa a equipe</button>
-</form>
+<div class="equipe-container">
+    <div class="equipe-card">
 
-{% include "foot.html" %}
+        <h1>Equipe: {{ equipe['nome'] }}</h1>
+
+        <!-- Editar equipe -->
+        <h2>Informações da Equipe</h2>
+
+        <form action="/equipes/substituir" method="POST">
+            <input type="hidden" name="id" value="{{ equipe['id'] }}">
+
+            <label>Nome</label>
+            <input type="text" name="nome" value="{{ equipe['name'] }}">
+
+            <label>Tag</label>
+            <input type="text" name="tag" value="{{ equipe['tag'] }}">
+
+            <button type="submit" class="btn">Salvar Alterações</button>
+        </form>
+
+
+        <!-- Sair da equipe -->
+        <h2>Sair da Equipe</h2>
+
+        <form action="/equipes/sair" method="POST">
+            <input type="hidden" name="id" value="{{ equipe['id'] }}">
+            <input type="hidden" name="sair" value="true">
+
+            <button type="submit" class="btn btn-danger">Sair da Equipe</button>
+        </form>
+
+
+        <!-- Adicionar pessoa -->
+        <h2>Adicionar Pessoa</h2>
+
+        <form action="/equipes/nova-pessoa" method="POST">
+            <input type="hidden" name="id" value="{{ equipe['id'] }}">
+
+            <label>Nome da Pessoa</label>
+            <input name="nome" type="text">
+
+            <label>Tag</label>
+            <input name="tag" type="text">
+
+            <button type="submit" class="btn">Adicionar à Equipe</button>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}
