@@ -1,19 +1,162 @@
 {% set title = "perfil" %}
 {% include "head.html" %}
 
-<ul>
-    <li>nome: {{ nome }}</li>
-    <li>email: {{ email }}</li>
-</ul>
+<style>
+    /*
+      ATENÇÃO: Este estilo usa as Variáveis CSS (Ex: --cor-primaria) que
+      devem estar definidas no seu arquivo 'head.html' (veja o próximo bloco).
+    */
 
-<form method="POST" action="/perfil/substituir">
-    <label>mudar nome</label>
-    <input text="text" name="nome" value="{{ nome }}">
+    /* Estilos Gerais */
+    body {
+        /* Usando Variáveis CSS */
+        background-color: var(--cor-fundo-claro, #f0f2f5); 
+        margin: 0;
+        padding: 0;
+        /* O nome técnico é: Família da Fonte (Font Family) */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--cor-texto, #333);
+    }
 
-    <label>mudar email</label>
-    <input text="text" name="email" value="{{ email }}">
+    h2 {
+        color: var(--cor-texto, #1a1a1a);
+        font-size: 1.5em;
+        margin-top: 0;
+    }
 
-    <input type="submit" value="mudar"></form>
-</form>
+    /* Estilo do Card Principal (Perfil Container) */
+    .perfil-container {
+        max-width: 600px; 
+        /* O nome técnico é: Margem Externa (Margin). Centraliza o card. */
+        margin: 50px auto; 
+        /* O nome técnico é: Espaçamento Interno (Padding). */
+        padding: 30px 40px; 
+        background-color: #ffffff; 
+        /* O nome técnico é: Raio da Borda (Border Radius) */
+        border-radius: 15px; 
+        /* O nome técnico é: Sombra da Caixa (Box Shadow). Adiciona profundidade. */
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); 
+    }
+
+    /* Estilo da Seção de Dados Atuais */
+    .perfil-dados h2 {
+        /* Usando Variável CSS para a cor primária */
+        border-bottom: 3px solid var(--cor-primaria, #007bff); 
+        padding-bottom: 10px;
+        margin-bottom: 25px;
+    }
+
+    .perfil-dados ul {
+        /* O nome técnico é: Estilo da Lista (List Style). Remove os pontos. */
+        list-style: none; 
+        padding: 0;
+    }
+
+    .perfil-dados li {
+        background-color: #f8f9fa; /* Um cinza bem leve */
+        padding: 12px 20px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        font-size: 1.05em;
+        /* O nome técnico é: Flexbox. Alinha itens na linha. */
+        display: flex; 
+        justify-content: space-between; /* Espaça o label do dado */
+    }
+
+    .dado-label {
+        /* O nome técnico é: Peso da Fonte (Font Weight) */
+        font-weight: 600; 
+        color: #555;
+    }
+
+    /* Estilo do Formulário de Edição */
+    .perfil-form {
+        margin-top: 40px;
+        border-top: 1px solid #ddd;
+        padding-top: 30px;
+    }
+
+    .form-grupo {
+        margin-bottom: 25px;
+    }
+
+    .perfil-form label {
+        /* O nome técnico é: Exibição (Display). Faz o label ocupar sua própria linha. */
+        display: block; 
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--cor-texto, #1a1a1a);
+    }
+
+    .perfil-form input[type="text"] {
+        width: 100%; 
+        padding: 12px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        /* O nome técnico é: Dimensionamento da Caixa (Box Sizing). Garante que a largura inclua padding e borda. */
+        box-sizing: border-box; 
+        font-size: 1em;
+    }
+
+    /* O nome técnico é: Pseudoclasse de Foco (:focus). */
+    .perfil-form input[type="text"]:focus {
+        /* Usando Variável CSS para a cor primária */
+        border-color: var(--cor-primaria, #007bff); 
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); 
+    }
+
+    /* Estilo do Botão de Envio */
+    .btn-submit {
+        /* O nome técnico é: Seletor de Classe */
+        /* Usando Variável CSS para a cor primária */
+        background-color: var(--cor-primaria, #007bff); 
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer; 
+        font-size: 1.1em;
+        font-weight: 600;
+        /* O nome técnico é: Transição (Transition). */
+        transition: background-color 0.3s ease; 
+        width: 100%; 
+        margin-top: 15px;
+    }
+
+    /* O nome técnico é: Pseudoclasse de Mouse Sobre (:hover) */
+    .btn-submit:hover {
+        /* Usando Variável CSS para a cor secundária (ou um escurecimento) */
+        background-color: var(--cor-secundaria, #0056b3); 
+    }
+</style>
+
+<div class="perfil-container">
+    
+    <div class="perfil-dados">
+        <h2>Seus Dados Atuais</h2>
+        <ul>
+            <li><span class="dado-label">Nome:</span> {{ nome }}</li>
+            <li><span class="dado-label">Email:</span> {{ email }}</li>
+        </ul>
+    </div>
+
+    <form method="POST" action="/perfil/substituir" class="perfil-form">
+        <h2>Atualizar Informações</h2>
+        
+        <div class="form-grupo">
+            <label for="input-nome">Mudar Nome</label>
+            <input type="text" id="input-nome" name="nome" value="{{ nome }}">
+        </div>
+
+        <div class="form-grupo">
+            <label for="input-email">Mudar Email</label>
+             <input type="text" id="input-email" name="email" value="{{ email }}">
+        </div>
+
+        <input type="submit" value="Salvar Mudanças" class="btn-submit">
+    </form>
+
+</div>
 
 {% include "foot.html" %}
