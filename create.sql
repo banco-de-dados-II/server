@@ -96,7 +96,7 @@ DROP TABLE IF EXISTS `bd2`.`equipes_has_pessoas` ;
 CREATE TABLE IF NOT EXISTS `bd2`.`equipes_has_pessoas` (
   `equipe_id` INT NOT NULL,
   `pessoa_id` INT NOT NULL,
-  `tag` VARCHAR(100) NULL COMMENT 'exemplo: lider, desenvolvedor, dba, da, estagiario')
+  `tag` VARCHAR(24) NULL COMMENT 'mongodb Objectid')
 ENGINE = InnoDB;
 
 
@@ -108,7 +108,7 @@ DROP TABLE IF EXISTS `bd2`.`tarefas_has_pessoas` ;
 CREATE TABLE IF NOT EXISTS `bd2`.`tarefas_has_pessoas` (
   `tarefa_id` INT NOT NULL,
   `pessoa_id` INT NOT NULL,
-  `tag` VARCHAR(100) NULL COMMENT 'exemplo: prioridade(A), prioridade(B), prioridade(C)')
+  `tag` VARCHAR(24) NULL COMMENT 'mongodb Objectid')
 ENGINE = InnoDB;
 
 
@@ -120,7 +120,7 @@ DROP TABLE IF EXISTS `bd2`.`projetos_has_pessoas` ;
 CREATE TABLE IF NOT EXISTS `bd2`.`projetos_has_pessoas` (
   `projeto_id` INT NOT NULL,
   `pessoa_id` INT NOT NULL,
-  `tag` VARCHAR(100) NULL COMMENT 'exemplo: criador, cliente')
+  `tag` VARCHAR(24) NULL COMMENT 'mongodb Objectid')
 ENGINE = InnoDB;
 
 
@@ -132,7 +132,7 @@ DROP TABLE IF EXISTS `bd2`.`projetos_has_equipes` ;
 CREATE TABLE IF NOT EXISTS `bd2`.`projetos_has_equipes` (
   `projeto_id` INT NOT NULL,
   `equipe_id` INT NOT NULL,
-  `tag` VARCHAR(100) NULL COMMENT 'exemplo: desenvolvedores, designers')
+  `tag` VARCHAR(24) NULL COMMENT 'mongodb Objectid')
 ENGINE = InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;

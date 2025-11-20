@@ -5,7 +5,12 @@ from datetime import datetime
 from time import time
 from bson.objectid import ObjectId
 
+import bson
 import json
+import random
+
+def id():
+    return bson.ObjectId(random.randbytes(12))
 
 def registrar(info={}):
     logs = g.mdb.get_collection('logs')
@@ -24,7 +29,10 @@ def registrar(info={}):
 
     info['data'] = datetime.fromtimestamp(time()).strftime('%Y-%m-%d %H:%M:%S')
 
+    info['_id'] = id()
+
     logs.insert_one(info)
+
 
 def tag_update(filter, l):
     tags = g.mdb.get_collection('tags')
@@ -37,4 +45,4 @@ def tag_update(filter, l):
 
 def tag_search(id):
     tags = g.mdb.get_collection('tags')
-    return tags.find_one({'_id': Objectid(id)})
+    return tags.find_one({'_id': ObjectId(id)})
