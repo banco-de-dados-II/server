@@ -12,9 +12,7 @@
         /* 1. Variáveis CSS (Cores Padrão) */
         /* ---------------------------------- */
         :root {
-            /* Cor Primária (Para botões e destaque) */
             --cor-primaria: #007bff; 
-            /* Cor Secundária (Para hover mais escuro) */
             --cor-secundaria: #0056b3; 
             --cor-fundo-claro: #f0f2f5; 
             --cor-texto: #1a1a1a;
@@ -62,7 +60,7 @@
         .navbar a.active {
             background-color: var(--cor-primaria);
             color: var(--cor-texto-claro);
-            border-color: var(--cor-primaria); /* Mantém os 2px */
+            border-color: var(--cor-primaria);
             font-weight: 700;
         }
         
@@ -72,33 +70,16 @@
         }
 
         /* ---------------------------------- */
-        /* 3. NOVO ESTILO PARA O TÍTULO DA PÁGINA (SOLUÇÃO DO PROBLEMA) */
+        /* 3. Estilos de Título Removidos */
+        /* O CSS para .page-title e .page-title h1 foi removido pois a estrutura HTML não existe mais. */
         /* ---------------------------------- */
-        
-        .page-title {
-            padding: 30px 20px; 
-            background-color: #ffffff; 
-            margin-bottom: 20px;
-            border-bottom: 1px solid #ddd;
-            text-align: center;
-        }
-
-        .page-title h1 {
-            /* O nome técnico é: Título de Nível 1. */
-            font-size: 2.2em; 
-            font-weight: 700;
-            color: var(--cor-texto); /* Usa a variável de cor de texto padrão */
-            margin: 0; 
-            /* O nome técnico é: Transformação de Texto. */
-            text-transform: capitalize; 
-        }
     </style>
 </head>
 <body>
 
 <nav class="navbar">
     <ul>
-        <li><a href="/" {% if rota == "home" or rota == "" %}class="active"{% endif %}>home</a></li>
+        <li><a href="/" {% if rota == "home" or rota == "index" or rota == "" %}class="active"{% endif %}>início</a></li>
         <li><a href="/login" {% if rota == "login" %}class="active"{% endif %}>login</a></li>
         <li><a href="/perfil" {% if rota == "perfil" %}class="active"{% endif %}>perfil</a></li>
         <li><a href="/tarefas" {% if rota == "tarefas" %}class="active"{% endif %}>tarefas</a></li>
@@ -106,7 +87,3 @@
         <li><a href="/projetos" {% if rota == "projetos" %}class="active"{% endif %}>projetos</a></li>
     </ul>
 </nav>
-
-<header class="page-title">
-    <h1>{{ rota }}</h1>
-</header>

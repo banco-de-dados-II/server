@@ -1,26 +1,153 @@
 {% set title = "projetos" %}
 {% include "head.html" %}
 
-<form action="/projetos/substituir" method="POST">
-    <input name="id" type="hidden" value="{{ projeto['id'] }}">
+<style>
+    /* Estilos Gerais */
+    body {
+        /* Garante que o corpo da página use o fundo claro após o cabeçalho */
+        background-color: var(--cor-fundo-claro, #f0f2f5); 
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--cor-texto, #333);
+    }
+    
+    h2, h3 {
+        color: var(--cor-texto, #1a1a1a);
+        margin-top: 0;
+    }
 
-    <label>titulo</label>
-    <input name="titulo" type="text" value="{{ projeto['titulo'] }}">
+    /* Estilo do Card Principal (Container) */
+    .projeto-container {
+        max-width: 600px; 
+        /* Centralização horizontal com Margem Automática */
+        margin: 50px auto; 
+        padding: 30px 40px; 
+        background-color: #ffffff; 
+        border-radius: 15px; 
+        /* O nome técnico é: Sombra da Caixa (Box Shadow). */
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); 
+    }
 
-    <h3>datas</h3>
-    <p>criacao: {{ projeto['criacao'] }}</p>
+    /* Estilo para Agrupar Rótulo e Campo */
+    .form-grupo {
+        margin-bottom: 20px;
+    }
 
-    <label>fazendo</label>
-    <input type="data" name="fazendo" value="{{ projeto['fazendo']}}">
+    .projeto-container label {
+        display: block; /* O nome técnico é: Exibição em Bloco. Faz o rótulo ocupar sua linha. */
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--cor-texto, #333);
+    }
+    
+    /* Estilo para Título e Campos de Data/Texto */
+    .projeto-container input[type="text"],
+    .projeto-container input[type="data"] {
+        width: 100%; 
+        padding: 12px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        box-sizing: border-box; /* Garante que padding e borda não aumentem a largura total */
+        font-size: 1em;
+    }
 
-    <label>conclusao</label>
-    <input type="data" name="conclusao" value="{{ projeto['conclusao']}}">
+    /* Estilo do Foco (Focus) no Input */
+    .projeto-container input:focus {
+        border-color: var(--cor-primaria, #007bff); 
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); 
+    }
 
-    <label>limite</label>
-    <input type="data" name="limite" value="{{ projeto['limite']}}">
+    /* ---------------------------------- */
+    /* Estilo Específico para as Datas */
+    /* ---------------------------------- */
 
-    <br> <br>
-    <button type="submit">atualizar projeto</button>
-</form>
+    .datas-secao {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 20px;
+        margin-bottom: 30px;
+        background-color: #f8f8f8;
+    }
+
+    .datas-secao h3 {
+        color: var(--cor-secundaria, #555);
+        border-bottom: 1px dashed #ccc;
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+    }
+    
+    /* Estilo do Campo 'Data de Criação' (apenas visualização) */
+    .data-criacao {
+        margin-bottom: 15px;
+        font-style: italic;
+        color: #6c757d;
+        /* O nome técnico é: Espaçamento entre Linhas (Line Height). Melhora a leitura. */
+        line-height: 1.5; 
+    }
+
+    /* ---------------------------------- */
+    /* Estilo do Botão Principal */
+    /* ---------------------------------- */
+
+    .btn-submit {
+        background-color: var(--cor-primaria, #007bff); 
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer; 
+        font-size: 1.1em;
+        font-weight: 600;
+        transition: background-color 0.3s ease; 
+        width: 100%; 
+        margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+        background-color: var(--cor-secundaria, #0056b3); 
+    }
+</style>
+
+<div class="projeto-container">
+    
+    <form action="/projetos/substituir" method="POST">
+        <input name="id" type="hidden" value="{{ projeto['id'] }}">
+
+        <div class="form-grupo">
+            <label for="titulo-input">Título</label>
+            <input name="titulo" type="text" id="titulo-input" value="{{ projeto['titulo'] }}">
+        </div>
+
+        <div class="datas-secao">
+            <h3>Datas do Projeto</h3>
+            
+            <p class="data-criacao">
+                Criação: **{{ projeto['criacao'] }}**
+            </p>
+            
+            <div class="form-grupo">
+                <label for="fazendo-input">Data de Início (Fazendo)</label>
+                <input type="data" name="fazendo" id="fazendo-input" value="{{ projeto['fazendo']}}">
+            </div>
+
+            <div class="form-grupo">
+                <label for="conclusao-input">Data de Conclusão</label>
+                <input type="data" name="conclusao" id="conclusao-input" value="{{ projeto['conclusao']}}">
+            </div>
+
+            <div class="form-grupo">
+                <label for="limite-input">Data Limite (Deadline)</label>
+                <input type="data" name="limite" id="limite-input" value="{{ projeto['limite']}}">
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit">ATUALIZAR PROJETO</button>
+    </form>
+
+</div>
 
 {% include "foot.html" %}

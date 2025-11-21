@@ -1,32 +1,178 @@
 {% set title = "equipes" %}
 {% include "head.html" %}
 
-<h1>equipes de {{ nome }}</h1>
+<style>
+    body {
+        background-color: var(--cor-fundo-claro, #f0f2f5); 
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--cor-texto, #333);
+    }
+    
+    h1 {
+        max-width: 900px;
+        margin: 0 auto 20px auto; 
+        padding: 0 20px;
+        color: var(--cor-texto, #1a1a1a);
+        font-size: 1.8em;
+        text-transform: capitalize;
+    }
 
-<h2>adicionar</h2>
+    h2 {
+        color: var(--cor-primaria, #007bff);
+        border-bottom: 2px solid var(--cor-primaria, #007bff);
+        padding-bottom: 5px;
+        margin-top: 30px;
+        margin-bottom: 20px;
+        font-size: 1.5em;
+    }
 
-<form action="/equipes/criar" method="POST">
-    <label>nome</label>
-    <input name="nome" type="text">
-    <button type="submit">adicionar nova equipe</button>
-</form>
+    .equipes-main-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
 
-<h2>equipes</h2>
+    .form-adicionar {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        gap: 15px; 
+    }
 
-{% include "paginas.html" %}
+    .form-adicionar label {
+        font-weight: 600;
+        color: var(--cor-texto, #333);
+        flex-shrink: 0;
+    }
 
-<ul>
-    {% for item in equipes %}
-    <li>
-        <h2><a href="equipes/{{ item['id'] }}">{{ item['nome'] }}</a></h2>
-        <p>tags: {{ item['tags'] }}</p>
-        {% if item['projeto'] is none %}
-        <p>sem projeto</p>
-        {% else %}
-        <p>no projeto: {{ item['projeto'] }}</p>
-        {% endif %}
-    </li>
-    {% endfor %}
-</ul>
+    .form-adicionar input[type="text"] {
+        flex-grow: 1;
+        padding: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        box-sizing: border-box; 
+    }
+    
+    .form-adicionar input[type="text"]:focus {
+        border-color: var(--cor-primaria, #007bff); 
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); 
+    }
+
+    .form-adicionar button {
+        background-color: var(--cor-primaria, #007bff); 
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer; 
+        font-weight: 600;
+        transition: background-color 0.3s ease; 
+        flex-shrink: 0;
+    }
+
+    .form-adicionar button:hover {
+        background-color: var(--cor-secundaria, #0056b3); 
+    }
+
+    .lista-equipes {
+        list-style: none;
+        padding: 0;
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+    }
+
+    .equipe-card {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-left: 5px solid var(--cor-secundaria, #56b3);
+        transition: transform 0.2s;
+    }
+    
+    .equipe-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .equipe-card h2 { 
+        margin-top: 0; 
+        padding-bottom: 0;
+        border-bottom: none;
+        font-size: 1.4em;
+    }
+
+    .equipe-card a {
+        color: var(--cor-primaria, #007bff);
+        text-decoration: none;
+        display: block;
+        transition: color 0.2s;
+        margin-bottom: 5px;
+        /* CORREÇÃO DO ESTOURO */
+        word-break: break-word;
+    }
+
+    .equipe-card a:hover {
+        color: var(--cor-secundaria, #0056b3);
+    }
+
+    .equipe-card p {
+        font-size: 0.9em;
+        margin: 5px 0;
+        color: #6c757d;
+        font-style: italic; 
+        line-height: 1.4;
+    }
+    
+    .equipe-card .projeto-info {
+        font-weight: 600;
+        color: var(--cor-texto, #333);
+        font-style: normal;
+        margin-top: 10px;
+    }
+</style>
+
+<div class="equipes-main-container">
+    
+    <h1>Equipes de {{ nome | capitalize }}</h1>
+
+    <h2>Adicionar Nova Equipe</h2>
+
+    <form action="/equipes/criar" method="POST" class="form-adicionar">
+        <label for="nome-equipe-input">Nome</label>
+        <input name="nome" type="text" id="nome-equipe-input" placeholder="Nome da nova equipe">
+        <button type="submit">ADICIONAR NOVA EQUIPE</button>
+    </form>
+
+    <h2>Lista de Equipes</h2>
+
+    {% include "paginas.html" %}
+
+    <ul class="lista-equipes">
+        {% for item in equipes %}
+        <li class="equipe-card">
+            
+            <h2 style="margin-bottom: 10px;"><a href="equipes/{{ item['id'] }}">{{ item['nome'] }}</a></h2>
+            
+            <p>Tags: {{ item['tags'] }}</p>
+            
+            {% if item['projeto'] is none %}
+            <p class="projeto-info">Sem projeto associado.</p>
+            {% else %}
+            <p class="projeto-info">No projeto: **{{ item['projeto'] }}**</p>
+            {% endif %}
+            
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>
 
 {% include "foot.html" %}

@@ -1,30 +1,174 @@
 {% set title = "projetos" %}
 {% include "head.html" %}
 
-<h1>projetos de {{ nome }}</h1>
+<style>
+    /* Estilos Gerais */
+    body {
+        /* Garante que o corpo da página use o fundo claro após o cabeçalho */
+        background-color: var(--cor-fundo-claro, #f0f2f5); 
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--cor-texto, #333);
+    }
+    
+    h1 {
+        /* O h1 já está sendo estilizado no seu head.html com a classe .page-title, 
+           mas vamos centralizar o conteúdo principal. */
+        max-width: 900px;
+        margin: 0 auto 20px auto; 
+        padding: 0 20px;
+        /* Garante que o h1 da página de conteúdo seja visível (se for necessário) */
+        color: var(--cor-texto, #1a1a1a);
+        font-size: 1.8em;
+        text-transform: capitalize;
+    }
 
-<h2>adicionar</h2>
+    h2 {
+        color: var(--cor-primaria, #007bff);
+        border-bottom: 2px solid var(--cor-primaria, #007bff);
+        padding-bottom: 5px;
+        margin-top: 30px;
+        margin-bottom: 20px;
+        font-size: 1.5em;
+    }
 
-<form action="/projetos/substituir" method="POST">
-    <label>titulo</label>
-    <input name="titulo" type="text">
-    <button type="submit">adicionar nova projeto</button>
-</form>
+    /* ---------------------------------- */
+    /* Container Principal */
+    /* ---------------------------------- */
+    .projetos-main-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
 
-<h2>projeto</h2>
+    /* ---------------------------------- */
+    /* Estilo do Formulário de Adição */
+    /* ---------------------------------- */
+    .form-adicionar {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        /* O nome técnico é: Flexbox. Usado para alinhar o input e o botão na linha. */
+        display: flex;
+        gap: 15px; /* Espaço entre o input e o botão */
+        align-items: center;
+    }
 
-{% include "paginas.html" %}
+    .form-adicionar label {
+        font-weight: 600;
+        color: var(--cor-texto, #333);
+    }
 
-<ul>
-    {% for item in projetos %}
-    <li>
-        <a href="/projetos/{{ item['id'] }}">{{ item['titulo'] }}</a>
-        <p>criacao: {{ item['criacao'] }}</p>
-        <p>fazendo: {{ item['fazendo'] }}</p>
-        <p>conclusao: {{ item['conclusao'] }}</p>
-        <p>limite: {{ item['limite'] }}</p>
-    </li>
-    {% endfor %}
-</ul>
+    .form-adicionar input[type="text"] {
+        flex-grow: 1; /* O nome técnico é: Crescimento Flexível. O input ocupa o espaço restante. */
+        padding: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        box-sizing: border-box; 
+    }
+    
+    .form-adicionar input[type="text"]:focus {
+        border-color: var(--cor-primaria, #007bff); 
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); 
+    }
+
+    .form-adicionar button {
+        background-color: var(--cor-primaria, #007bff); 
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer; 
+        font-weight: 600;
+        transition: background-color 0.3s ease; 
+    }
+
+    .form-adicionar button:hover {
+        background-color: var(--cor-secundaria, #0056b3); 
+    }
+
+    /* ---------------------------------- */
+    /* Estilo da Lista de Projetos (Cards) */
+    /* ---------------------------------- */
+    .lista-projetos {
+        list-style: none;
+        padding: 0;
+        margin-top: 20px;
+        /* O nome técnico é: CSS Grid Layout. Para exibir projetos em colunas. */
+        display: grid;
+        /* Exibe no máximo 3 projetos por linha, dependendo da tela */
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+    }
+
+    .projeto-card {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-left: 5px solid var(--cor-primaria, #007bff); /* Linha de destaque */
+    }
+
+    .projeto-card a {
+        /* O nome técnico é: Link de Título. */
+        font-size: 1.4em;
+        font-weight: 700;
+        color: var(--cor-primaria, #007bff);
+        text-decoration: none;
+        display: block;
+        margin-bottom: 10px;
+        transition: color 0.2s;
+    }
+
+    .projeto-card a:hover {
+        color: var(--cor-secundaria, #0056b3);
+    }
+
+    .projeto-card p {
+        font-size: 0.9em;
+        margin: 5px 0;
+        color: #6c757d;
+        /* O nome técnico é: Estilo da Fonte. */
+        font-style: italic; 
+    }
+
+    .projeto-card p strong {
+        color: var(--cor-texto, #333);
+        font-style: normal;
+        font-weight: 600;
+    }
+</style>
+
+<div class="projetos-main-container">
+    
+    <h2>Adicionar Novo Projeto</h2>
+
+    <form action="/projetos/substituir" method="POST" class="form-adicionar">
+        <label for="titulo-input">Título</label>
+        <input name="titulo" type="text" id="titulo-input" placeholder="Novo nome do projeto">
+        <button type="submit">ADICIONAR</button>
+    </form>
+
+    <h2>Lista de Projetos</h2>
+
+    {% include "paginas.html" %}
+
+    <ul class="lista-projetos">
+        {% for item in projetos %}
+        <li class="projeto-card">
+            <a href="/projetos/{{ item['id'] }}">{{ item['titulo'] }}</a>
+            
+            <p>Criacão: <strong>{{ item['criacao'] }}</strong></p>
+            <p>Fazendo: <strong>{{ item['fazendo'] }}</strong></p>
+            <p>Conclusão: <strong>{{ item['conclusao'] }}</strong></p>
+            <p>Limite: <strong>{{ item['limite'] }}</strong></p>
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>
 
 {% include "foot.html" %}
