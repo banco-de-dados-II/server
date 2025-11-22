@@ -75,8 +75,8 @@ begin
 end $
 
 create procedure bd2.create_card (
+       OUT q_tarefa int,
        IN q_titulo varchar(100),
-       IN q_tag varchar(100),
        IN q_criacao date,
        IN q_fazendo date,
        IN q_conclusao date,
@@ -92,10 +92,7 @@ begin
     insert into tarefas (status, titulo, projeto_id, data_id, criador_id)
     value (q_status, q_titulo, 69, @data_id, q_criador_id) ;
 
-    SET @tarefa_id = LAST_INSERT_ID();
-
-    insert into tarefas_has_pessoas (tarefa_id, pessoa_id, tag)
-    value (@tarefa_id, q_criador_id, q_tag) ;
+    set q_tarefa = LAST_INSERT_ID();
 end $
 
 create procedure bd2.update_projeto (
