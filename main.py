@@ -192,9 +192,10 @@ def equipes_get(id=None):
 
     if id:
         with g.db.cursor(dictionary=True, buffered=True) as cur:
-            cur.execute('select id, nome, tag from equipes inner join equipes_has_pessoas on equipe_id = id where id = %s and pessoa_id = %s', (id, u.id))
+            cur.execute('select * from equipe_full where equipe_id = %s and pessoa_id = %s', (id, u.id))
             equipe = cur.fetchone()
-            equipe['tags'] = ','.join(mongo.tag_search(equipe['tag'])['tags'])
+            print(equipe)
+            equipe['tags'] = ','.join(mongo.tag_search(equipe['equipe_tag'])['tags'])
             return renderisar('equipe', equipe=equipe)
 
     equipes = db.call_proc(

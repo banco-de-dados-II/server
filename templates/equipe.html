@@ -13,13 +13,15 @@
     <input type="hidden" name="id" value="{{ equipe['id'] }}">
 
     <label>nome</label>
-    <input type="text" name="nome" value="{{ equipe['nome'] }}">
+    <input type="text" name="nome" value="{{ equipe['equipe_nome'] }}">
 
     <label>tags</label>
     <input type="text" name="tags" value="{{ equipe['tags'] }}">
 
     <button type="submit">atualizar informações da equipe</button>
 </form>
+
+<h2>projeto: <a href="/projetos/{{ equipe['projeto_id'] }}">{{ equipe['projeto_titulo'] }}</a></h2>
 
 <h2>sair da equipe</h2>
 <form action="/equipes/sair" method="POST">

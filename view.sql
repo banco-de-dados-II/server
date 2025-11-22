@@ -1,6 +1,7 @@
 use bd2;
 
 drop view if exists card;
+drop view if exists equipe_full;
 
 create view card as
 select
@@ -21,3 +22,17 @@ inner join pessoas
 on tarefas.criador_id = pessoas.id
 inner join tarefas_has_pessoas
 on tarefas.id = tarefas_has_pessoas.tarefa_id ;
+
+create view equipe_full as
+select
+    equipes.id as equipe_id,
+    projetos.id as projeto_id,
+    pessoas.id as pessoa_id,
+    equipes.nome as equipe_nome,
+    projetos.titulo as projeto_titulo,
+    equipes_has_pessoas.tag as equipe_tag
+    from equipes
+inner join equipes_has_pessoas on equipes_has_pessoas.equipe_id = equipes.id
+inner join pessoas on pessoas.id = equipes_has_pessoas.pessoa_id
+inner join projetos_has_pessoas on projetos_has_pessoas.pessoa_id = pessoas.id
+inner join projetos on projetos.id = projetos_has_pessoas.projeto_id ;

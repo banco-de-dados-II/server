@@ -20,11 +20,6 @@
     <li>
         <h2><a href="equipes/{{ item['id'] }}">{{ item['nome'] }}</a></h2>
         <p>tags: {{ item['tags'] }}</p>
-        {% if item['projeto'] is none %}
-        <p>sem projeto</p>
-        {% else %}
-        <p>no projeto: {{ item['projeto'] }}</p>
-        {% endif %}
     </li>
     {% endfor %}
 </ul>
