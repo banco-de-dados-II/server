@@ -165,11 +165,14 @@ def tarefas_substituir_post():
             modo = 'criar'
             criacao = tempo()
 
-            cur.execute('call create_card(%s, %s, %s, %s, %s, %s, %s, %s)',
-                        (titulo, tag_id, criacao, None, None, None, status, u.id))
+            cur.execute('call create_card(@ret, %s, %s, %s, %s, %s, %s, %s)', (titulo, criacao, None, None, None, status, u.id))
             g.db.commit()
-            id = cur.lastrowid
+            cur.execute('select @ret')
+            id = cur.fetchone()[0]
+            print(f'id: {id}')
             tag_id = mongo.tag_update({'tarefa': id, 'pessoa': u.id}, ['criador'])
+            cur.execute('insert into tarefas_has_pessoas (tarefa_id, pessoa_id, tag) value (%s, %s, %s)', (id, u.id, tag_id))
+            g.db.commit()
         else:
             modo = 'substituir'
             tag_id = mongo.tag_update({'tarefa': int(id), 'pessoa': u.id}, tags)
