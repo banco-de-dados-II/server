@@ -11,6 +11,7 @@ import db
 import db_gen
 
 import mongo
+import pygal
 
 def escape_str(s):
     if s is None or len(s) == 0:
@@ -87,9 +88,28 @@ def login_get():
 def perfil_get():
     u = usuario()
     if not u:
-        return redirecionar('login_get')
+        return redirecionar(
+            'login_get',
+        )
 
-    return renderisar('perfil')
+    graficos = []
+
+    tarefas = pygal.Pie()
+    with g.db.cursor(buffered=True) as cur:
+        for status in tarefa_status:
+            cur.execute(
+                'select count(*) from card where atribuido_id = %s and status = %s',
+                (u.id, status)
+            )
+            tarefas.add(status, cur.fetchone()[0])
+    graficos.append(tarefas)
+
+    graficos = map(lambda o: o.render(disable_xml_declaration=True), graficos)
+
+    return renderisar(
+        'perfil',
+        graficos=graficos
+    )
 
 def perfil(u, rest={}):
     session['usuario'] = u.to_json()

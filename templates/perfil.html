@@ -16,4 +16,8 @@
     <input type="submit" value="mudar"></form>
 </form>
 
+{% for grafico in graficos %}
+{{grafico|safe}}
+{% endfor %}
+
 {% include "foot.html" %}
