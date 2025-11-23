@@ -188,7 +188,6 @@ def tarefas_substituir_post():
             g.db.commit()
             cur.execute('select @ret')
             id = cur.fetchone()[0]
-            print(f'id: {id}')
             tag_id = mongo.tag_update({'tarefa': id, 'pessoa': u.id}, ['criador'])
             cur.execute('insert into tarefas_has_pessoas (tarefa_id, pessoa_id, tag) value (%s, %s, %s)', (id, u.id, tag_id))
             g.db.commit()
@@ -227,8 +226,6 @@ def equipes_get(id=None):
         pagina * max,
         max,
     )
-
-    print(f'{equipes=}')
 
     for i in range(len(equipes)):
         search = mongo.tag_search(equipes[i]['tag'])
@@ -277,12 +274,11 @@ def equipes_sair_post():
     u = usuario()
     if not u:
         return redirecionar('login_get')
-    id = form_get('id')
 
+    id = form_get('id')
     with g.db.cursor(buffered=True) as cur:
         cur.execute('delete from equipes_has_pessoas where equipe_id = %s and pessoa_id = %s', (id, u.id))
-
-    g.db.commit()
+        g.db.commit()
 
     return redirecionar('equipes_get')
 

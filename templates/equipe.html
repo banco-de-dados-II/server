@@ -25,7 +25,7 @@
 
 <h2>sair da equipe</h2>
 <form action="/equipes/sair" method="POST">
-    <input type="hidden" name="id" value="{{ equipe['id'] }}">
+    <input type="hidden" name="id" value="{{ equipe['equipe_id'] }}">
     <input type="hidden" name="sair" value="true">
 
     <button type="submit">sair</button>
@@ -34,7 +34,7 @@
 <h2>adicionar pessoa na equipe</h2>
 
 <form action="/equipes/nova-pessoa" method="POST">
-    <input type="hidden" name="id" value="{{ equipe['id'] }}">
+    <input type="hidden" name="id" value="{{ equipe['equipe_id'] }}">
 
     <label>nome da pessoa</label>
     <input name="nome" type="text">
