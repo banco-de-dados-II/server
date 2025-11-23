@@ -22,13 +22,12 @@ end $
 create procedure bd2.equipes_da_pessoa (IN q_pessoa_id INT, IN q_pagina INT, IN q_max INT)
 begin
     select
-        distinct(equipes.id),
-        equipes.nome as nome,
-        equipes_has_pessoas.tag as tag
-    from equipes
-    inner join equipes_has_pessoas on equipes_has_pessoas.equipe_id = equipes.id
-    inner join projetos_has_equipes on projetos_has_equipes.equipe_id = equipes.id
-    where equipes_has_pessoas.pessoa_id = q_pessoa_id
+        distinct(equipe_id),
+        equipe_id as id,
+        equipe_nome as nome,
+        equipe_tag as tag
+    from equipe_full
+    where pessoa_id = q_pessoa_id
     limit q_pagina, q_max;
 end $
 

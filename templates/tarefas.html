@@ -29,10 +29,10 @@
         <p>tags: {{ tarefa['tags'] }}</p>
         <p>status: {{ tarefa['status'] }}</p>
         <p>nome do projeto: {{ tarefa['projeto_nome'] }}</p>
-        <p>data de criacao: {{ tarefa['criacao'] }}</p>
-        <p>começou a fazer em: {{ tarefa['fazendo'] }}</p>
-        <p>concluido em: {{ tarefa['conclusao'] }}</p>
-        <p>limite: {{ tarefa['limite'] }}</p>
+        <p>data de criacao: {{ tarefa['criacao']}}</p>
+        {% if tarefa['fazendo'] %}<p>começou a fazer em: {{ tarefa['fazendo']}}</p>{% endif %}
+        {% if tarefa['conclusao'] %}<p>concluido em: {{ tarefa['conclusao']}}</p>{% endif %}
+        {% if tarefa['limite'] %}<p>limite: {{ tarefa['limite']}}</p>{% endif %}
         <p>criador: {{ tarefa['criador_nome'] }}</p>
     </li>
     {% endfor %}

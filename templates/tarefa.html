@@ -21,13 +21,13 @@
     <p>criacao: {{ tarefa['criacao'] }}</p>
 
     <label>fazendo</label>
-    <input type="data" name="fazendo" value="{{ tarefa['fazendo']}}">
+    <input type="data" name="fazendo" value="{{ tarefa['fazendo'] or ''}}">
 
     <label>conclusao</label>
-    <input type="data" name="conclusao" value="{{ tarefa['conclusao']}}">
+    <input type="data" name="conclusao" value="{{ tarefa['conclusao'] or ''}}">
 
     <label>limite</label>
-    <input type="data" name="limite" value="{{ tarefa['limite']}}">
+    <input type="data" name="limite" value="{{ tarefa['limite'] or ''}}">
 
     <br>
     {% for status in tarefa_status %}
