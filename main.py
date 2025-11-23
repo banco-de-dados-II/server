@@ -11,6 +11,7 @@ import db
 import db_gen
 
 import mongo
+import pygal
 
 def escape_str(s):
     if s is None or len(s) == 0:
@@ -87,9 +88,28 @@ def login_get():
 def perfil_get():
     u = usuario()
     if not u:
-        return redirecionar('login_get')
+        return redirecionar(
+            'login_get',
+        )
 
-    return renderisar('perfil')
+    graficos = []
+
+    tarefas = pygal.Pie()
+    with g.db.cursor(buffered=True) as cur:
+        for status in tarefa_status:
+            cur.execute(
+                'select count(*) from card where atribuido_id = %s and status = %s',
+                (u.id, status)
+            )
+            tarefas.add(status, cur.fetchone()[0])
+    graficos.append(tarefas)
+
+    graficos = map(lambda o: o.render(disable_xml_declaration=True), graficos)
+
+    return renderisar(
+        'perfil',
+        graficos=graficos
+    )
 
 def perfil(u, rest={}):
     session['usuario'] = u.to_json()
@@ -140,7 +160,6 @@ def tarefas_get(id=None):
         search = mongo.tag_search(tarefas[i]['tag'])
         tarefas[i]['tags'] = ','.join(search['tags'])
 
-    print(tarefas)
     return renderisar(
         'tarefas',
         tarefas=tarefas,
@@ -197,8 +216,8 @@ def equipes_get(id=None):
         with g.db.cursor(dictionary=True, buffered=True) as cur:
             cur.execute('select * from equipe_full where equipe_id = %s and pessoa_id = %s', (id, u.id))
             equipe = cur.fetchone()
-            print(equipe)
-            equipe['tags'] = ','.join(mongo.tag_search(equipe['equipe_tag'])['tags'])
+            search = mongo.tag_search(equipe['equipe_tag'])
+            equipe['tags'] = ','.join(search['tags'])
             return renderisar('equipe', equipe=equipe)
 
     equipes = db.call_proc(
@@ -208,6 +227,8 @@ def equipes_get(id=None):
         pagina * max,
         max,
     )
+
+    print(f'{equipes=}')
 
     for i in range(len(equipes)):
         search = mongo.tag_search(equipes[i]['tag'])
@@ -245,7 +266,8 @@ def equipes_criar_post():
         cur.execute('insert into equipes (nome) value (%s)', (nome,))
         g.db.commit()
         id = cur.lastrowid
-        cur.execute('insert into equipes_has_pessoas (equipe_id, pessoa_id, tag) value (%s, %s, "criador")', (id, u.id))
+        tag = mongo.tag_update({'equipe': id, 'pessoa': u.id}, ['criador'])
+        cur.execute('insert into equipes_has_pessoas (equipe_id, pessoa_id, tag) value (%s, %s, %s)', (id, u.id, tag))
         g.db.commit()
 
     return redirecionar('equipes_get', id=id)
@@ -272,7 +294,7 @@ def equipes_nova_pessoa():
 
     with g.db.cursor(dictionary=True, buffered=True) as cur:
         pessoa_id = db.Pessoa.procurar('id', nome=nome).fetchone()[0]
-        tag_id = mongo.tag_update({'equipe': equipe_id, 'pessoa': pessoa_id})
+        tag_id = mongo.tag_search({'equipe': equipe_id, 'pessoa': pessoa_id})
 
         cur.execute(
             'call equipe_adicionar_pessoa (%s, %s, %s)',

@@ -13,7 +13,6 @@
     
     /* Estilo do Título Principal (Nome da Equipe) */
     h1 {
-        /* O nome técnico é: Título de Nível 1. */
         max-width: 700px;
         margin: 30px auto 20px auto; 
         padding: 0 20px;
@@ -74,37 +73,27 @@
     }
 
     /* ---------------------------------- */
-    /* Estilo dos Formulários de Ação (Para separá-los) */
+    /* Estilo dos Formulários de Ação */
     /* ---------------------------------- */
     
-    /* Formulário de Atualização (Principal) */
     .form-principal {
         padding-bottom: 20px;
         border-bottom: 1px solid #f0f0f0;
     }
 
-    /* Formulário de Adicionar Pessoa */
     .form-adicionar-pessoa {
         padding-top: 10px;
         border-top: 1px dashed #ddd;
     }
 
-    /* Formulário de Sair (Perigoso) */
+    /* Ação de Sair Simplificada (APENAS UM BOTÃO NO FINAL) */
     .form-sair {
         margin-top: 30px;
-        padding: 20px;
-        border: 2px solid #dc3545; /* Borda Vermelha */
-        border-radius: 8px;
-        background-color: #ffe8e9; /* Fundo Vermelho Claro */
-        text-align: center;
+        text-align: right; /* Alinha o botão à direita para separá-lo */
+        padding-top: 15px;
+        border-top: 1px solid #eee;
     }
     
-    .form-sair h2 {
-        border-bottom: none;
-        color: #dc3545;
-        margin-top: 0;
-    }
-
     /* ---------------------------------- */
     /* Estilo dos Botões */
     /* ---------------------------------- */
@@ -123,23 +112,38 @@
         width: 100%; 
         margin-top: 20px;
     }
+    
+    /* NOVO: Estilo para os botões de atualização/adição */
+    .btn-atualizar {
+        background-color: var(--cor-primaria, #007bff); 
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer; 
+        font-size: 1.1em;
+        font-weight: 600;
+        transition: background-color 0.3s ease; 
+        width: 100%; 
+        margin-top: 20px;
+    }
 
-    .btn-submit:hover {
+    .btn-atualizar:hover {
         background-color: var(--cor-secundaria, #0056b3); 
     }
 
-    /* Botão de SAIR (Cor de Perigo) */
+    /* Botão de SAIR (Cor de Perigo, mas mais simples) */
     .btn-sair {
-        background-color: #dc3545; /* Vermelho */
+        background-color: #dc3545; /* Vermelho - Ação Destrutiva */
         color: white;
-        padding: 10px 30px;
+        padding: 10px 20px;
         border: none;
         border-radius: 8px;
         cursor: pointer; 
         font-size: 1em;
         font-weight: 600;
         transition: background-color 0.3s ease; 
-        margin-top: 10px;
+        width: auto; /* Deixa o botão pequeno */
     }
 
     .btn-sair:hover {
@@ -166,7 +170,7 @@
             <input type="text" id="tags-input" name="tags" value="{{ equipe['tags'] }}">
         </div>
 
-        <button type="submit" class="btn-submit">ATUALIZAR INFORMAÇÕES DA EQUIPE</button>
+        <button type="submit" class="btn-atualizar">ATUALIZAR INFORMAÇÕES DA EQUIPE</button>
     </form>
 
     <h2 style="margin-top: 40px;">Adicionar Novo Membro</h2>
@@ -184,18 +188,15 @@
             <input name="tags" type="text" id="nova-pessoa-tags">
         </div>
 
-        <button type="submit" class="btn-submit">ADICIONAR PESSOA À EQUIPE</button>
+        <button type="submit" class="btn-atualizar">ADICIONAR PESSOA À EQUIPE</button>
     </form>
 
     <div class="form-sair">
-        <h2>Ação de Risco</h2>
-        <p style="color: #dc3545; font-weight: 600;">Esta ação não pode ser desfeita.</p>
-        
         <form action="/equipes/sair" method="POST">
             <input type="hidden" name="id" value="{{ equipe['id'] }}">
             <input type="hidden" name="sair" value="true">
 
-            <button type="submit" class="btn-sair">SAIR DA EQUIPE</button>
+            <button type="submit" class="btn-sair">Sair da Equipe</button>
         </form>
     </div>
 

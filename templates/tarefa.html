@@ -228,6 +228,14 @@
         <h2>Projeto Associado</h2>
         <a href="projetos/{{ tarefa['projeto_id'] }}">{{ tarefa['projeto_nome'] }}</a>
     </div>
+    <label>fazendo</label>
+    <input type="data" name="fazendo" value="{{ tarefa['fazendo'] or ''}}">
+
+    <label>conclusao</label>
+    <input type="data" name="conclusao" value="{{ tarefa['conclusao'] or ''}}">
+
+    <label>limite</label>
+    <input type="data" name="limite" value="{{ tarefa['limite'] or ''}}">
 
 </div>
 
