@@ -151,7 +151,8 @@ def tarefas_get(id=None):
             cur.execute('select * from card where id = %s', (id, ))
             tarefa = cur.fetchone()
             tarefa['tags'] = ','.join(mongo.tag_search(tarefa['tag'])['tags'])
-            return renderisar('tarefa', tarefa=tarefa)
+            projetos = db.call_proc(cur, 'projetos_da_pessoa', u.id, 0, 100)
+            return renderisar('tarefa', tarefa=tarefa, projetos=projetos)
 
     with g.db.cursor(dictionary=True, buffered=True) as cur:
         tarefas = db.call_proc(cur, 'card_da_pessoa', u.id, pagina * max, max)
@@ -176,6 +177,7 @@ def tarefas_substituir_post():
     conclusao = form_get('conclusao')
     limite = form_get('limite')
     status = form_get('status')
+    projeto = form_get('projeto')
 
     modo: str
     with g.db.cursor(buffered=True) as cur:
@@ -197,6 +199,9 @@ def tarefas_substituir_post():
             cur.execute('call update_card(%s, %s, %s, %s, %s, %s, %s)',
                         (int(id), titulo, tag_id, fazendo, conclusao, limite, status))
             g.db.commit()
+
+        cur.execute('update tarefas set projeto_id = %s where id = %s', (projeto, id))
+        g.db.commit()
 
     return redirecionar('tarefas_get', {'modo': modo}, id=id)
 

@@ -38,10 +38,18 @@
     <label>{{ status }}</label>
     {% endfor %}
 
+    <h2>projeto <a href="/projetos/{{ tarefa['projeto_id'] }}">{{ tarefa['projeto_nome'] }}</a></h2>
+
+    <label>mudar de projeto?</label>
+    <select name="projeto">
+        <option value="{{ tarefa['projeto_id'] }}">{{ tarefa['projeto_nome'] }}</option>
+        {% for projeto in projetos %}
+        <option value="{{ projeto['id'] }}">{{ projeto['titulo'] }}</option>
+        {% endfor %}
+    </select>
+
     <br>
     <button type="submit">mudar informações da tarefa</button>
 </form>
-
-<h2>projeto <a href="/projetos/{{ tarefa['projeto_id'] }}">{{ tarefa['projeto_nome'] }}</a></h2>
 
 {% include "foot.html" %}
