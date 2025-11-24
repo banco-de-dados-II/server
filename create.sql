@@ -38,7 +38,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `bd2`.`projetos` ;
 
-CREATE TABLE IF NOT EXISTS `bd2`.`projetos` (
+create TABLE IF NOT EXISTS `bd2`.`projetos` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `titulo` VARCHAR(50) NULL,
   `data_id` INT NOT NULL,
@@ -96,7 +96,7 @@ DROP TABLE IF EXISTS `bd2`.`equipes_has_pessoas` ;
 CREATE TABLE IF NOT EXISTS `bd2`.`equipes_has_pessoas` (
   `equipe_id` INT NOT NULL,
   `pessoa_id` INT NOT NULL,
-  `tag` VARCHAR(24) NULL COMMENT 'mongodb Objectid')
+  `tag` CHAR(24) NULL COMMENT 'mongodb Objectid')
 ENGINE = InnoDB;
 
 
@@ -108,7 +108,7 @@ DROP TABLE IF EXISTS `bd2`.`tarefas_has_pessoas` ;
 CREATE TABLE IF NOT EXISTS `bd2`.`tarefas_has_pessoas` (
   `tarefa_id` INT NOT NULL,
   `pessoa_id` INT NOT NULL,
-  `tag` VARCHAR(24) NULL COMMENT 'mongodb Objectid')
+  `tag` CHAR(24) NULL COMMENT 'mongodb Objectid')
 ENGINE = InnoDB;
 
 
@@ -120,7 +120,8 @@ DROP TABLE IF EXISTS `bd2`.`projetos_has_pessoas` ;
 CREATE TABLE IF NOT EXISTS `bd2`.`projetos_has_pessoas` (
   `projeto_id` INT NOT NULL,
   `pessoa_id` INT NOT NULL,
-  `tag` VARCHAR(24) NULL COMMENT 'mongodb Objectid')
+  `tag` CHAR(24) NULL COMMENT 'mongodb Objectid',
+  `direto` BOOLEAN DEFAULT false)
 ENGINE = InnoDB;
 
 
@@ -132,7 +133,7 @@ DROP TABLE IF EXISTS `bd2`.`projetos_has_equipes` ;
 CREATE TABLE IF NOT EXISTS `bd2`.`projetos_has_equipes` (
   `projeto_id` INT NOT NULL,
   `equipe_id` INT NOT NULL,
-  `tag` VARCHAR(24) NULL COMMENT 'mongodb Objectid')
+  `tag` CHAR(24) NULL COMMENT 'mongodb Objectid')
 ENGINE = InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;
