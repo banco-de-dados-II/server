@@ -222,7 +222,8 @@ def equipes_get(id=None):
             equipe = cur.fetchone()
             search = mongo.tag_search(equipe['equipe_tag'])
             equipe['tags'] = ','.join(search['tags'])
-            return renderisar('equipe', equipe=equipe)
+            projetos = db.call_proc(cur, 'projetos_da_pessoa', u.id, 0, 100)
+            return renderisar('equipe', equipe=equipe, projetos=projetos)
 
     equipes = db.call_proc(
         g.db.cursor(dictionary=True),
@@ -249,11 +250,13 @@ def equipes_post():
     id = form_get('id')
     nome = form_get('nome') or ''
     tags = form_get_list('tags')
+    projeto = form_get('projeto')
 
     tag_id = mongo.tag_update({'equipe': id, 'pessoa': u.id}, tags)
     with g.db.cursor(buffered=True) as cur:
         cur.execute('update equipes set nome = %s where id = %s', (nome, id))
         cur.execute('update equipes_has_pessoas set tag = %s where equipe_id = %s and pessoa_id = %s', (tag_id, id, u.id))
+        cur.execute('update projetos_has_equipes set projeto_id = %s where equipe_id = %s', (projeto, id))
         g.db.commit()
 
     return redirecionar('equipes_get', id=id)

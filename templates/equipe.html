@@ -18,10 +18,18 @@
     <label>tags</label>
     <input type="text" name="tags" value="{{ equipe['tags'] }}">
 
+    <h2>projeto: <a href="/projetos/{{ equipe['projeto_id'] }}">{{ equipe['projeto_titulo'] }}</a></h2>
+
+    <label>mudar de projeto?</label>
+    <select name="projeto">
+        <option value="{{ equipe['projeto_id'] }}">{{ equipe['projeto_titulo'] }}</option>
+        {% for projeto in projetos %}
+        <option value="{{ projeto['id'] }}">{{ projeto['titulo'] }}</option>
+        {% endfor %}
+    </select>
+
     <button type="submit">atualizar informações da equipe</button>
 </form>
-
-<h2>projeto: <a href="/projetos/{{ equipe['projeto_id'] }}">{{ equipe['projeto_titulo'] }}</a></h2>
 
 <h2>sair da equipe</h2>
 <form action="/equipes/sair" method="POST">

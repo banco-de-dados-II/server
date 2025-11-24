@@ -34,5 +34,5 @@ select
     from equipes
 inner join equipes_has_pessoas on equipes_has_pessoas.equipe_id = equipes.id
 inner join pessoas on pessoas.id = equipes_has_pessoas.pessoa_id
-inner join projetos_has_pessoas on projetos_has_pessoas.pessoa_id = pessoas.id
-inner join projetos on projetos.id = projetos_has_pessoas.projeto_id ;
+inner join projetos_has_equipes on projetos_has_equipes.equipe_id = equipes.id
+inner join projetos on projetos.id = projetos_has_equipes.projeto_id ;
