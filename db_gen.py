@@ -8,6 +8,14 @@ from pathlib import Path
 import pymongo
 
 def do(db, mdb, l=10):
+    """
+    deleta e insere novos dados no mysql e mongo
+
+    `db` é o contexto do mysql
+    `mdb` é o contexto do mongo
+    `l` é a quantidade de inserções nos bancos de dados
+    """
+
     mdb['logs'].drop()
     mdb['tags'].drop()
 

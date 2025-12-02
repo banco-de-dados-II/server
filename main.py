@@ -14,15 +14,25 @@ import mongo
 import pygal
 
 def escape_str(s):
+    """
+    escapa strings com caracteres especiais ou None
+    """
+
     if s is None or len(s) == 0:
         return None
     return str(escape(s))
 
 def form_get(key):
+    """
+    retorna um parametro do `form` com o nome `key`
+    """
     return escape_str(request.form.get(key, None))
 
-
 def form_get_list(key):
+    """
+    retorna um parametro do `form` com o nome `key` como uma lista
+    """
+
     value = form_get(key)
     if value:
         return value.split(',')
@@ -30,6 +40,10 @@ def form_get_list(key):
         return []
 
 def usuario():
+    """
+    retorna o usuario atual da sessão
+    """
+
     result = session.get('usuario')
 
     if not result:
@@ -38,9 +52,18 @@ def usuario():
     return db.Pessoa(**json.loads(result))
 
 def tempo():
+    """
+    retorna o dia atual com a formatação padrao
+    """
+
     return datetime.fromtimestamp(time()).strftime("%Y-%m-%d")
 
 def get_param_int(name, default):
+    """
+    retorna um parametro do `form` com o nome `name` como um int
+    `default` e o valor caso nao exista nenhum valor no `form` com o nome `name`
+    """
+
     result = request.args.get(name)
 
     if result:
@@ -52,6 +75,11 @@ def get_param_int(name, default):
 
 
 def redirecionar(f, d={}, **kargs):
+    """
+    redireciona para `f`, `f` sendo um nome de uma funcao do app
+    e armazena os logs com informções adicionais `d`
+    `kargs` parametros opicionais da formatacao da url
+    """
     d['redirecionar'] = f
     mongo.registrar(d)
     return redirect(url_for(f, **kargs))
@@ -111,7 +139,12 @@ def perfil_get():
         graficos=graficos
     )
 
-def perfil(u, rest={}):
+def perfil(u: db.Pessoa, rest={}):
+    """
+    define o cookie do usuário para ser o valor valor de `u` e o redireciona para a pagina de perfil
+    `rest` argumentos para o redirecionamento da pagina de perfil
+    """
+
     session['usuario'] = u.to_json()
     return redirecionar('perfil_get', rest)
 
@@ -291,23 +324,26 @@ def equipes_sair_post():
     return redirecionar('equipes_get')
 
 @app.post('/equipes/nova-pessoa')
-def equipes_nova_pessoa():
+def equipes_nova_pessoa_post():
     equipe_id = int(form_get('id'))
     nome = form_get('nome')
     tags = form_get_list('tags')
 
-    with g.db.cursor(dictionary=True, buffered=True) as cur:
-        pessoa_id = db.Pessoa.procurar('id', nome=nome).fetchone()[0]
-        tag_id = mongo.tag_search({'equipe': equipe_id, 'pessoa': pessoa_id})
+    pessoa_id = db.Pessoa.procurar('id', nome=nome).fetchone()[0]
+    tags = g.mdb.get_collection('tags')
+    tag_id = mongo.id()
+    tags.insert_one({'equipe': equipe_id, 'pessoa': pessoa_id, '_id': tag_id})
 
+    print(f'[+] {equipe_id=}, {pessoa_id=}, {tag_id}')
+
+    with g.db.cursor(buffered=True) as cur:
         cur.execute(
-            'call equipe_adicionar_pessoa (%s, %s, %s)',
+            'insert into equipes_has_pessoas (equipe_id, pessoa_id, tag) value (%s, %s, %s)',
             equipe_id, pessoa_id, tag_id,
         )
-
         g.db.commit()
 
-        return redirecionar('equipes_get', id=equipe_id)
+    return redirecionar('equipes_get', id=equipe_id)
 
 @app.get('/projetos/')
 @app.get('/projetos/<int:id>')
@@ -377,22 +413,15 @@ def pessoa_mudar_post():
 
 @app.post('/reset')
 def rest_post():
+    """
+    deleta todas as informações do mysql e mongodb.
+    insere `N` linhas em ambos os bancos com dados novos
+    `N` é um valor numérico vindo do parametro `max` do metodo post
+    """
     if session.get('usuario'):
         session.pop('usuario')
 
     max = form_get('max')
 
     db_gen.do(g.db, g.mdb, int(max))
-    return redirecionar('index')
-
-@app.post('/dump')
-def dump_post():
-    print(g.mongo)
-    print(g.mdb)
-    print(g.mdb['logs'])
-    for d in g.mdb['logs'].find():
-        print(d)
-    for d in g.mdb['tags'].find():
-        print(d)
-
     return redirecionar('index')

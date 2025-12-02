@@ -1,3 +1,10 @@
+"""
+para debug apenas
+
+python -i mongo-repl.py
+>>> dump_last(tags)
+"""
+
 import pymongo
 import bson
 from pprint import pprint as pp

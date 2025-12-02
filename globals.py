@@ -1,3 +1,7 @@
+"""
+configuração de Flask, mysql, mongodb e suas variaveis globais
+"""
+
 import secrets
 
 from flask import Flask, g

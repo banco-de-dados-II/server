@@ -10,9 +10,17 @@ import json
 import random
 
 def id():
+    """
+    returna um id aleatorio para mongodb
+    """
+
     return bson.ObjectId(random.randbytes(12))
 
 def registrar(info={}):
+    """
+    registra um evento na tabela `logs` com `info` dentro do mongodb
+    """
+
     logs = g.mdb.get_collection('logs')
 
     info['url'] = request.path
@@ -35,6 +43,10 @@ def registrar(info={}):
 
 
 def tag_update(filter, l):
+    """
+    atualiza as tags que passam pelo filtro `filter` com as novas tags `l` no mongodb
+    """
+
     tags = g.mdb.get_collection('tags')
     return str(tags.find_one_and_update(
         filter,
@@ -44,5 +56,8 @@ def tag_update(filter, l):
     )['_id'])
 
 def tag_search(id):
+    """
+    procura uma tag por id no mongodb
+    """
     tags = g.mdb.get_collection('tags')
     return tags.find_one({'_id': ObjectId(id)})

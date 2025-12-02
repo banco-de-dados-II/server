@@ -155,9 +155,9 @@
 
 <div class="equipe-container">
     <h2 style="border-bottom: 2px solid var(--cor-primaria);">Informações da Equipe</h2>
-    <form action="/equipes/substituir" method="POST" class="form-principal">
 
-        <input type="hidden" name="id" value="{{ equipe['id'] }}">
+    <form action="/equipes/substituir" method="POST" class="form-principal">
+        <input type="hidden" name="id" value="{{ equipe['equipe_id'] }}">
 
         <div class="form-grupo">
             <label for="nome-input">Nome</label>
@@ -184,8 +184,7 @@
 
     <h2 style="margin-top: 40px;">Adicionar Novo Membro</h2>
     <form action="/equipes/nova-pessoa" method="POST" class="form-adicionar-pessoa">
-
-        <input type="hidden" name="id" value="{{ equipe['id'] }}">
+        <input type="hidden" name="id" value="{{ equipe['equipe_id'] }}">
 
         <div class="form-grupo">
             <label for="nova-pessoa-nome">Nome da Pessoa</label>
@@ -202,7 +201,7 @@
 
     <div class="form-sair">
         <form action="/equipes/sair" method="POST">
-            <input type="hidden" name="id" value="{{ equipe['id'] }}">
+            <input type="hidden" name="id" value="{{ equipe['equipe_id'] }}">
             <input type="hidden" name="sair" value="true">
 
             <button type="submit" class="btn-sair">Sair da Equipe</button>

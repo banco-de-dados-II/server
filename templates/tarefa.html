@@ -223,19 +223,27 @@
         
         <h2 style="margin-top: 40px;">Projeto Associado</h2>
 
-        <div class="form-grupo">
-            <label for="projeto-select">Mudar de Projeto?</label>
-            <select name="projeto" id="projeto-select">
-                <option value="{{ tarefa['projeto_id'] }}" selected>{{ tarefa['projeto_nome'] }} (Atual)</option>
-                {% for projeto in projetos %}
-                {% if projeto['id'] != tarefa['projeto_id'] %}
-                <option value="{{ projeto['id'] }}">{{ projeto['titulo'] }}</option>
-                {% endif %}
-                {% endfor %}
-            </select>
+        <div class="projeto-link-secao">
+            <h2>Projeto Associado</h2>
+            <a href="/projetos/{{ tarefa['projeto_id'] }}">{{ tarefa['projeto_nome'] }}</a>
         </div>
-        
-        <button type="submit" class="btn-submit">SALVAR MUDANÇAS NA TAREFA</button>
+        <label>fazendo</label>
+        <input type="data" name="fazendo" value="{{ tarefa['fazendo'] or '' }}">
+
+        <label>conclusao</label>
+        <input type="data" name="conclusao" value="{{ tarefa['conclusao'] or '' }}">
+
+        <label>limite</label>
+        <input type="data" name="limite" value="{{ tarefa['limite'] or '' }}">
+
+        <label>mudar de projeto?</label>
+        <select name="projeto">
+            <option value="{{ tarefa['projeto_id'] }}">{{ tarefa['projeto_nome'] }}</option>
+            {% for projeto in projetos %}
+            <option value="{{ projeto['id'] }}">{{ projeto['titulo'] }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn-submit">MUDAR INFORMAÇÕES DA TAREFA</button>
     </form>
     
     <div class="projeto-link-secao">

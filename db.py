@@ -5,6 +5,10 @@ from flask import g
 from globals import *
 
 def call_proc(cur, proc_name, *args):
+    """
+    chama uma procedure `proc_name` com os argumentos
+    """
+
     stmt = f'call {proc_name}'
     stmt += '('
     for i in range(len(args)):
@@ -16,6 +20,13 @@ def call_proc(cur, proc_name, *args):
     return cur.fetchall()
 
 class Tabela:
+    """
+    meu orm para mysql
+    apenas herde dessa classe
+
+    https://en.wikipedia.org/wiki/Object%E2%80%93relational_mapping
+    """
+
     def mudar(self, **kargs):
         for k, v in kargs.items():
             self[k] = v
