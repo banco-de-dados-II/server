@@ -89,9 +89,14 @@ begin
     set @data_id = LAST_INSERT_ID();
 
     insert into tarefas (status, titulo, projeto_id, data_id, criador_id)
-    value (q_status, q_titulo, 69, @data_id, q_criador_id) ;
+    value (q_status, q_titulo, 34+35, @data_id, q_criador_id) ;
 
     set q_tarefa = LAST_INSERT_ID();
+
+    update tarefas
+    set projeto_id = (select projetos.id from projetos inner join projetos_has_pessoas on projeto_id = id where pessoa_id = q_criador_id and direto)
+    where tarefas.id = q_tarefa;
+
 end $
 
 create procedure bd2.update_projeto (

@@ -48,10 +48,10 @@
         padding: 20px;
         border-radius: 12px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        /* O nome técnico é: Flexbox. Alinha os itens na linha. */
         display: flex;
         align-items: center;
         gap: 15px; 
+        flex-wrap: wrap; 
     }
 
     .form-adicionar label {
@@ -61,7 +61,7 @@
     }
 
     .form-adicionar input[type="text"] {
-        flex-grow: 1; /* O nome técnico é: Crescimento Flexível. */
+        flex-grow: 1; 
         padding: 10px;
         border: 1px solid #ced4da;
         border-radius: 8px;
@@ -79,6 +79,7 @@
         display: flex;
         gap: 10px;
         margin-left: 15px;
+        flex-wrap: wrap;
     }
 
     .form-adicionar button {
@@ -90,23 +91,8 @@
         cursor: pointer; 
         font-weight: 600;
         transition: background-color 0.3s ease; 
-        flex-shrink: 0; /* Impede o botão de encolher */
+        flex-shrink: 0; 
     }
-<ul>
-    {% for tarefa in tarefas %}
-    <li>
-        <h2><a href="/tarefas/{{ tarefa['id'] }}">{{ tarefa['titulo'] }}</a></h2>
-        <p>tags: {{ tarefa['tags'] }}</p>
-        <p>status: {{ tarefa['status'] }}</p>
-        <p>nome do projeto: {{ tarefa['projeto_nome'] }}</p>
-        <p>data de criacao: {{ tarefa['criacao']}}</p>
-        {% if tarefa['fazendo'] %}<p>começou a fazer em: {{ tarefa['fazendo']}}</p>{% endif %}
-        {% if tarefa['conclusao'] %}<p>concluido em: {{ tarefa['conclusao']}}</p>{% endif %}
-        {% if tarefa['limite'] %}<p>limite: {{ tarefa['limite']}}</p>{% endif %}
-        <p>criador: {{ tarefa['criador_nome'] }}</p>
-    </li>
-    {% endfor %}
-</ul>
 
     .form-adicionar button:hover {
         background-color: var(--cor-secundaria, #0056b3); 
@@ -119,7 +105,6 @@
         list-style: none;
         padding: 0;
         margin-top: 20px;
-        /* O nome técnico é: CSS Grid Layout. */
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
         gap: 20px;
@@ -130,7 +115,7 @@
         padding: 20px;
         border-radius: 12px;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        border-left: 5px solid var(--cor-primaria, #007bff); /* Linha de destaque */
+        border-left: 5px solid var(--cor-primaria, #007bff); 
         transition: transform 0.2s;
     }
     
@@ -177,7 +162,7 @@
         color: #ffffff; 
         text-transform: uppercase;
         font-size: 0.8em;
-        margin-left: 10px; /* Separar do texto de tags */
+        margin-left: 10px; 
     }
 
     /* Status: Concluído (VERDE) */
@@ -185,14 +170,15 @@
         background-color: #28a745; 
     }
 
-    /* Status: A Fazer (AZUL) */
+    /* Status: A Fazer (AZUL - mantendo o azul claro anterior) */
     .status-a-fazer {
         background-color: #007bff; 
     }
 
-    /* Status: Fazendo (ROSA) */
-    .status-fazendo {
-        background-color: #e83e8c; 
+    /* Status: Fazendo/Em Andamento (LILÁS CLARO - A COR SOLICITADA) */
+    /* Ambos os slugs 'fazendo' e 'em-andamento' são cobertos pela mesma cor */
+    .status-fazendo, .status-em-andamento {
+        background-color: #B19CD9; /* Lilás Claro */
     }
 </style>
 
@@ -242,6 +228,7 @@
                 Criação: {{ tarefa['criacao'] }} | Início: {{ tarefa['fazendo'] }} 
             </p>
             <p>Conclusão: {{ tarefa['conclusao'] }} | Limite: **{{ tarefa['limite'] }}**</p>
+            <p>Criador: {{ tarefa['criador_nome'] }}</p>
         </li>
         {% endfor %}
     </ul>

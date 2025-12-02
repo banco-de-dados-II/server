@@ -3,16 +3,16 @@
 
 <style>
     body {
-        background-color: var(--cor-fundo-claro, #f0f2f5); 
+        background-color: var(--cor-fundo-claro, #f0f2f5);
         margin: 0;
         padding: 0;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         color: var(--cor-texto, #333);
     }
-    
+
     h1 {
         max-width: 900px;
-        margin: 0 auto 20px auto; 
+        margin: 0 auto 20px auto;
         padding: 0 20px;
         color: var(--cor-texto, #1a1a1a);
         font-size: 1.8em;
@@ -41,7 +41,7 @@
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
         display: flex;
         align-items: center;
-        gap: 15px; 
+        gap: 15px;
     }
 
     .form-adicionar label {
@@ -55,29 +55,29 @@
         padding: 10px;
         border: 1px solid #ced4da;
         border-radius: 8px;
-        box-sizing: border-box; 
+        box-sizing: border-box;
     }
-    
+
     .form-adicionar input[type="text"]:focus {
-        border-color: var(--cor-primaria, #007bff); 
+        border-color: var(--cor-primaria, #007bff);
         outline: none;
-        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); 
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
     }
 
     .form-adicionar button {
-        background-color: var(--cor-primaria, #007bff); 
+        background-color: var(--cor-primaria, #007bff);
         color: white;
         padding: 10px 20px;
         border: none;
         border-radius: 8px;
-        cursor: pointer; 
+        cursor: pointer;
         font-weight: 600;
-        transition: background-color 0.3s ease; 
+        transition: background-color 0.3s ease;
         flex-shrink: 0;
     }
 
     .form-adicionar button:hover {
-        background-color: var(--cor-secundaria, #0056b3); 
+        background-color: var(--cor-secundaria, #0056b3);
     }
 
     .lista-equipes {
@@ -97,13 +97,13 @@
         border-left: 5px solid var(--cor-secundaria, #56b3);
         transition: transform 0.2s;
     }
-    
+
     .equipe-card:hover {
         transform: translateY(-3px);
     }
 
-    .equipe-card h2 { 
-        margin-top: 0; 
+    .equipe-card h2 {
+        margin-top: 0;
         padding-bottom: 0;
         border-bottom: none;
         font-size: 1.4em;
@@ -127,10 +127,10 @@
         font-size: 0.9em;
         margin: 5px 0;
         color: #6c757d;
-        font-style: italic; 
+        font-style: italic;
         line-height: 1.4;
     }
-    
+
     .equipe-card .projeto-info {
         font-weight: 600;
         color: var(--cor-texto, #333);
@@ -140,7 +140,7 @@
 </style>
 
 <div class="equipes-main-container">
-    
+
     <h1>Equipes de {{ nome | capitalize }}</h1>
 
     <h2>Adicionar Nova Equipe</h2>
@@ -156,19 +156,18 @@
     {% include "paginas.html" %}
 
     <ul class="lista-equipes">
-        {% for item in equipes %}
+        {% for equipe in equipes %}
         <li class="equipe-card">
-            
-            <h2 style="margin-bottom: 10px;"><a href="equipes/{{ item['id'] }}">{{ item['nome'] }}</a></h2>
-            
-            <p>Tags: {{ item['tags'] }}</p>
-            
-            {% if item['projeto'] is none %}
+            <h2 style="margin-bottom: 10px;"><a href="equipes/{{ equipe['id'] }}">{{ equipe['nome'] }}</a></h2>
+
+            <p>Tags: {{ equipe['tags'] }}</p>
+
+            {% if equipe['projeto'] is none %}
             <p class="projeto-info">Sem projeto associado.</p>
             {% else %}
-            <p class="projeto-info">No projeto: **{{ item['projeto'] }}**</p>
+            <p class="projeto-info">No projeto: **{{ equipe['projeto'] }}**</p>
             {% endif %}
-            
+            </select>
         </li>
         {% endfor %}
     </ul>

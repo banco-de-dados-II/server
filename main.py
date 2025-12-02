@@ -151,7 +151,8 @@ def tarefas_get(id=None):
             cur.execute('select * from card where id = %s', (id, ))
             tarefa = cur.fetchone()
             tarefa['tags'] = ','.join(mongo.tag_search(tarefa['tag'])['tags'])
-            return renderisar('tarefa', tarefa=tarefa)
+            projetos = db.call_proc(cur, 'projetos_da_pessoa', u.id, 0, 100)
+            return renderisar('tarefa', tarefa=tarefa, projetos=projetos)
 
     with g.db.cursor(dictionary=True, buffered=True) as cur:
         tarefas = db.call_proc(cur, 'card_da_pessoa', u.id, pagina * max, max)
@@ -176,6 +177,7 @@ def tarefas_substituir_post():
     conclusao = form_get('conclusao')
     limite = form_get('limite')
     status = form_get('status')
+    projeto = form_get('projeto')
 
     modo: str
     with g.db.cursor(buffered=True) as cur:
@@ -188,7 +190,6 @@ def tarefas_substituir_post():
             g.db.commit()
             cur.execute('select @ret')
             id = cur.fetchone()[0]
-            print(f'id: {id}')
             tag_id = mongo.tag_update({'tarefa': id, 'pessoa': u.id}, ['criador'])
             cur.execute('insert into tarefas_has_pessoas (tarefa_id, pessoa_id, tag) value (%s, %s, %s)', (id, u.id, tag_id))
             g.db.commit()
@@ -198,6 +199,9 @@ def tarefas_substituir_post():
             cur.execute('call update_card(%s, %s, %s, %s, %s, %s, %s)',
                         (int(id), titulo, tag_id, fazendo, conclusao, limite, status))
             g.db.commit()
+
+        cur.execute('update tarefas set projeto_id = %s where id = %s', (projeto, id))
+        g.db.commit()
 
     return redirecionar('tarefas_get', {'modo': modo}, id=id)
 
@@ -218,7 +222,8 @@ def equipes_get(id=None):
             equipe = cur.fetchone()
             search = mongo.tag_search(equipe['equipe_tag'])
             equipe['tags'] = ','.join(search['tags'])
-            return renderisar('equipe', equipe=equipe)
+            projetos = db.call_proc(cur, 'projetos_da_pessoa', u.id, 0, 100)
+            return renderisar('equipe', equipe=equipe, projetos=projetos)
 
     equipes = db.call_proc(
         g.db.cursor(dictionary=True),
@@ -227,8 +232,6 @@ def equipes_get(id=None):
         pagina * max,
         max,
     )
-
-    print(f'{equipes=}')
 
     for i in range(len(equipes)):
         search = mongo.tag_search(equipes[i]['tag'])
@@ -247,11 +250,13 @@ def equipes_post():
     id = form_get('id')
     nome = form_get('nome') or ''
     tags = form_get_list('tags')
+    projeto = form_get('projeto')
 
     tag_id = mongo.tag_update({'equipe': id, 'pessoa': u.id}, tags)
     with g.db.cursor(buffered=True) as cur:
         cur.execute('update equipes set nome = %s where id = %s', (nome, id))
         cur.execute('update equipes_has_pessoas set tag = %s where equipe_id = %s and pessoa_id = %s', (tag_id, id, u.id))
+        cur.execute('update projetos_has_equipes set projeto_id = %s where equipe_id = %s', (projeto, id))
         g.db.commit()
 
     return redirecionar('equipes_get', id=id)
@@ -277,12 +282,11 @@ def equipes_sair_post():
     u = usuario()
     if not u:
         return redirecionar('login_get')
-    id = form_get('id')
 
+    id = form_get('id')
     with g.db.cursor(buffered=True) as cur:
         cur.execute('delete from equipes_has_pessoas where equipe_id = %s and pessoa_id = %s', (id, u.id))
-
-    g.db.commit()
+        g.db.commit()
 
     return redirecionar('equipes_get')
 

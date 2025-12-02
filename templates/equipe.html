@@ -4,17 +4,17 @@
 <style>
     /* Estilos Gerais (Fundo e Fonte) */
     body {
-        background-color: var(--cor-fundo-claro, #f0f2f5); 
+        background-color: var(--cor-fundo-claro, #f0f2f5);
         margin: 0;
         padding: 0;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         color: var(--cor-texto, #333);
     }
-    
+
     /* Estilo do Título Principal (Nome da Equipe) */
     h1 {
         max-width: 700px;
-        margin: 30px auto 20px auto; 
+        margin: 30px auto 20px auto;
         padding: 0 20px;
         color: var(--cor-primaria, #007bff);
         font-size: 2em;
@@ -36,12 +36,12 @@
     /* Container Principal (O Card) */
     /* ---------------------------------- */
     .equipe-container {
-        max-width: 700px; 
-        margin: 0 auto 50px auto; 
-        padding: 30px 40px; 
-        background-color: #ffffff; 
-        border-radius: 15px; 
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); 
+        max-width: 700px;
+        margin: 0 auto 50px auto;
+        padding: 30px 40px;
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
     }
 
     /* Estilo para Agrupar Rótulo e Campo */
@@ -50,32 +50,32 @@
     }
 
     .equipe-container label {
-        display: block; 
+        display: block;
         font-weight: 600;
         margin-bottom: 8px;
         color: var(--cor-texto, #333);
     }
-    
+
     .equipe-container input[type="text"] {
-        width: 100%; 
+        width: 100%;
         padding: 12px;
         border: 1px solid #ced4da;
         border-radius: 8px;
-        box-sizing: border-box; 
+        box-sizing: border-box;
         font-size: 1em;
     }
 
     /* Estilo do Foco (Focus) no Input */
     .equipe-container input:focus {
-        border-color: var(--cor-primaria, #007bff); 
+        border-color: var(--cor-primaria, #007bff);
         outline: none;
-        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); 
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
     }
 
     /* ---------------------------------- */
     /* Estilo dos Formulários de Ação */
     /* ---------------------------------- */
-    
+
     .form-principal {
         padding-bottom: 20px;
         border-bottom: 1px solid #f0f0f0;
@@ -93,43 +93,43 @@
         padding-top: 15px;
         border-top: 1px solid #eee;
     }
-    
+
     /* ---------------------------------- */
     /* Estilo dos Botões */
     /* ---------------------------------- */
 
     /* Botão Principal de Atualização/Adição (Cor Primária) */
     .btn-submit {
-        background-color: var(--cor-primaria, #007bff); 
+        background-color: var(--cor-primaria, #007bff);
         color: white;
         padding: 12px 25px;
         border: none;
         border-radius: 8px;
-        cursor: pointer; 
+        cursor: pointer;
         font-size: 1.1em;
         font-weight: 600;
-        transition: background-color 0.3s ease; 
-        width: 100%; 
+        transition: background-color 0.3s ease;
+        width: 100%;
         margin-top: 20px;
     }
-    
+
     /* NOVO: Estilo para os botões de atualização/adição */
     .btn-atualizar {
-        background-color: var(--cor-primaria, #007bff); 
+        background-color: var(--cor-primaria, #007bff);
         color: white;
         padding: 12px 25px;
         border: none;
         border-radius: 8px;
-        cursor: pointer; 
+        cursor: pointer;
         font-size: 1.1em;
         font-weight: 600;
-        transition: background-color 0.3s ease; 
-        width: 100%; 
+        transition: background-color 0.3s ease;
+        width: 100%;
         margin-top: 20px;
     }
 
     .btn-atualizar:hover {
-        background-color: var(--cor-secundaria, #0056b3); 
+        background-color: var(--cor-secundaria, #0056b3);
     }
 
     /* Botão de SAIR (Cor de Perigo, mas mais simples) */
@@ -139,10 +139,10 @@
         padding: 10px 20px;
         border: none;
         border-radius: 8px;
-        cursor: pointer; 
+        cursor: pointer;
         font-size: 1em;
         font-weight: 600;
-        transition: background-color 0.3s ease; 
+        transition: background-color 0.3s ease;
         width: auto; /* Deixa o botão pequeno */
     }
 
@@ -154,15 +154,14 @@
 <h1>Equipe {{ equipe['nome'] | capitalize }}</h1>
 
 <div class="equipe-container">
-
     <h2 style="border-bottom: 2px solid var(--cor-primaria);">Informações da Equipe</h2>
     <form action="/equipes/substituir" method="POST" class="form-principal">
-        
+
         <input type="hidden" name="id" value="{{ equipe['id'] }}">
 
         <div class="form-grupo">
             <label for="nome-input">Nome</label>
-            <input type="text" id="nome-input" name="nome" value="{{ equipe['nome'] }}">
+            <input type="text" id="nome-input" name="nome" value="{{ equipe['equipe_nome'] }}">
         </div>
 
         <div class="form-grupo">
@@ -170,12 +169,22 @@
             <input type="text" id="tags-input" name="tags" value="{{ equipe['tags'] }}">
         </div>
 
+        <h2><a href="/projetos/{{ equipe['projeto_id'] }}">projeto {{ equipe['projeto_titulo'] }}</a></h2>
+
+        <label>mudar de projeto?</label>
+        <select name="projeto">
+            <option value="{{ equipe['projeto_id'] }}">{{ equipe['projeto_titulo'] }}</option>
+            {% for projeto in projetos %}
+            <option value="{{ projeto['id'] }}">{{ projeto['titulo'] }}</option>
+            {% endfor %}
+        </select>
+
         <button type="submit" class="btn-atualizar">ATUALIZAR INFORMAÇÕES DA EQUIPE</button>
     </form>
 
     <h2 style="margin-top: 40px;">Adicionar Novo Membro</h2>
     <form action="/equipes/nova-pessoa" method="POST" class="form-adicionar-pessoa">
-        
+
         <input type="hidden" name="id" value="{{ equipe['id'] }}">
 
         <div class="form-grupo">
