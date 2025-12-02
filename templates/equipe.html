@@ -32,22 +32,55 @@
         padding-bottom: 5px;
     }
 
+
+     /* ---------------------------------- */
+    /* Estilo do Link de Projeto Associado (Agora dentro do card) */
     /* ---------------------------------- */
-    /* Container Principal (O Card) */
-    /* ---------------------------------- */
-    .equipe-container {
-        max-width: 700px;
-        margin: 0 auto 50px auto;
-        padding: 30px 40px;
-        background-color: #ffffff;
-        border-radius: 15px;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    .projeto-link-secao {
+        margin-top: 30px;
+        padding-top: 15px;
+        border-top: 2px solid var(--cor-primaria, #007bff);
+        text-align: center;
     }
 
-    /* Estilo para Agrupar Rótulo e Campo */
-    .form-grupo {
-        margin-bottom: 20px;
+    .projeto-link-secao a {
+        font-size: 1.3em;
+        font-weight: 700;
+        color: var(--cor-primaria, #007bff);
+        text-decoration: none;
+        transition: color 0.2s;
     }
+
+ .projeto-link-secao a:hover {
+     color: var(--cor-secundaria, #0056b3);
+ }
+
+ /* ---------------------------------- */
+ /* Container Principal (O Card) */
+ /* ---------------------------------- */
+ .equipe-container {
+     max-width: 700px;
+     margin: 0 auto 50px auto;
+     padding: 30px 40px;
+     background-color: #ffffff;
+     border-radius: 15px;
+     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+ }
+
+ .equipe-container select {
+     width: 100%;
+     padding: 12px;
+     border: 1px solid #ced4da;
+     border-radius: 8px;
+     box-sizing: border-box;
+     font-size: 1em;
+ }
+
+
+     /* Estilo para Agrupar Rótulo e Campo */
+     .form-grupo {
+         margin-bottom: 20px;
+     }
 
     .equipe-container label {
         display: block;
@@ -169,7 +202,7 @@
             <input type="text" id="tags-input" name="tags" value="{{ equipe['tags'] }}">
         </div>
 
-        <h2><a href="/projetos/{{ equipe['projeto_id'] }}">projeto {{ equipe['projeto_titulo'] }}</a></h2>
+        <h2>Projeto Associado</h2>
 
         <label>mudar de projeto?</label>
         <select name="projeto">
@@ -179,7 +212,11 @@
             {% endfor %}
         </select>
 
-        <button type="submit" class="btn-atualizar">ATUALIZAR INFORMAÇÕES DA EQUIPE</button>
+
+        <div class="projeto-link-secao">
+            <a href="/projetos/{{ equipe['projeto_id'] }}">Ver Página do Projeto</a>
+        </div>
+    <button type="submit" class="btn-atualizar">ATUALIZAR INFORMAÇÕES DA EQUIPE</button>
     </form>
 
     <h2 style="margin-top: 40px;">Adicionar Novo Membro</h2>
