@@ -1,16 +1,109 @@
 {% set title = "index" %}
 {% include "head.html" %}
 
-<form action="/reset" method="POST">
-    <label>max</label>
-    <input type="text" name="max" value="100">
+<style>
+    /* Estilo para garantir que o corpo da página tenha o fundo correto */
+    body {
+        background-color: var(--cor-fundo-claro, #f0f2f5); 
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-    <button>reset</button>
-</form>
+    /* O nome técnico é: Container de Layout. Ele usa Grid para organizar os cards lado a lado. */
+    .action-grid {
+        max-width: 900px;
+        margin: 50px auto; /* Centraliza o grid horizontalmente */
+        padding: 0 20px;
+        /* O nome técnico é: CSS Grid Layout. Perfeito para organizar seções. */
+        display: grid; 
+        /* Define duas colunas de tamanho igual (1 fração cada) */
+        grid-template-columns: 1fr 1fr; 
+        /* Espaço entre as colunas e linhas */
+        gap: 30px; 
+    }
 
-<form action="/dump" method="POST">
-    <label>dump</label>
-    <input type="submit">
-</form>
+    /* Estilo do Card (Individual) */
+    .action-card {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        /* O nome técnico é: Sombra da Caixa (Box Shadow). Adiciona profundidade. */
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); 
+        text-align: center;
+    }
+
+    .action-card h2 {
+        color: var(--cor-primaria, #007bff);
+        margin-bottom: 25px;
+        font-size: 1.8em;
+    }
+
+    /* Estilo do Input de Texto (Max) */
+    .action-card input[type="text"] {
+        width: 100%;
+        padding: 12px;
+        margin-top: 5px;
+        margin-bottom: 20px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        box-sizing: border-box; 
+        font-size: 1em;
+        text-align: center;
+    }
+    
+    /* Estilo dos Rótulos (Label) */
+    .action-card label {
+        display: block;
+        font-weight: 600;
+        color: var(--cor-texto, #333);
+        margin-bottom: 5px;
+    }
+
+    /* Estilo dos Botões (Button e Submit) */
+    .action-card button,
+    .action-card input[type="submit"] {
+        background-color: var(--cor-primaria, #007bff); 
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer; 
+        font-size: 1.1em;
+        font-weight: 600;
+        transition: background-color 0.3s ease; 
+        width: 100%; 
+    }
+
+    /* Pseudoclasse de Mouse Sobre (:hover) */
+    .action-card button:hover,
+    .action-card input[type="submit"]:hover {
+        background-color: var(--cor-secundaria, #0056b3); 
+    }
+</style>
+
+<div class="action-grid">
+    
+    <div class="action-card">
+        <h2>Configurar e Resetar Dados</h2>
+        <form action="/reset" method="POST">
+            <label for="input-max">Máximo de Inserts (max)</label>
+            <input type="text" id="input-max" name="max" value="100">
+
+            <button type="submit">RESETAR BANCO DE DADOS</button>
+        </form>
+    </div>
+
+    <div class="action-card">
+        <h2>Executar Exportação (Dump)</h2>
+        <p style="color: #6c757d; margin-bottom: 30px;">
+            Clique abaixo para exportar o conteúdo atual do banco de dados.
+        </p>
+        <form action="/dump" method="POST">
+            <input type="submit" value="EXECUTAR DUMP">
+        </form>
+    </div>
+
+</div>
 
 {% include "foot.html" %}

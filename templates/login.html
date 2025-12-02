@@ -1,22 +1,113 @@
 {% set title = "login" %}
 {% include "head.html" %}
 
-<div id="sabrina">
-    <h2>login:<h2>
-        <form action="/login" method="POST">
-            <label>id</label>
-            <input type="text" name="id">
+<style>
+    /* Estilos Gerais */
+    body {
+        /* REMOVEMOS: display: flex; justify-content: center; align-items: center; e min-height: 100vh; */
+        /* O body agora volta ao fluxo normal (vertical) */
+        background-color: var(--cor-fundo-claro, #f0f2f5); 
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-            <label>nome</label>
-            <input type="text" name="nome">
+    /* Estilo do Card Principal (Login Container) */
+    .login-container {
+        /* A CENTRALIZAÇÃO AGORA É FEITA COM MARGIN */
+        max-width: 400px; 
+        width: 90%; 
+        padding: 40px; 
+        background-color: #ffffff; 
+        border-radius: 12px; 
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); 
+        
+        /* O nome técnico é: Margem Auto (Margin Auto). Centraliza o card horizontalmente. */
+        margin: 50px auto 50px auto; 
+    }
 
-            <label>email</label>
-            <input type="text" name="email">
+    .login-container h2 {
+        text-align: center;
+        color: var(--cor-primaria, #007bff);
+        margin-bottom: 30px;
+        font-size: 2em;
+        border-bottom: 2px solid var(--cor-primaria, #007bff);
+        padding-bottom: 10px;
+    }
 
-            <br/>
-            <input type="submit" value="enviar">
-        </form>
-        </form>
+    /* Estilo para agrupar rótulo e input */
+    .form-grupo {
+        margin-bottom: 20px;
+    }
+
+    .login-container label {
+        display: block; 
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--cor-texto, #333);
+    }
+
+    .login-container input[type="text"],
+    .login-container input[type="password"] {
+        width: 100%; 
+        padding: 12px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        box-sizing: border-box; 
+        font-size: 1em;
+    }
+
+    /* Estilo do Foco (Focus) no Input */
+    .login-container input[type="text"]:focus,
+    .login-container input[type="password"]:focus {
+        border-color: var(--cor-primaria, #007bff); 
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); 
+    }
+
+    /* Estilo do Botão de Envio */
+    .btn-submit {
+        background-color: var(--cor-primaria, #007bff); 
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer; 
+        font-size: 1.1em;
+        font-weight: 600;
+        transition: background-color 0.3s ease; 
+        width: 100%; 
+        margin-top: 10px;
+    }
+
+    /* Pseudoclasse de Mouse Sobre (:hover) */
+    .btn-submit:hover {
+        background-color: var(--cor-secundaria, #0056b3); 
+    }
+</style>
+
+<div class="login-container">
+    
+    <h2>Login:</h2>
+    
+    <form action="/login" method="POST">
+        
+        <div class="form-grupo">
+            <label for="input-id">ID</label>
+            <input type="text" id="input-id" name="id">
+        </div>
+
+        <div class="form-grupo">
+            <label for="input-nome">Nome</label>
+            <input type="text" id="input-nome" name="nome">
+        </div>
+
+        <div class="form-grupo">
+            <label for="input-email">Email</label>
+            <input type="text" id="input-email" name="email">
+        </div>
+
+        <input type="submit" value="Entrar" class="btn-submit">
+    </form>
 </div>
 
 {% include "foot.html" %}

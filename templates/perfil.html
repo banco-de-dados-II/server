@@ -1,23 +1,170 @@
 {% set title = "perfil" %}
 {% include "head.html" %}
 
-<ul>
-    <li>nome: {{ nome }}</li>
-    <li>email: {{ email }}</li>
-</ul>
+<style>
+    /* ---------------------------------- */
+    /* Estilos de Perfil */
+    /* ---------------------------------- */
+    body {
+        background-color: var(--cor-fundo-claro, #f0f2f5); 
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--cor-texto, #333);
+    }
 
-<form method="POST" action="/perfil/substituir">
-    <label>mudar nome</label>
-    <input text="text" name="nome" value="{{ nome }}">
+    h2 {
+        color: var(--cor-texto, #1a1a1a);
+        font-size: 1.5em;
+        margin-top: 0;
+    }
 
-    <label>mudar email</label>
-    <input text="text" name="email" value="{{ email }}">
+    /* Estilo do Card Principal (Perfil Container) */
+    .perfil-container {
+        max-width: 600px; 
+        margin: 50px auto; 
+        padding: 30px 40px; 
+        background-color: #ffffff; 
+        border-radius: 15px; 
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); 
+    }
 
-    <input type="submit" value="mudar"></form>
-</form>
+    /* Estilo da Seção de Dados Atuais */
+    .perfil-dados h2 {
+        border-bottom: 3px solid var(--cor-primaria, #007bff); 
+        padding-bottom: 10px;
+        margin-bottom: 25px;
+    }
 
-{% for grafico in graficos %}
-{{grafico|safe}}
-{% endfor %}
+    .perfil-dados ul {
+        list-style: none; 
+        padding: 0;
+    }
+
+    .perfil-dados li {
+        background-color: #f8f9fa; 
+        padding: 12px 20px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        font-size: 1.05em;
+        display: flex; 
+        justify-content: space-between; 
+    }
+
+    .dado-label {
+        font-weight: 600; 
+        color: #555;
+    }
+
+    /* Estilo do Formulário de Edição */
+    .perfil-form {
+        margin-top: 40px;
+        border-top: 1px solid #ddd;
+        padding-top: 30px;
+    }
+
+    .form-grupo {
+        margin-bottom: 25px;
+    }
+
+    .perfil-form label {
+        display: block; 
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--cor-texto, #1a1a1a);
+    }
+
+    .perfil-form input[type="text"] {
+        width: 100%; 
+        padding: 12px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        box-sizing: border-box; 
+        font-size: 1em;
+    }
+
+    .perfil-form input[type="text"]:focus {
+        border-color: var(--cor-primaria, #007bff); 
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); 
+    }
+
+    .btn-submit {
+        background-color: var(--cor-primaria, #007bff); 
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer; 
+        font-size: 1.1em;
+        font-weight: 600;
+        transition: background-color 0.3s ease; 
+        width: 100%; 
+        margin-top: 15px;
+    }
+
+    .btn-submit:hover {
+        background-color: var(--cor-secundaria, #0056b3); 
+    }
+
+    /* ---------------------------------- */
+    /* Estilo para Gráficos (Correção Forçada) */
+    /* ---------------------------------- */
+    .graficos-container {
+        /* Centraliza os gráficos na página e limita a largura total */
+        margin: 50px auto; 
+        max-width: 900px;
+        padding: 0 20px;
+        text-align: center;
+    }
+    
+    /* Aplica a regra forte a todos os elementos dentro do container de gráficos */
+    .graficos-container * {
+        max-width: 100% !important; 
+        height: auto !important; 
+        display: block; 
+        margin: 0 auto 20px auto;
+    }
+
+    /* ---------------------------------- */
+    /* O Estilo da Legenda FOI REMOVIDO */
+    /* ---------------------------------- */
+</style>
+
+<div class="perfil-container">
+    
+    <div class="perfil-dados">
+        <h2>Seus Dados Atuais</h2>
+        <ul>
+            <li><span class="dado-label">Nome:</span> {{ nome }}</li>
+            <li><span class="dado-label">Email:</span> {{ email }}</li>
+        </ul>
+    </div>
+
+    <form method="POST" action="/perfil/substituir" class="perfil-form">
+        <h2>Atualizar Informações</h2>
+        
+        <div class="form-grupo">
+            <label for="input-nome">Mudar Nome</label>
+            <input type="text" id="input-nome" name="nome" value="{{ nome }}">
+        </div>
+
+        <div class="form-grupo">
+            <label for="input-email">Mudar Email</label>
+            <input type="text" id="input-email" name="email" value="{{ email }}">
+        </div>
+
+        <input type="submit" value="Salvar Mudanças" class="btn-submit">
+    </form>
+
+</div>
+
+<div class="graficos-container">
+    <h2 style="text-align: left; margin-left: 20px; width: 100%;">Seus Gráficos</h2>
+
+    {% for grafico in graficos %}
+    {{grafico|safe}}
+    {% endfor %}
+</div>
 
 {% include "foot.html" %}

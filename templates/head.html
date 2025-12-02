@@ -3,22 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/holiday.css" />
     <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js" integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz" crossorigin="anonymous"></script>
 
     <title>{{ title }}</title>
+
+    <style>
+        /* ---------------------------------- */
+        /* 1. Variáveis CSS (Cores Padrão) */
+        /* ---------------------------------- */
+        :root {
+            --cor-primaria: #007bff; 
+            --cor-secundaria: #0056b3; 
+            --cor-fundo-claro: #f0f2f5; 
+            --cor-texto: #1a1a1a;
+            --cor-texto-claro: #ffffff;
+        }
+        
+        /* ---------------------------------- */
+        /* 2. Estilo da Navegação (navbar) - Corrigido o bug do 'salto' */
+        /* ---------------------------------- */
+
+        .navbar {
+            background-color: #343a40; 
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+        }
+
+        .navbar ul {
+            list-style: none; 
+            padding: 0;
+            margin: 0;
+            display: flex; 
+            justify-content: flex-start; 
+            align-items: center; 
+            gap: 15px; 
+        }
+
+        .navbar a {
+            text-decoration: none; 
+            color: var(--cor-texto-claro); 
+            padding: 8px 15px; 
+            border-radius: 5px; 
+            /* O nome técnico é: Borda Consistente. Corrigiu o bug do desalinhamento. */
+            border: 2px solid transparent; 
+            transition: background-color 0.3s ease, border-color 0.3s ease; 
+            font-weight: 500; 
+            display: block;
+        }
+
+        .navbar a:hover {
+            background-color: var(--cor-secundaria); 
+            border-color: var(--cor-secundaria); 
+            color: var(--cor-texto-claro); 
+        }
+
+        .navbar a.active {
+            background-color: var(--cor-primaria);
+            color: var(--cor-texto-claro);
+            border-color: var(--cor-primaria);
+            font-weight: 700;
+        }
+        
+        .navbar a.active:hover {
+            background-color: var(--cor-secundaria);
+            border-color: var(--cor-secundaria);
+        }
+
+        /* ---------------------------------- */
+        /* 3. Estilos de Título Removidos */
+        /* O CSS para .page-title e .page-title h1 foi removido pois a estrutura HTML não existe mais. */
+        /* ---------------------------------- */
+    </style>
 </head>
 <body>
 
-<nav>
+<nav class="navbar">
     <ul>
-        <li><a href="/">home</a></li>
-        <li><a href="/login">login</a></li>
-        <li><a href="/perfil">perfil</a></li>
-        <li><a href="/tarefas">tarefas</a></li>
-        <li><a href="/equipes">equipes</a></li>
-        <li><a href="/projetos">projetos</a></li>
+        <li><a href="/" {% if rota == "home" or rota == "index" or rota == "" %}class="active"{% endif %}>início</a></li>
+        <li><a href="/login" {% if rota == "login" %}class="active"{% endif %}>login</a></li>
+        <li><a href="/perfil" {% if rota == "perfil" %}class="active"{% endif %}>perfil</a></li>
+        <li><a href="/tarefas" {% if rota == "tarefas" %}class="active"{% endif %}>tarefas</a></li>
+        <li><a href="/equipes" {% if rota == "equipes" %}class="active"{% endif %}>equipes</a></li>
+        <li><a href="/projetos" {% if rota == "projetos" %}class="active"{% endif %}>projetos</a></li>
     </ul>
 </nav>
-
-<header>/{{ rota }}/</header>

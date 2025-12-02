@@ -1,27 +1,97 @@
 {% set title = "tarefas" %}
 {% include "head.html" %}
 
-<h1>tarefas de {{ nome }}</h1>
+<style>
+    /* Estilos Gerais */
+    body {
+        /* Garante que o corpo da página use o fundo claro após o cabeçalho */
+        background-color: var(--cor-fundo-claro, #f0f2f5); 
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--cor-texto, #333);
+    }
+    
+    h1 {
+        /* O nome técnico é: Título de Nível 1. */
+        max-width: 900px;
+        margin: 0 auto 20px auto; 
+        padding: 0 20px;
+        color: var(--cor-texto, #1a1a1a);
+        font-size: 1.8em;
+        text-transform: capitalize;
+    }
 
-<h2>adicionar</h2>
+    h2 {
+        color: var(--cor-primaria, #007bff);
+        border-bottom: 2px solid var(--cor-primaria, #007bff);
+        padding-bottom: 5px;
+        margin-top: 30px;
+        margin-bottom: 20px;
+        font-size: 1.5em;
+    }
 
-<form action="/tarefas/substituir" method="POST">
-    <label>titulo</label>
-    <input name="titulo" type="text">
+    /* ---------------------------------- */
+    /* Container Principal */
+    /* ---------------------------------- */
+    .tarefas-main-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
 
-    {% for status in tarefa_status %}
-    <input type="radio" name="status" value="{{ status }}">
-    <label>{{ status }}</label>
-    {% endfor %}
+    /* ---------------------------------- */
+    /* Estilo do Formulário de Adição (Form) */
+    /* ---------------------------------- */
+    .form-adicionar {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        /* O nome técnico é: Flexbox. Alinha os itens na linha. */
+        display: flex;
+        align-items: center;
+        gap: 15px; 
+    }
 
-    <br>
-    <button type="submit">adicionar nova tarefa</button>
-</form>
+    .form-adicionar label {
+        font-weight: 600;
+        color: var(--cor-texto, #333);
+        flex-shrink: 0; 
+    }
 
-<h2>tarefas</h2>
+    .form-adicionar input[type="text"] {
+        flex-grow: 1; /* O nome técnico é: Crescimento Flexível. */
+        padding: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        box-sizing: border-box; 
+    }
+    
+    .form-adicionar input[type="text"]:focus {
+        border-color: var(--cor-primaria, #007bff); 
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); 
+    }
 
-{% include "paginas.html" %}
+    /* Estilizando os Botões de Rádio (Status) */
+    .form-adicionar .radio-group {
+        display: flex;
+        gap: 10px;
+        margin-left: 15px;
+    }
 
+    .form-adicionar button {
+        background-color: var(--cor-primaria, #007bff); 
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer; 
+        font-weight: 600;
+        transition: background-color 0.3s ease; 
+        flex-shrink: 0; /* Impede o botão de encolher */
+    }
 <ul>
     {% for tarefa in tarefas %}
     <li>
@@ -37,5 +107,145 @@
     </li>
     {% endfor %}
 </ul>
+
+    .form-adicionar button:hover {
+        background-color: var(--cor-secundaria, #0056b3); 
+    }
+
+    /* ---------------------------------- */
+    /* Estilo da Lista de Tarefas (Cards) */
+    /* ---------------------------------- */
+    .lista-tarefas {
+        list-style: none;
+        padding: 0;
+        margin-top: 20px;
+        /* O nome técnico é: CSS Grid Layout. */
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 20px;
+    }
+
+    .tarefa-card {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-left: 5px solid var(--cor-primaria, #007bff); /* Linha de destaque */
+        transition: transform 0.2s;
+    }
+    
+    .tarefa-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .tarefa-card h3 { 
+        font-size: 1.2em;
+        font-weight: 700;
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+    
+    .tarefa-card a {
+        color: var(--cor-primaria, #007bff);
+        text-decoration: none;
+        display: block;
+        transition: color 0.2s;
+    }
+
+    .tarefa-card a:hover {
+        color: var(--cor-secundaria, #0056b3);
+    }
+
+    .tarefa-card p {
+        font-size: 0.9em;
+        margin: 5px 0;
+        color: #6c757d;
+        font-style: italic; 
+        line-height: 1.4;
+    }
+
+    /* ---------------------------------- */
+    /* CORES DINÂMICAS PARA O STATUS */
+    /* ---------------------------------- */
+    
+    /* Estilo Base para todos os Status (tag) */
+    .tarefa-status {
+        font-weight: 700;
+        padding: 4px 10px; 
+        border-radius: 15px; 
+        display: inline-block;
+        color: #ffffff; 
+        text-transform: uppercase;
+        font-size: 0.8em;
+        margin-left: 10px; /* Separar do texto de tags */
+    }
+
+    /* Status: Concluído (VERDE) */
+    .status-concluido {
+        background-color: #28a745; 
+    }
+
+    /* Status: A Fazer (AZUL) */
+    .status-a-fazer {
+        background-color: #007bff; 
+    }
+
+    /* Status: Fazendo (ROSA) */
+    .status-fazendo {
+        background-color: #e83e8c; 
+    }
+</style>
+
+<div class="tarefas-main-container">
+    
+    <h1>Tarefas de {{ nome | capitalize }}</h1>
+
+    <h2>Adicionar Nova Tarefa</h2>
+
+    <form action="/tarefas/substituir" method="POST" class="form-adicionar">
+        <label for="titulo-input">Título</label>
+        <input name="titulo" type="text" id="titulo-input" placeholder="Nova tarefa...">
+
+        <div class="radio-group">
+            {% for status in tarefa_status %}
+            <input type="radio" name="status" value="{{ status }}" id="status-{{ status | lower | replace(' ', '-') }}" 
+                   {% if loop.first %}checked{% endif %}>
+            <label for="status-{{ status | lower | replace(' ', '-') }}">{{ status }}</label>
+            {% endfor %}
+        </div>
+        
+        <button type="submit">ADICIONAR</button>
+    </form>
+
+    <h2>Lista de Tarefas</h2>
+
+    {% include "paginas.html" %}
+
+    <ul class="lista-tarefas">
+        {% for tarefa in tarefas %}
+        
+        {% set status_slug = tarefa['status'] | lower | replace(' ', '-') | replace(':', '') %}
+        
+        <li class="tarefa-card">
+            <h3><a href="/tarefas/{{ tarefa['id'] }}">{{ tarefa['titulo'] }}</a></h3>
+            
+            <p>
+                Tags: {{ tarefa['tags'] }}
+                
+                <span class="tarefa-status status-{{ status_slug }}">{{ tarefa['status'] }}</span>
+            </p>
+            
+            <p>Projeto: {{ tarefa['projeto_nome'] }}</p>
+            <p>Criador: {{ tarefa['criador_nome'] }}</p>
+            
+            <p style="margin-top: 15px; border-top: 1px dashed #eee; padding-top: 10px;">
+                Criação: {{ tarefa['criacao'] }} | Início: {{ tarefa['fazendo'] }} 
+            </p>
+            <p>Conclusão: {{ tarefa['conclusao'] }} | Limite: **{{ tarefa['limite'] }}**</p>
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>
 
 {% include "foot.html" %}

@@ -195,7 +195,7 @@ def tarefas_substituir_post():
             g.db.commit()
         else:
             modo = 'substituir'
-            tag_id = mongo.tag_update({'tarefa': id, 'pessoa': u.id}, tags)
+            tag_id = mongo.tag_update({'tarefa': int(id), 'pessoa': u.id}, tags)
             cur.execute('call update_card(%s, %s, %s, %s, %s, %s, %s)',
                         (int(id), titulo, tag_id, fazendo, conclusao, limite, status))
             g.db.commit()
