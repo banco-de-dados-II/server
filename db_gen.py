@@ -57,15 +57,6 @@ def do(db, mdb, l=10):
 
     with db.cursor(buffered=True) as cur:
         for i in range(l):
-            nome = c(nomes)
-            cur.execute(
-                'insert into pessoas (nome, email) values (%s, %s)',
-                (
-                    nome,
-                    f'{".".join(nome.split())}{n()}@{c(emails_servers)}.{c(doms)}',
-                ),
-            )
-
             cur.execute(
                 f'insert into equipes (nome) value (%s)',
                 (f'{c(objs)}.{c(fruitas)}{n()}',),
@@ -119,6 +110,17 @@ def do(db, mdb, l=10):
                 tag('tarefa', 'pessoa')
                 tag('projeto', 'pessoa')
                 tag('projeto', 'equipe')
+
+        for i in range(l):
+            nome = c(nomes)
+            cur.execute(
+                'insert into pessoas (nome, email) values (%s, %s)',
+                (
+                    nome,
+                    f'{".".join(nome.split())}{n()}@{c(emails_servers)}.{c(doms)}',
+                ),
+            )
+
 
     # file('proc.sql')
     # file('view.sql')
